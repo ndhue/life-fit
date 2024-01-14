@@ -1,31 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Text, View } from 'react-native';
+import InputField from '../../components/InputField';
+import { styles } from '../../constants/Styles';
+import RadioButton from '../../components/RadioButton';
 
 export default function TabProfileScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Activity</Text>
-      <View style={styles.separator} />
+  const [selectedOption, setSelectedOption] = useState<string>('Nam');
 
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+  const handleSelect = (option: string) => {
+    setSelectedOption(option);
+  };
+
+  return (
+    <View style={styles.wrapper}>
+      <View style={[styles.flexBox, {
+        paddingHorizontal: 10
+      }]}>
+        <Text>Back</Text>
+        <Text style={styles.title}>Hồ sơ của tôi</Text>
+        <Text>Edit</Text>
+      </View>
+      <View style={styles.container}>
+      <View
+          style={{
+            width: 120,
+            height: 120,
+            backgroundColor: "gray",
+            borderRadius: 100,
+          }}
+        ></View>
+        <InputField label='Email' type='text' />
+        <InputField label='Họ và tên' type='text' />
+        <InputField label='Tuổi' type='text' />
+        <RadioButton
+        selectedOption={selectedOption}
+        onSelect={handleSelect}
+      />
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

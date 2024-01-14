@@ -1,38 +1,21 @@
-import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import Colors from "../../constants/Colors";
 import Header from "../../components/Header";
 import ActivityContainer from "../../components/ActivityContainer";
+import { styles } from "../../constants/Styles";
+
+let texts: string[] = ["Giảm 20 calo", "Chạy 200 bước"];
 
 export default function TabHomeScreen() {
   return (
-    <View style={{
-      backgroundColor: Colors.background
-    }}>
+    <View style={styles.wrapper}>
       <Header />
       <View style={styles.container}>
-        <ActivityContainer />
-
-        {/* Use a light status bar on iOS to account for the black space above the modal */}
-        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+        <ActivityContainer title='Hoạt động' text={texts} />
+        <ActivityContainer title='Hoạt động' text={texts} />
+        <ActivityContainer title='Hoạt động' text={texts} />
+        <ActivityContainer title='Hoạt động' text={texts} />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

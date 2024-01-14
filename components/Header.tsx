@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 const Header = () => {
   return (
@@ -10,7 +10,7 @@ const Header = () => {
         alignItems: "center",
         justifyContent: "space-between",
         backgroundColor: "transparent",
-        padding: "20px"
+        paddingHorizontal: 20 
       }}
     >
       <View
@@ -19,15 +19,15 @@ const Header = () => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: "15px",
+          gap: 15,
         }}
       >
         <View
           style={{
-            width: "60px",
-            height: "60px",
+            width: 60,
+            height: 60,
             backgroundColor: "gray",
-            borderRadius: "100%",
+            borderRadius: 100,
           }}
         ></View>
         <View>
