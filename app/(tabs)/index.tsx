@@ -1,14 +1,21 @@
-import { StyleSheet } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { Platform, StyleSheet, Text, View } from "react-native";
+import Colors from "../../constants/Colors";
+import Header from "../../components/Header";
+import ActivityContainer from "../../components/ActivityContainer";
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
-
-export default function TabOneScreen() {
+export default function TabHomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+    <View style={{
+      backgroundColor: Colors.background
+    }}>
+      <Header />
+      <View style={styles.container}>
+        <ActivityContainer />
+
+        {/* Use a light status bar on iOS to account for the black space above the modal */}
+        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+      </View>
     </View>
   );
 }
@@ -16,16 +23,16 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   separator: {
     marginVertical: 30,
     height: 1,
-    width: '80%',
+    width: "80%",
   },
 });
