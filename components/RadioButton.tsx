@@ -1,5 +1,6 @@
-import { View, TouchableOpacity, Text } from "react-native";
-import { styles } from "../constants/Styles";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { global } from "../constants/Styles";
+import Colors from "../constants/Colors";
 
 let options: string[] = ["Nam", "Nữ", "Khác"];
 
@@ -10,7 +11,7 @@ type RadioButtonProps = {
 const RadioButton = ({ selectedOption, onSelect }: RadioButtonProps) => {
   return (
     <View style={{ paddingVertical: 6, width: 339 }}>
-      <Text style={styles.inputLabel}>Giới tính</Text>
+      <Text style={global.inputLabel}>Giới tính</Text>
       <View style={styles.radioButtonContainer}>
         {options.map((option) => (
           <TouchableOpacity
@@ -19,7 +20,7 @@ const RadioButton = ({ selectedOption, onSelect }: RadioButtonProps) => {
           >
             <View
               style={[
-                styles.flexBox,
+                global.flexBox,
                 {
                   gap: 5,
                 },
@@ -41,5 +42,29 @@ const RadioButton = ({ selectedOption, onSelect }: RadioButtonProps) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  radioButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 25
+  },
+  radioCheck: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.background2,
+    borderRadius: 100,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  selected: {
+    width: 12,
+    height: 12,
+    backgroundColor: Colors.border
+  }
+})
 
 export default RadioButton;

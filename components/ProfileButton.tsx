@@ -1,18 +1,17 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Colors from '../constants/Colors';
 
 type ProfileButtonProps = {
   onPress: () => void;
-  icon?: string;
+  icon?: React.ReactNode;
   text: string;
 }
 
 const ProfileButton = ({ onPress, icon, text }: ProfileButtonProps) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      {/* <Image source={iconSource} style={styles.icon} /> */}
-      <Text style={styles.icon}>Icon</Text>
+      {icon}
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   )
@@ -36,11 +35,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10
-  },
-  icon: {
-    width: 50,
-    height: 50,
+    gap: 15
   },
   text: {
     fontSize: 18,

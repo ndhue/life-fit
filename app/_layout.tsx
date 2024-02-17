@@ -47,7 +47,11 @@ function RootLayoutNav() {
     <ThemeProvider value={DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="signin" options={{ headerShown: false }} />
+        <Stack.Screen name="signup" options={{ headerShown: false }} />
+        <Stack.Screen name="confirm" options={{ headerShown: false }} />
+        <Stack.Screen name="forget-password" options={{ headerShown: false }} />
+        <Stack.Screen name="new-password" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

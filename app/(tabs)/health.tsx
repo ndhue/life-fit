@@ -1,31 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { global } from '../../constants/Styles';
+import Header from '../../components/Header';
 
 export default function TabHealthScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Activity</Text>
-      <View style={styles.separator} />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+    <View style={global.wrapper}>
+      <Header title='Hồ sơ sức khỏe' />
+      <View style={global.container}>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

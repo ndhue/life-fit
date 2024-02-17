@@ -1,27 +1,22 @@
-import { useState } from 'react';
-import { Text, View } from 'react-native';
-import InputField from '../../components/InputField';
-import { styles } from '../../constants/Styles';
-import RadioButton from '../../components/RadioButton';
+import { useState } from "react";
+import { View } from "react-native";
+import InputField from "../../components/InputField";
+import RadioButton from "../../components/RadioButton";
+import { global } from "../../constants/Styles";
+import Header from "../../components/Header";
 
 export default function TabProfileScreen() {
-  const [selectedOption, setSelectedOption] = useState<string>('Nam');
+  const [selectedOption, setSelectedOption] = useState<string>("Nam");
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
   };
 
   return (
-    <View style={styles.wrapper}>
-      <View style={[styles.flexBox, {
-        paddingHorizontal: 10
-      }]}>
-        <Text>Back</Text>
-        <Text style={styles.title}>Hồ sơ của tôi</Text>
-        <Text>Edit</Text>
-      </View>
-      <View style={styles.container}>
-      <View
+    <View style={global.wrapper}>
+      <Header title="Hồ sơ của tôi" />
+      <View style={global.container}>
+        <View
           style={{
             width: 120,
             height: 120,
@@ -29,13 +24,12 @@ export default function TabProfileScreen() {
             borderRadius: 100,
           }}
         ></View>
-        <InputField label='Email' type='text' />
-        <InputField label='Họ và tên' type='text' />
-        <InputField label='Tuổi' type='text' />
-        <RadioButton
-        selectedOption={selectedOption}
-        onSelect={handleSelect}
-      />
+        <View>
+          <InputField label="Email" type="text" />
+          <InputField label="Họ và tên" type="text" />
+          <InputField label="Tuổi" type="text" />
+          <RadioButton selectedOption={selectedOption} onSelect={handleSelect} />
+        </View>
       </View>
     </View>
   );
