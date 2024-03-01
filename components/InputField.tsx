@@ -4,15 +4,19 @@ import Colors from '../constants/Colors';
 
 type InputFieldProps = {
   label: string;
+  subLabel?: string;
   placeholder?: string;
   type?: string;
   value?: string;
 }
 
-const InputField = ({ label, placeholder, type, value }: InputFieldProps) => {
+const InputField = ({ label, subLabel, placeholder, type, value }: InputFieldProps) => {
   return (
     <View style={{ paddingVertical: 6 }}>
-      <Text style={styles.inputLabel}>{label}</Text>
+      <Text style={styles.inputLabel}>
+        {label}
+        <Text style={styles.subLabel}>{subLabel}</Text>
+      </Text>
       <TextInput style={styles.input} placeholder={placeholder} placeholderTextColor={'#c8c8c8'} />
     </View>
   )
@@ -31,6 +35,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingBottom: 11,
   },
+  subLabel: {
+    fontWeight: '400',
+    fontSize: 12,
+    paddingLeft: 3
+  }
 })
 
 export default InputField

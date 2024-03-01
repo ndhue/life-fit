@@ -52,6 +52,8 @@ function RootLayoutNav() {
         <Stack.Screen name="confirm" options={{ headerShown: false }} />
         <Stack.Screen name="forget-password" options={{ headerShown: false }} />
         <Stack.Screen name="new-password" options={{ headerShown: false }} />
+        <Stack.Screen name="water-tracker" options={{ headerShown: false }} />
+        <Stack.Screen name="period-tracker" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

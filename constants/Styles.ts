@@ -5,12 +5,12 @@ export const global = StyleSheet.create({
   wrapper: {
     backgroundColor: Colors.background,
     height: "100%",
-    paddingTop: 40
   },
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    overflowY: 'auto'
   },
   flexBox: {
     display: "flex",

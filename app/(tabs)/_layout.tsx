@@ -59,7 +59,7 @@ export default function TabLayout() {
         options={{
           title: 'Hồ sơ',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="image" color={color} />,
         }}
       />
     </Tabs>

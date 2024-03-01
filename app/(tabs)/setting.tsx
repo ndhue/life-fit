@@ -1,6 +1,7 @@
 import { Button, Text, View } from "react-native";
 import ProfileButton from "../../components/ProfileButton";
 import { global } from "../../constants/Styles";
+import Header from "../../components/Header";
 
 export default function TabSettingScreen() {
   const handleButtonPress = () => {
@@ -9,6 +10,7 @@ export default function TabSettingScreen() {
   };
   return (
     <View style={global.wrapper}>
+      <Header title="Cài đặt" />
       <View style={global.container}>
         <View
           style={{

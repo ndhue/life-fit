@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import InputField from "../../components/InputField";
 import RadioButton from "../../components/RadioButton";
 import { global } from "../../constants/Styles";
@@ -14,7 +14,7 @@ export default function TabProfileScreen() {
 
   return (
     <View style={global.wrapper}>
-      <Header title="Hồ sơ của tôi" />
+      <Header title="Hồ sơ của tôi" edit={true} />
       <View style={global.container}>
         <View
           style={{
@@ -24,11 +24,15 @@ export default function TabProfileScreen() {
             borderRadius: 100,
           }}
         ></View>
-        <View>
+        <View style={{ marginBottom: 20}}>
           <InputField label="Email" type="text" />
           <InputField label="Họ và tên" type="text" />
-          <InputField label="Tuổi" type="text" />
           <RadioButton selectedOption={selectedOption} onSelect={handleSelect} />
+          <View style={{ width: '30%'}}>
+            <InputField label="Tuổi" type="text" />
+            <InputField label="Cân nặng" subLabel="(kg)" type="text" />
+            <InputField label="Chiều cao" subLabel="(cm)" type="text" />
+          </View>
         </View>
       </View>
     </View>
