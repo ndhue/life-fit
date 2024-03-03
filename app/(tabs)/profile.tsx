@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import InputField from "../../components/InputField";
 import RadioButton from "../../components/RadioButton";
 import { global } from "../../constants/Styles";
@@ -14,7 +14,7 @@ export default function TabProfileScreen() {
 
   return (
     <View style={global.wrapper}>
-      <Header title="Hồ sơ của tôi" edit={true} />
+      <Header title="Hồ sơ của tôi" edit={true} route="/" />
       <View style={global.container}>
         <View
           style={{

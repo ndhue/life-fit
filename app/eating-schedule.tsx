@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Calendar } from "react-native-calendars";
 import { global } from "../constants/Styles";
-import Colors from "../constants/Colors";
 import Header from "../components/Header";
-import Button from "../components/Button";
 
 const EatingSchedule = () => {
+  const [selectedDate, setSelectedDate] = useState('2024-03-08');
+  const [markedDates, setMarkedDates] = useState({});
+
+  const handleDateSelect = (date) => {
+    // Update selected date
+    setSelectedDate(date);
+
+    // Add or remove dot from the selected date
+    const newMarkedDates = { markedDates };
+    newMarkedDates[date] = { selected: true, selectedColor: '#00FF66' };
+    setMarkedDates(newMarkedDates);
+  };
+
+  useEffect(() => {
+    handleDateSelect(selectedDate);
+  }, [])
+
   return (
     <View style={global.wrapper}>
-      <Header title="Chu kì kinh nguyệt" />
+      <Header title="Chế độ ăn" route="/activity" main={true} />
       <View style={global.container}>
         <View style={styles.circle}>
           <View style={styles.line}>
@@ -18,10 +34,19 @@ const EatingSchedule = () => {
             </View>
           </View>
         </View>
-        <View style={{ paddingVertical: 20}}>
-          
+        <Calendar
+          onDayPress={day => {
+            handleDateSelect(day.dateString);
+          }}
+          monthFormat={'MM/yyyy'}
+          markedDates={markedDates}
+          style={{ width: 348, marginTop: 20, borderRadius: 10 }}
+          theme={{
+            todayTextColor: '#2d4150',
+            arrowColor: '#00FF66'
+          }}
+        />
         </View>
-      </View>
     </View>
   );
 };

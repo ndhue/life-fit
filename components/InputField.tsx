@@ -6,18 +6,20 @@ type InputFieldProps = {
   label: string;
   subLabel?: string;
   placeholder?: string;
-  type?: string;
+  secure?: boolean;
   value?: string;
+  onPress?: () => void;
+  editable?: boolean;
 }
 
-const InputField = ({ label, subLabel, placeholder, type, value }: InputFieldProps) => {
+const InputField = ({ label, subLabel, placeholder, secure, value, onPress, editable }: InputFieldProps) => {
   return (
     <View style={{ paddingVertical: 6 }}>
       <Text style={styles.inputLabel}>
         {label}
         <Text style={styles.subLabel}>{subLabel}</Text>
       </Text>
-      <TextInput style={styles.input} placeholder={placeholder} placeholderTextColor={'#c8c8c8'} />
+      <TextInput editable={editable} secureTextEntry={secure} style={styles.input} placeholder={placeholder} placeholderTextColor={'#c8c8c8'} onPressIn={onPress} value={value && value} />
     </View>
   )
 }
@@ -27,7 +29,8 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 7,
     backgroundColor: Colors.background2,
-    border: `2px solid ${Colors.border}`,
+    borderWidth: 2,
+    borderColor: Colors.border,
     paddingHorizontal: 15
   },
   inputLabel: {

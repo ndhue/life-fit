@@ -1,24 +1,20 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { FontAwesome5, FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import Colors from '../../constants/Colors';
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
 
 export default function TabLayout() {
   return (
     <Tabs screenOptions={{
       tabBarStyle: {
         backgroundColor: 'black',
-        height: '10%'
+        height: 90,
+      },
+      tabBarItemStyle: {
+        display: 'flex',
+        flexDirection: 'column',
       },
       tabBarLabelStyle: {
         fontSize: 12,
-        paddingBottom: 10
       },
       tabBarActiveTintColor: Colors.primary
     }}>
@@ -27,7 +23,7 @@ export default function TabLayout() {
         options={{
           title: 'Hoạt động',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="header" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome5 name="file-medical-alt" color={color} size={25} />,
         }}
       />
       <Tabs.Screen
@@ -35,7 +31,7 @@ export default function TabLayout() {
         options={{
           title: 'Sức khỏe',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="info" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome5 name="book-medical" color={color} size={25} />,
         }}
       />
       <Tabs.Screen
@@ -43,7 +39,7 @@ export default function TabLayout() {
         options={{
           title: 'Trang chủ',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <AntDesign name="home" color={color} size={25} />,
         }}
       />
       <Tabs.Screen
@@ -51,7 +47,7 @@ export default function TabLayout() {
         options={{
           title: 'Cài đặt',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="gear" color={color} size={25} />,
         }}
       />
       <Tabs.Screen
@@ -59,7 +55,7 @@ export default function TabLayout() {
         options={{
           title: 'Hồ sơ',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="image" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="user" color={color} size={25} />,
         }}
       />
     </Tabs>

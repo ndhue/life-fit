@@ -1,15 +1,17 @@
-import { View } from "react-native";
+import { Button, View } from "react-native";
 import HomeHeader from "../../components/HomeHeader";
 import ActivityContainer from "../../components/ActivityContainer";
 import { global } from "../../constants/Styles";
+import { router } from "expo-router";
 
 let texts: string[] = ["Giảm 20 calo", "Chạy 200 bước"];
 
 export default function TabHomeScreen() {
   return (
-    <View style={[global.wrapper, { paddingTop: 0}]}>
+    <View style={global.wrapper}>
       <HomeHeader />
-      <View style={[global.container, { overflowY: 'auto', justifyContent: 'flex-start' }]}>
+      <Button onPress={() => router.push('/signup')} title="hi" />
+      <View style={[global.container, { overflowY: 'auto', justifyContent: 'flex-start', paddingTop: 20 }]}>
         <ActivityContainer title='Hoạt động' text={texts} />
         <ActivityContainer title='Hoạt động' text={texts} />
         <ActivityContainer title='Hoạt động' text={texts} />

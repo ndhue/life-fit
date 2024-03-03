@@ -3,12 +3,11 @@ import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { global } from "../constants/Styles";
 import Colors from "../constants/Colors";
 import Header from "../components/Header";
-import Button from "../components/Button";
 
 const WaterTracker = () => {
   return (
     <View style={global.wrapper}>
-      <Header title="Mục tiêu của tôi" />
+      <Header title="Mục tiêu của tôi" main={true} />
       <View style={global.container}>
         <View style={styles.water}>
           <Text style={styles.number}>8</Text>

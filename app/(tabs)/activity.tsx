@@ -3,14 +3,14 @@ import { global } from "../../constants/Styles";
 import Header from "../../components/Header";
 import Colors from "../../constants/Colors";
 import Button from "../../components/Button";
-import { useNavigation } from "expo-router";
+import { router } from 'expo-router';
 
 export default function TabActivityScreen() {
-  const navigation = useNavigation();
 
-  const navigateToWaterTracker = () => {
-    // Navigate to the "water-tracker" screen within the "activity" tab
+  const navigateTo = (route: string) => {
+    router.push(route);
   };
+
   return (
     <View style={global.wrapper}>
       <Header title="Hoạt động của tôi" />
@@ -33,7 +33,7 @@ export default function TabActivityScreen() {
                 <Text style={styles.subTitle}>Chế độ dinh dưỡng</Text>
                 <Text style={styles.note}>note something</Text>
               </View>
-              <Button title="Xem" variant="secondary" />
+              <Button title="Xem" variant="secondary" onPress={() => navigateTo('/eating-schedule')} />
             </View>
             <Text>Image</Text>
           </View>
@@ -57,7 +57,7 @@ export default function TabActivityScreen() {
                 <Text style={styles.subTitle}>Nhắc nhở uống nước</Text>
                 <Text style={styles.note}>note something</Text>
               </View>
-              <Button title="Xem" variant="secondary" onPress={navigateToWaterTracker} />
+              <Button title="Xem" variant="secondary" onPress={() => navigateTo('/water-tracker')} />
             </View>
             <Image source={require('../../assets/images/water-drop.png')} />
           </View>
@@ -81,7 +81,7 @@ export default function TabActivityScreen() {
                 <Text style={styles.subTitle}>Chu kì kinh nguyệt</Text>
                 <Text style={styles.note}>note something</Text>
               </View>
-              <Button title="Xem" variant="secondary" />
+              <Button title="Xem" variant="secondary" onPress={() => navigateTo('/period-tracker')} />
             </View>
             <Image source={require('../../assets/images/flower.png')} />
           </View>

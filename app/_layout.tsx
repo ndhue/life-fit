@@ -3,6 +3,8 @@ import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
+import store from '../redux/store';
+import { Provider } from 'react-redux';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,17 +46,21 @@ export default function RootLayout() {
 function RootLayoutNav() {
 
   return (
-    <ThemeProvider value={DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="signin" options={{ headerShown: false }} />
-        <Stack.Screen name="signup" options={{ headerShown: false }} />
-        <Stack.Screen name="confirm" options={{ headerShown: false }} />
-        <Stack.Screen name="forget-password" options={{ headerShown: false }} />
-        <Stack.Screen name="new-password" options={{ headerShown: false }} />
-        <Stack.Screen name="water-tracker" options={{ headerShown: false }} />
-        <Stack.Screen name="period-tracker" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider value={DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="signin" options={{ headerShown: false }} />
+          <Stack.Screen name="signup" options={{ headerShown: false }} />
+          <Stack.Screen name="confirm" options={{ headerShown: false }} />
+          <Stack.Screen name="forget-password" options={{ headerShown: false }} />
+          <Stack.Screen name="new-password" options={{ headerShown: false }} />
+          <Stack.Screen name="water-tracker" options={{ headerShown: false }} />
+          <Stack.Screen name="period-tracker" options={{ headerShown: false }} />
+          <Stack.Screen name="edit-period" options={{ headerShown: false }} />
+          <Stack.Screen name="eating-schedule" options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+    </Provider>
   );
 }

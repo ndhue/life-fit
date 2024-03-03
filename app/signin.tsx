@@ -3,24 +3,27 @@ import { Text, View } from "react-native";
 import { global } from "../constants/Styles";
 import Colors from "../constants/Colors";
 import InputField from "../components/InputField";
+import LargeButton from "../components/LargeButton";
+import { router } from "expo-router";
 
 const SignIn = () => {
   return (
-    <View style={[global.container, { backgroundColor: Colors.background }]}>
+    <View style={[global.container, { backgroundColor: 'white', justifyContent: 'center' }]}>
       <View
         style={{
           width: 393,
-          height: 540,
+          height: 440,
           borderRadius: 20,
           paddingVertical: 20,
           paddingHorizontal: 10,
+          backgroundColor: Colors.primary,
         }}
       >
         <Text
           style={{
             textAlign: "center",
-            fontSize: 36,
-            fontWeight: "600",
+            fontSize: 42,
+            fontWeight: "700",
           }}
         >
           LifeFit
@@ -33,10 +36,13 @@ const SignIn = () => {
         >
           Đăng nhập
         </Text>
-        <View style={{ paddingVertical: 20 }}>
-          <InputField label="Email" placeholder="Tài khoản email của bạn" />
-          <InputField label="Mật khẩu" />
+        <View style={{ padding: 20}}>
+          <InputField label="EMAIL" placeholder="Tài khoản email của bạn" />
+          <InputField secure={true} label="MẬT KHẨU" placeholder="Mật khẩu của bạn" />
+          <Text style={{ color:'grey' }}>Quên mật khẩu?</Text>
         </View>
+        <View style={{ paddingHorizontal: 70, paddingVertical: 8 }}><LargeButton title="ĐĂNG NHẬP" variant="primary" /></View>
+        <Text style={{ textAlign: 'center', color:'grey' }} onPress={() => router.push('/signup')}>Chưa có tài khoản? Đăng kí ngay</Text>
       </View>
     </View>
   );
