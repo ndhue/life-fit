@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.EXPO_APP_BASE_URL
+    baseUrl: process.env.EXPO_PUBLIC_API_URL
   }),
   reducerPath: 'adminApi',
   tagTypes: [],
@@ -12,11 +12,14 @@ export const api = createApi({
         url: '/login',
         method: 'POST',
         body: loginData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }),
     }),
     signUp: build.mutation({
       query: (userData) => ({
-        url: '/signup',
+        url: '/register',
         method: 'POST',
         body: userData,
       }),

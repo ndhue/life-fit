@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, View, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
 import Colors from '../constants/Colors';
 
 type InputFieldProps = {
@@ -10,16 +10,53 @@ type InputFieldProps = {
   value?: string;
   onPress?: () => void;
   editable?: boolean;
+  onChangeText?: () => void;
 }
 
-const InputField = ({ label, subLabel, placeholder, secure, value, onPress, editable }: InputFieldProps) => {
+const InputField = ({ label, subLabel, placeholder, secure, value, onPress, editable, onChangeText }: InputFieldProps) => {
+  const handleTapOutside = () => {
+    Keyboard.dismiss(); // Dismiss the keyboard when tapped outside
+  };
+  
   return (
-    <View style={{ paddingVertical: 6 }}>
-      <Text style={styles.inputLabel}>
-        {label}
-        <Text style={styles.subLabel}>{subLabel}</Text>
-      </Text>
-      <TextInput editable={editable} secureTextEntry={secure} style={styles.input} placeholder={placeholder} placeholderTextColor={'#c8c8c8'} onPressIn={onPress} value={value && value} />
+    <View>
+    {Platform.OS === 'ios' || Platform.OS === 'android' ? (
+      <TouchableWithoutFeedback onPress={handleTapOutside}>
+        <View style={{ paddingVertical: 6 }}>
+          <Text style={styles.inputLabel}>
+            {label}
+            <Text style={styles.subLabel}>{subLabel}</Text>
+          </Text>
+          <TextInput 
+            editable={editable} 
+            secureTextEntry={secure} 
+            style={styles.input} 
+            placeholder={placeholder} 
+            placeholderTextColor={'#c8c8c8'} 
+            onPressIn={onPress} 
+            value={value && value}
+            onChangeText={onChangeText}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    ) : (
+      <View style={{ paddingVertical: 6 }}>
+          <Text style={styles.inputLabel}>
+            {label}
+            <Text style={styles.subLabel}>{subLabel}</Text>
+          </Text>
+          <TextInput 
+            editable={editable} 
+            secureTextEntry={secure} 
+            style={styles.input} 
+            placeholder={placeholder} 
+            placeholderTextColor={'#c8c8c8'} 
+            onPressIn={onPress} 
+            value={value && value}
+            onChangeText={onChangeText}
+          />
+        </View>
+    )}
     </View>
   )
 }

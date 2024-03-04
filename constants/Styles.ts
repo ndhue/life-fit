@@ -28,4 +28,8 @@ export const global = StyleSheet.create({
     fontSize: 16,
     paddingBottom: 11
   },
+  error: {
+    fontSize: 12,
+    color: 'red'
+  }
 });
