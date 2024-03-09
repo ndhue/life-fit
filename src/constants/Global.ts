@@ -1,9 +1,15 @@
 import { StyleSheet } from "react-native";
-import Colors from "./Colors";
+
+export const bg = { uri: "https://res.cloudinary.com/dpb8gwksd/image/upload/v1709954083/background_zpgxtb.png" }
 
 export const global = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    width: '100%',
+    height: '100%'
+  },
   wrapper: {
-    backgroundColor: Colors.background,
     height: "100%",
   },
   container: {
@@ -30,6 +36,7 @@ export const global = StyleSheet.create({
   },
   error: {
     fontSize: 12,
-    color: 'red'
+    color: 'red',
+    paddingTop: 5
   }
 });

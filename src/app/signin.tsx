@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View, KeyboardAvoidingView, Platform } from "react-native";
 import { router } from "expo-router";
 import * as yup from 'yup';
@@ -12,9 +12,19 @@ import { useAuthLoginMutation } from "../controllers/api";
 import { UserLogin } from "../types/user";
 import { doSaveUser } from "../redux/slices/authSlice";
 import { useAppDispatch } from "../redux/store";
+import Toast from "react-native-toast-message";
+import { save } from "../controllers/secureStore";
 
 const SignIn = () => {
+  const showToast = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Sign in successfully',
+      text2: 'This is some something 👋'
+    });
+  }
   const dispatch = useAppDispatch();
+  const [isLoading, setIsloading] = useState(false);
   
   const schema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Email is required'),
@@ -33,17 +43,24 @@ const SignIn = () => {
     }
   });
   
-  const [authLogin, { isLoading }] = useAuthLoginMutation();
+  const [authLogin] = useAuthLoginMutation();
 
   const onSubmit = async (data: UserLogin) => {
+    setIsloading(true);
     try {
       const result = await authLogin(data);
-      const { userId } = result?.data;
-      dispatch(doSaveUser({ userId }));
-      console.log('SignIn successful:', result);
-      
-      router.push('/');
+      const { token } = result?.data;
+      if (token) {
+        setIsloading(false);
+        showToast();
+        dispatch(doSaveUser({ token }));
+        if (Platform.OS === 'android' || Platform.OS === 'ios') {
+          save(token);
+        }
+        router.push('/');
+      }
     } catch (error) {
+      setIsloading(false);
       console.error('SignIn failed:', error);
     }
   }; 
@@ -100,6 +117,7 @@ const SignIn = () => {
           </View>
           <View style={{ paddingHorizontal: 70, paddingVertical: 8 }}>
             <LargeButton 
+              loading={isLoading}
               title="ĐĂNG NHẬP"
               variant="primary" 
               onPress={handleSubmit(onSubmit)}

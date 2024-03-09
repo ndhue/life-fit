@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { global } from "../../constants/Global";
+import { bg, global } from "../../constants/Global";
 import Header from "../../components/Header";
+import LargeButton from "../../components/LargeButton";
+import { router } from "expo-router";
 
 const EatingSchedule = () => {
   const [selectedDate, setSelectedDate] = useState('2024-03-08');
@@ -23,31 +25,40 @@ const EatingSchedule = () => {
   }, [])
 
   return (
-    <View style={global.wrapper}>
-      <Header title="Chế độ ăn" route="/activity" main={true} />
-      <View style={global.container}>
-        <View style={styles.circle}>
-          <View style={styles.line}>
-            <View style={styles.summarized}>
-              <Text style={styles.text1}>Mục tiêu:</Text>
-              <Text style={styles.text2}>500 kalo/ngày</Text>
+    <ImageBackground 
+      source={bg} 
+      style={global.backgroundImage}
+      resizeMode='cover'
+    >
+      <View style={global.wrapper}>
+        <Header title="Chế độ ăn" route="/activity" main={true} />
+        <View style={global.container}>
+          <View style={styles.circle}>
+            <View style={styles.line}>
+              <View style={styles.summarized}>
+                <Text style={styles.text1}>Mục tiêu:</Text>
+                <Text style={styles.text2}>500 kalo/ngày</Text>
+              </View>
             </View>
           </View>
-        </View>
-        <Calendar
-          onDayPress={day => {
-            handleDateSelect(day.dateString);
-          }}
-          monthFormat={'MM/yyyy'}
-          markedDates={markedDates}
-          style={{ width: 348, marginTop: 20, borderRadius: 10 }}
-          theme={{
-            todayTextColor: '#2d4150',
-            arrowColor: '#00FF66'
-          }}
-        />
-        </View>
-    </View>
+          <View style={{ paddingVertical: 20}}>
+            <LargeButton variant="secondary" title="Đặt mục tiêu mới" onPress={() => router.replace('/activity/eating-target')} />
+          </View>
+          <Calendar
+            onDayPress={day => {
+              handleDateSelect(day.dateString);
+            }}
+            monthFormat={'MM/yyyy'}
+            markedDates={markedDates}
+            style={{ width: 348, marginTop: 20, borderRadius: 10 }}
+            theme={{
+              todayTextColor: '#2d4150',
+              arrowColor: '#00FF66'
+            }}
+          />
+          </View>
+      </View>
+    </ImageBackground>
   );
 };
 

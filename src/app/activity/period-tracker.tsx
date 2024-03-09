@@ -1,59 +1,63 @@
 import React from "react";
-import { Calendar } from "react-native-calendars";
-import { StyleSheet, Text, View } from "react-native";
-import { global } from "../../constants/Global";
-import Colors from "../../constants/Colors";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { bg, global } from "../../constants/Global";
 import Header from "../../components/Header";
 import LargeButton from "../../components/LargeButton";
 import { router } from "expo-router";
 
 const PeriodTracker = () => {
   return (
-    <View style={global.wrapper}>
-      <Header title="Chu kì kinh nguyệt" route="/activity" main={true} />
-      <View style={global.container}>
-        <View style={styles.circle}>
-          <View style={styles.line}>
-            <View style={styles.summarized}>
-              <Text style={styles.text1}>Kỳ kinh:</Text>
-              <Text style={styles.text2}>Ngày 3</Text>
+    <ImageBackground 
+      source={bg} 
+      style={global.backgroundImage}
+      resizeMode='cover'
+    >
+      <View style={global.wrapper}>
+        <Header title="Chu kì kinh nguyệt" route="/activity" main={true} />
+        <View style={global.container}>
+          <View style={styles.circle}>
+            <View style={styles.line}>
+              <View style={styles.summarized}>
+                <Text style={styles.text1}>Kỳ kinh:</Text>
+                <Text style={styles.text2}>Ngày 3</Text>
+              </View>
             </View>
           </View>
-        </View>
-        <View style={{ paddingVertical: 20}}>
-          <LargeButton variant="secondary" title="Chỉnh sửa chu kì" onPress={() => router.replace('/edit-period')} />
-        </View>
-        <View style={styles.info}>
-          <View style={[styles.borderInfo, global.flexBox]}>
-            <View>
-              <Text style={styles.subTitle}>Độ dài chu kì trước</Text>
-              <Text style={styles.subDetail}>36 ngày</Text>
-            </View>
-            <View>
-              <Text style={styles.conclusion}>BẤT THƯỜNG</Text>
-            </View>
+          <View style={{ paddingVertical: 20}}>
+            <LargeButton variant="secondary" title="Chỉnh sửa chu kì" onPress={() => router.replace('/activity/edit-period')} />
           </View>
-          <View style={[styles.borderInfo, global.flexBox]}>
-            <View>
-              <Text style={styles.subTitle}>Độ dài kỳ kinh trước</Text>
-              <Text style={styles.subDetail}>7 ngày</Text>
+          <View style={styles.info}>
+            <View style={[styles.borderInfo, global.flexBox]}>
+              <View>
+                <Text style={styles.subTitle}>Độ dài chu kì trước</Text>
+                <Text style={styles.subDetail}>36 ngày</Text>
+              </View>
+              <View>
+                <Text style={styles.conclusion}>BẤT THƯỜNG</Text>
+              </View>
             </View>
-            <View>
-              <Text style={styles.conclusion}>BÌNH THƯỜNG</Text>
+            <View style={[styles.borderInfo, global.flexBox]}>
+              <View>
+                <Text style={styles.subTitle}>Độ dài kỳ kinh trước</Text>
+                <Text style={styles.subDetail}>7 ngày</Text>
+              </View>
+              <View>
+                <Text style={styles.conclusion}>BÌNH THƯỜNG</Text>
+              </View>
             </View>
-          </View>
-          <View style={[{ paddingVertical: 8 }, global.flexBox]}>
-            <View>
-              <Text style={styles.subTitle}>Thay đổi về độ dài chu kỳ</Text>
-              <Text style={styles.subDetail}>30-40 ngày</Text>
-            </View>
-            <View>
-              <Text style={styles.conclusion}>KHÔNG ĐỀU</Text>
+            <View style={[{ paddingVertical: 8 }, global.flexBox]}>
+              <View>
+                <Text style={styles.subTitle}>Thay đổi về độ dài chu kỳ</Text>
+                <Text style={styles.subDetail}>30-40 ngày</Text>
+              </View>
+              <View>
+                <Text style={styles.conclusion}>KHÔNG ĐỀU</Text>
+              </View>
             </View>
           </View>
         </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 

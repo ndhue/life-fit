@@ -1,15 +1,15 @@
 import React from "react";
-import { View } from "react-native";
+import { ImageBackground, KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from 'react-hook-form';
-import { global } from "../constants/Global";
+import { bg, global } from "../constants/Global";
 import Colors from "../constants/Colors";
 import InputField from "../components/InputField";
 import LargeButton from "../components/LargeButton";
 import { StyleSheet } from "react-native";
 import { useUpdatePasswordMutation } from "../controllers/api";
-import { NewPassword } from "../src/types/user";
+import { NewPassword } from "../types/user";
 
 const UpdatePassword = () => {
   const schema = yup.object().shape({
@@ -41,22 +41,37 @@ const UpdatePassword = () => {
   }; 
 
   return (
-    <View style={global.wrapper}>
-      <View style={global.container}>
-      <View style={styles.fixedContainer}>
-        <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('password', t)} />
-        <InputField label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmpassword', t)} />
-        <View
-          style={[
-            global.flexBox,
-            { justifyContent: "flex-end", paddingTop: 10 },
-          ]}
-        >
-          <LargeButton title="Gửi" variant="primary" onPress={handleSubmit(onSubmit)} />
+    <KeyboardAvoidingView
+      behavior={
+        Platform.OS === "ios" || Platform.OS === "android"
+          ? "padding"
+          : "height"
+      }
+      style={{ flex: 1 }}
+    >
+    <ImageBackground 
+      source={bg} 
+      style={global.backgroundImage}
+      resizeMode='cover'
+    >
+      <View style={global.wrapper}>
+        <View style={global.container}>
+        <View style={styles.fixedContainer}>
+        <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
+          <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('password', t)} />
+          {errors.password && <Text style={global.error}>{errors.password.message}</Text>}
+          
+          <InputField label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmpassword', t)} />
+          {errors.confirmpassword && <Text style={global.error}>{errors.confirmpassword.message}</Text>}
+          <View style={{ marginTop: 30 }}>
+            <LargeButton title="Gửi" variant="primary" onPress={handleSubmit(onSubmit)} />
+          </View>
+          </View>
+        </View>
         </View>
       </View>
-      </View>
-    </View>
+    </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
@@ -68,8 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   fixedContainer: {
-    position: 'fixed',
-    height: 552,
+    position: 'absolute',
     width: '100%',
     backgroundColor: 'white',
     borderStartStartRadius: 40,

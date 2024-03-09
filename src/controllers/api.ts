@@ -18,11 +18,34 @@ export const api = createApi({
         },
       }),
     }),
+    // register
     signUp: build.mutation({
       query: (userData) => ({
         url: '/register',
         method: 'POST',
         body: userData,
+      }),
+    }),
+    accountAuthen: build.mutation({
+      query: (data) => ({
+        url: '/otpaccount',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    saveAccount: build.mutation({
+      query: (data) => ({
+        url: '/saveInfor',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    // Set up profile
+    setUpProfile: build.mutation({
+      query: (data) => ({
+        url: '/inforprofile',
+        method: 'POST',
+        body: data,
       }),
     }),
     // Reset Password
@@ -86,12 +109,16 @@ export const api = createApi({
         body: data,
       })
     }),
+    // Period
   })
 })
 
 export const { 
   useAuthLoginMutation,
   useSignUpMutation,
+  useAccountAuthenMutation,
+  useSaveAccountMutation,
+  useSetUpProfileMutation,
   useSendOtpMutation,
   useAuthOtpMutation,
   useUpdatePasswordMutation,

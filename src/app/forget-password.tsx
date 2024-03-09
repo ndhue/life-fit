@@ -1,21 +1,18 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState } from "react";
+import { View, Text, ImageBackground, KeyboardAvoidingView, Platform } from "react-native";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from 'react-hook-form';
-import { global } from "../constants/Global";
+import { bg, global } from "../constants/Global";
 import Colors from "../constants/Colors";
-import Button from "../components/Button";
 import InputField from "../components/InputField";
 import { useSendOtpMutation } from "../controllers/api";
 import { router } from "expo-router";
-import { useDispatch } from "react-redux";
-import { doSaveEmail } from "../redux/slices/authSlice";
 import { StyleSheet } from "react-native";
 import LargeButton from "../components/LargeButton";
 
 const ForgetPassword = () => {
-  const dispatch = useDispatch();
+  const [isLoading, setIsloading] = useState(false);
 
   const schema = yup.object().shape({
     email: yup.string().email('Email không hợp lệ').required('Email không được để trống'),
@@ -32,38 +29,58 @@ const ForgetPassword = () => {
     }
   });
 
-  const [sendOtp, { isLoading }] = useSendOtpMutation();
+  const [sendOtp] = useSendOtpMutation();
 
   const onSubmit = async (data: { email: string }) => {
+    setIsloading(true);
     try {
       const result = await sendOtp(data);
-      dispatch(doSaveEmail(data.email));
-      
-      console.log('Send otp successful:', result);
-      
-      router.push('/confirm');
+      if(result?.data) {
+        setIsloading(false);
+        router.push('/confirm');
+      }
     } catch (error) {
+      setIsloading(false);
       console.error('Send otp failed:', error);
     }
   }; 
 
 
   return (
-    <View style={global.wrapper}>
-      <View style={global.container}>
-        <View style={styles.fixedContainer}>
-          <InputField label="EMAIL" placeholder="Tài khoản email của bạn" onChangeText={text => setValue('email', text)} />
-          {errors.email && <Text style={global.error}>{errors.email.message}</Text>}
-          <View>
-          <LargeButton 
-            title="Gửi" 
-            variant="primary" 
-            onPress={handleSubmit(onSubmit)}
-            />
+    <KeyboardAvoidingView
+      behavior={
+        Platform.OS === "ios" || Platform.OS === "android"
+          ? "padding"
+          : "height"
+      }
+      style={{ flex: 1 }}
+    >
+
+      <ImageBackground 
+        source={bg} 
+        style={global.backgroundImage}
+        resizeMode='cover'
+      >
+        <View style={global.wrapper}>
+          <View style={global.container}>
+            <View style={styles.fixedContainer}>
+            <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
+              <InputField label="EMAIL" placeholder="Tài khoản email của bạn" onChangeText={text => setValue('email', text)} />
+              {errors.email && <Text style={global.error}>{errors.email.message}</Text>}
+              <View style={{ marginTop: 30 }}>
+              <LargeButton 
+                loading={isLoading}
+                title="Gửi" 
+                variant="primary" 
+                onPress={handleSubmit(onSubmit)}
+                />
+              </View>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
-    </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -76,8 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   fixedContainer: {
-    position: 'fixed',
-    height: 552,
+    position: 'absolute',
     width: '100%',
     backgroundColor: 'white',
     borderStartStartRadius: 40,

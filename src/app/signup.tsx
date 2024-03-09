@@ -12,6 +12,7 @@ import InputField from "../components/InputField";
 import LargeButton from "../components/LargeButton";
 import Button from "../components/Button";
 import { UserRegister } from "../types/user";
+import * as SplashScreen from 'expo-splash-screen';
 
 const SignUp = () => {
   const [date, setDate] = useState(new Date());
@@ -24,8 +25,7 @@ const SignUp = () => {
 
   const onChange = ({ type }, selectedDate: Date) => {
     if (type == 'set') {
-      const currentDate = selectedDate;
-      setDate(currentDate);
+      setDate(selectedDate);
     } else {
       toggleDatePicker();
     }
@@ -65,14 +65,20 @@ const SignUp = () => {
     }
   });
 
-  const [signUp, { isLoading }] = useSignUpMutation();
+  const [signUp] = useSignUpMutation();
+  const [isLoading, setIsloading] = useState(false);
   
   const onSubmit = async (data: UserRegister) => {
+    setIsloading(true);
     try {
       const result = await signUp(data);
-      console.log('SignUp successful:', result);
-      router.push('/signin');
+      console.log('SignUp successful:', result); 
+      if (result?.data) {
+        setIsloading(false);
+        router.push('/account-auth');
+      }
     } catch (error) {
+      setIsloading(false);
       console.error('SignUp failed:', error);
     }
   }; 
@@ -183,7 +189,8 @@ const SignUp = () => {
             </View>
           </View>
           <View style={{ paddingHorizontal: 70, paddingVertical: 8 }}>
-            <LargeButton 
+            <LargeButton
+              loading={isLoading} 
               title="ĐĂNG KÍ" 
               variant="primary" 
               onPress={handleSubmit(onSubmit)} />

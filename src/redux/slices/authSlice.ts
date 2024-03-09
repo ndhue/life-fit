@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  userId: "",
+  token: "",
   email: "",
 }
 
@@ -9,7 +9,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     doSaveUser: (state, action) => {
-      state.userId = action.payload.userId
+      state.token = action.payload.token
     },
     doSaveEmail: (state, action) => {
       state.email = action.payload.email

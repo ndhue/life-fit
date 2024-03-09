@@ -11,7 +11,7 @@ type HeaderProps = {
   main?: boolean;
 };
 
-const Header = ({ main, title, edit }: HeaderProps) => {
+const Header = ({ main, title, edit, route }: HeaderProps) => {
   return (
     <View
       style={[
@@ -23,7 +23,7 @@ const Header = ({ main, title, edit }: HeaderProps) => {
         },
       ]}
     >
-      {main ? <AntDesign name="arrowleft" size={25} color="#FFD43B" onPress={() => router.back()} /> : <View style={{width: 20}}/>}
+      {main ? <AntDesign name="arrowleft" size={25} color="#FFD43B" onPress={() => router.push(route)} /> : <View style={{width: 20}}/>}
       <Text style={global.title}>{title}</Text>
       {edit 
       ? 

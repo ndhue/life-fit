@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import { global } from "../../../constants/Global";
+import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
+import { bg, global } from "../../../constants/Global";
 import Header from "../../../components/Header";
 import Colors from "../../../constants/Colors";
 import Button from "../../../components/Button";
@@ -12,83 +12,89 @@ export default function TabActivityScreen() {
   };
 
   return (
+    <ImageBackground 
+      source={bg} 
+      style={global.backgroundImage}
+      resizeMode='cover'
+    >
     <View style={global.wrapper}>
-      <Header title="Hoạt động của tôi" />
-      <View style={global.container}>
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: Colors.border,
-            borderRadius: 15,
-            backgroundColor: Colors.background2,
-            width: 350,
-            height: 120,
-            padding: 10,
-            marginVertical: 12,
-          }}
-        >
-          <View style={[global.flexBox, { padding: 5 }]}>
-            <View>
-              <View style={{ paddingBottom: 10 }}>
-                <Text style={styles.subTitle}>Chế độ dinh dưỡng</Text>
-                <Text style={styles.note}>note something</Text>
+        <Header title="Hoạt động của tôi" />
+        <View style={global.container}>
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.border,
+              borderRadius: 15,
+              backgroundColor: Colors.background2,
+              width: 350,
+              height: 120,
+              padding: 10,
+              marginVertical: 12,
+            }}
+          >
+            <View style={[global.flexBox, { padding: 5 }]}>
+              <View>
+                <View style={{ paddingBottom: 10 }}>
+                  <Text style={styles.subTitle}>Chế độ dinh dưỡng</Text>
+                  <Text style={styles.note}>note something</Text>
+                </View>
+                <Button title="Xem" variant="secondary" onPress={() => navigateTo('/activity/eating-schedule')} />
               </View>
-              <Button title="Xem" variant="secondary" onPress={() => navigateTo('/activity/eating-schedule')} />
+              <Text>Image</Text>
             </View>
-            <Text>Image</Text>
           </View>
-        </View>
 
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: Colors.border,
-            borderRadius: 15,
-            backgroundColor: Colors.background2,
-            width: 350,
-            height: 120,
-            padding: 10,
-            marginVertical: 12,
-          }}
-        >
-          <View style={[global.flexBox, { padding: 5 }]}>
-            <View>
-              <View style={{ paddingBottom: 10 }}>
-                <Text style={styles.subTitle}>Nhắc nhở uống nước</Text>
-                <Text style={styles.note}>note something</Text>
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.border,
+              borderRadius: 15,
+              backgroundColor: Colors.background2,
+              width: 350,
+              height: 120,
+              padding: 10,
+              marginVertical: 12,
+            }}
+          >
+            <View style={[global.flexBox, { padding: 5 }]}>
+              <View>
+                <View style={{ paddingBottom: 10 }}>
+                  <Text style={styles.subTitle}>Nhắc nhở uống nước</Text>
+                  <Text style={styles.note}>note something</Text>
+                </View>
+                <Button title="Xem" variant="secondary" onPress={() => navigateTo('/activity/water-tracker')} />
               </View>
-              <Button title="Xem" variant="secondary" onPress={() => navigateTo('/activity/water-tracker')} />
+              <Image source={require('../../../assets/images/water-drop.png')} />
             </View>
-            <Image source={require('../../../assets/images/water-drop.png')} />
           </View>
-        </View>
 
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: Colors.border,
-            borderRadius: 15,
-            backgroundColor: Colors.background2,
-            width: 350,
-            height: 120,
-            padding: 10,
-            marginVertical: 12,
-          }}
-        >
-          <View style={[global.flexBox, { padding: 5 }]}>
-            <View>
-              <View style={{ paddingBottom: 10 }}>
-                <Text style={styles.subTitle}>Chu kì kinh nguyệt</Text>
-                <Text style={styles.note}>note something</Text>
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.border,
+              borderRadius: 15,
+              backgroundColor: Colors.background2,
+              width: 350,
+              height: 120,
+              padding: 10,
+              marginVertical: 12,
+            }}
+          >
+            <View style={[global.flexBox, { padding: 5 }]}>
+              <View>
+                <View style={{ paddingBottom: 10 }}>
+                  <Text style={styles.subTitle}>Chu kì kinh nguyệt</Text>
+                  <Text style={styles.note}>note something</Text>
+                </View>
+                <Button title="Xem" variant="secondary" onPress={() => navigateTo('/activity/period-tracker')} />
               </View>
-              <Button title="Xem" variant="secondary" onPress={() => navigateTo('/activity/period-tracker')} />
+              <Image source={require('../../../assets/images/flower.png')} />
             </View>
-            <Image source={require('../../../assets/images/flower.png')} />
           </View>
-        </View>
 
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 

@@ -11,17 +11,26 @@ import {
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { bg, global } from "../constants/Global";
-import Colors from "../constants/Colors";
-import { useAuthOtpMutation, useSendOtpMutation } from "../controllers/api";
-import { useAppSelector } from "../redux/store";
-import LargeButton from "../components/LargeButton";
+import { bg, global } from "../../constants/Global";
+import Colors from "../../constants/Colors";
+import { useAccountAuthenMutation } from "../../controllers/api";
+import { useAppSelector } from "../../redux/store";
+import LargeButton from "../../components/LargeButton";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 
-const Confirm = () => {
+const AccountAuthent = () => {
+  const showToast = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Your account is authorized',
+      text2: 'This is some something 👋'
+    });
+  }
   const [seconds, setSeconds] = useState(60);
   const [disabled, setDisabled] = useState(true);
   const [isLoading, setIsloading] = useState(false);
+
   const email = useAppSelector((state) => state.auth.email);
 
   useEffect(() => {
@@ -54,33 +63,33 @@ const Confirm = () => {
       otp: "",
     },
   });
-
-  const [authOtp] = useAuthOtpMutation();
-  const [sendOtp] = useSendOtpMutation();
+  
+  const [accountAuthen] = useAccountAuthenMutation();
 
   const onSubmit = async () => {
-    setIsloading(true);
     try {
       setSeconds(60);
       setDisabled(false);
-      const result = await sendOtp({ email });
-      if(result?.data) {
-        setIsloading(false);
-        router.push('/new-password');
-      }
+      const result = await accountAuthen({ email });
+      console.log("Send otp successful:", result);
     } catch (error) {
-      setIsloading(false);
       console.error("Send otp failed:", error);
     }
   };
 
   const onSubmitAuth = async (data: { otp: string }) => {
+    setIsloading(true);
     try {
       setSeconds(60);
       setDisabled(false);
-      const result = await authOtp(data);
-      console.log("Auth otp successful:", result);
+      const result = await accountAuthen(data);
+      if (result?.data) {
+        showToast();
+        setIsloading(false);
+        router.push('/set-up-profile');
+      }
     } catch (error) {
+      setIsloading(false);
       console.error("Auth otp failed:", error);
     }
   };
@@ -149,6 +158,7 @@ const Confirm = () => {
                   </View>
                 <View style={{ marginTop: 30 }}>
                   <LargeButton
+                    loading={isLoading}
                     disabled={!disabled || getValues("otp").length < 6}
                     title="XÁC NHẬN"
                     variant="primary"
@@ -174,7 +184,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   fixedContainer: {
-    position: "absolute",
+    position: "fixed",
     width: "100%",
     backgroundColor: "white",
     borderStartStartRadius: 40,
@@ -188,4 +198,4 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 });
-export default Confirm;
+export default AccountAuthent;

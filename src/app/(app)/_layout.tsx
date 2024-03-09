@@ -7,11 +7,12 @@ export default function TabLayout() {
     <Tabs screenOptions={{
       tabBarStyle: {
         backgroundColor: 'black',
-        height: 90,
+        height: 100
       },
       tabBarItemStyle: {
         display: 'flex',
         flexDirection: 'column',
+        paddingVertical: 5
       },
       tabBarLabelStyle: {
         fontSize: 12,
