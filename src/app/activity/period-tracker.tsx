@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
   info: {
-    width: 348,
+    width: '90%',
     position: 'relative',
-    borderRadius: 20,
+    borderRadius: 10,
     backgroundColor: 'white',
     padding: 20,
   },

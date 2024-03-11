@@ -12,7 +12,6 @@ import InputField from "../components/InputField";
 import LargeButton from "../components/LargeButton";
 import Button from "../components/Button";
 import { UserRegister } from "../types/user";
-import * as SplashScreen from 'expo-splash-screen';
 
 const SignUp = () => {
   const [date, setDate] = useState(new Date());
@@ -32,11 +31,11 @@ const SignUp = () => {
   }
 
   const confirmDate = () => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    const formattedDate = `${year}/${month}/${day}`;
+    const formattedDate = new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
     setDateValue(formattedDate)
     setValue('birthday', formattedDate)
     toggleDatePicker();
@@ -75,7 +74,9 @@ const SignUp = () => {
       console.log('SignUp successful:', result); 
       if (result?.data) {
         setIsloading(false);
-        router.push('/account-auth');
+        setTimeout(() => {
+          router.push('/account-auth');
+        }, 2000);
       }
     } catch (error) {
       setIsloading(false);

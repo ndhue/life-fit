@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import {
   Dimensions,
@@ -6,174 +6,227 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { bg, global } from "../../constants/Global";
 import Colors from "../../constants/Colors";
 import Header from "../../components/Header";
+import LargeButton from "../../components/LargeButton";
+import { useSetWaterGoalMutation } from "../../controllers/api";
+import { useAppSelector } from "../../redux/store";
+import { showToastErrorSetGoal, showToastSuccessSetGoal } from "../../toast/toaster";
+import { router } from "expo-router";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "../../toast/config/toastConfig";
 
 const EditWaterTracker = () => {
-  const [selectedOption, setSelectedOption] = useState(0);
-  const pickerRef = useRef();
+  const { token } = useAppSelector((state) => state.auth);
+  const [watergoal, setSelectedOption] = useState(0);
+  const [goal, setGoal] = useState(0);
+  const [target, setTarget] = useState(0);
+  const [isLoading, setIsloading] = useState(false);
 
-  const open = () => {
-    pickerRef.current.focus();
-  };
+  const handleChangeTarget = (target: number) => {
+    setTarget(target);
+    setGoal(target);
+    setSelectedOption(target*200);
+  }
 
-  const close = () => {
-    pickerRef.current.blur();
-  };
+  const [setWaterGoal] = useSetWaterGoalMutation();
+
+  const handleSubmit = async () => {
+    const dategoal = new Date();
+    const data = { watergoal, dategoal };
+    setIsloading(true);
+    try {
+      const result = await setWaterGoal({data, token});
+      console.log("water goal successful:", result);
+      if (result?.data) {
+        setIsloading(false);
+        showToastSuccessSetGoal();
+        setTimeout(() => {
+          router.replace("/activity/water-tracker");
+        }, 1000);
+      } else {
+        setIsloading(false);
+        showToastErrorSetGoal();
+      }
+    } catch (error) {
+      setIsloading(false);
+      showToastErrorSetGoal();
+    }
+  }
+  
   return (
-    <ImageBackground
-      source={bg}
-      style={global.backgroundImage}
-      resizeMode="cover"
-    >
-      <View style={global.wrapper}>
-        <Header
-          title="Mục tiêu của tôi"
-          main={true}
-          route="/activity/water-tracker"
-        />
-        <View style={global.container}>
-          <View style={styles.water}>
-            <Text style={styles.number}>8</Text>
-          </View>
-          <View style={{ paddingVertical: 20 }}>
-            <Picker
-              ref={pickerRef}
-              selectedValue={selectedOption}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedOption(itemValue)
-              }
-              style={styles.picker}
-            >
-              <Picker.Item
-                style={styles.pickerOption}
-                label="4 ly (800ml)"
-                value="800"
-              />
-              <Picker.Item
-                style={styles.pickerOption}
-                label="6 ly (1200ml)"
-                value="1200"
-              />
-              <Picker.Item
-                style={styles.pickerOption}
-                label="8 ly (1600ml)"
-                value="1600"
-              />
-              <Picker.Item
-                style={styles.pickerOption}
-                label="10 ly (2000ml)"
-                value="2000"
-              />
-              <Picker.Item
-                style={styles.pickerOption}
-                label="12 ly (2400ml)"
-                value="2400"
-              />
-            </Picker>
-          </View>
-        </View>
-        <View style={styles.fixedContainer}>
-          <View
-            style={{
-              height: 5,
-              width: 60,
-              backgroundColor: Colors.primary,
-              position: "absolute",
-              left: Dimensions.get("window").width / 2 - 25,
-              top: 10,
-            }}
+    <>
+      <ImageBackground
+        source={bg}
+        style={global.backgroundImage}
+        resizeMode="cover"
+      >
+        <View style={global.wrapper}>
+          <Header
+            title="Mục tiêu của tôi"
+            main={true}
+            route="/activity/water-tracker"
           />
-          <View
-            style={{
-              marginTop: 30,
-            }}
-          >
-            <Text
+          <View style={global.container}>
+            <View style={styles.water}>
+              <Text style={styles.number}>{goal}</Text>
+            </View>
+            <View style={styles.pickerOverlay}>
+              <Picker
+                selectedValue={watergoal}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedOption(itemValue);
+                  setGoal(Number(itemValue) / 200);
+                }}
+                style={styles.picker}
+              >
+                <Picker.Item
+                  label="4 ly (800ml)"
+                  value="800"
+                />
+                <Picker.Item
+                  label="6 ly (1200ml)"
+                  value="1200"
+                />
+                <Picker.Item
+                  label="8 ly (1600ml)"
+                  value="1600"
+                />
+                <Picker.Item
+                  label="10 ly (2000ml)"
+                  value="2000"
+                />
+                <Picker.Item
+                  label="12 ly (2400ml)"
+                  value="2400"
+                />
+              </Picker>
+            </View>
+
+            <View style={{ paddingVertical: 20 }}>
+              <LargeButton
+                loading={isLoading}
+                variant="secondary"
+                title="Hoàn tất"
+                onPress={handleSubmit}
+              />
+            </View>
+          </View>
+          <View style={styles.fixedContainer}>
+            <View
               style={{
-                fontSize: 20,
-                fontWeight: "700",
-                textAlign: "center",
+                height: 5,
+                width: 60,
+                backgroundColor: Colors.primary,
+                position: "absolute",
+                left: Dimensions.get("window").width / 2 - 25,
+                top: 10,
+              }}
+            />
+            <View
+              style={{
+                marginTop: 30,
               }}
             >
-              Mục tiêu uống nước
-            </Text>
-            <Text
-              style={{
-                color: "#90A5B4",
-                textAlign: "center",
-                paddingTop: 8,
-              }}
-            >
-              Chúng tôi đã chuẩn vị một số mục tiêu cho bạn!
-            </Text>
-            <View style={styles.options}>
-              <View style={styles.option}>
-                <View style={{ padding: 15 }}>
-                  <Text style={styles.optionTitle}>Ngày nóng</Text>
-                  <View style={global.flexBox}>
-                    <Text style={styles.optionTarget}>10 Ly</Text>
-                    <Image
-                      source={require("../../assets/images/coconut.png")}
-                    />
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "700",
+                  textAlign: "center",
+                }}
+              >
+                Mục tiêu uống nước
+              </Text>
+              <Text
+                style={{
+                  color: "#90A5B4",
+                  textAlign: "center",
+                  paddingTop: 8,
+                }}
+              >
+                Chúng tôi đã chuẩn bị một số mục tiêu cho bạn!
+              </Text>
+              <View style={styles.options}>
+                <View style={[styles.option, { borderColor: `${target === 10 ? Colors.border : "#D0DBE2"}` }]}>
+                  <TouchableOpacity onPress={() => handleChangeTarget(10)}>
+                  <View style={{ padding: 15 }}>
+                    <Text style={styles.optionTitle}>Ngày nóng</Text>
+                    <View style={global.flexBox}>
+                      <Text style={styles.optionTarget}>10 Ly</Text>
+                      <Image
+                        source={require("../../assets/images/coconut.png")}
+                      />
+                    </View>
                   </View>
+                  </TouchableOpacity>
                 </View>
-              </View>
 
-              <View style={styles.option}>
-                <View style={{ padding: 15 }}>
-                  <Text style={styles.optionTitle}>Thể thao</Text>
-                  <View style={global.flexBox}>
-                    <Text style={styles.optionTarget}>7 Ly</Text>
-                    <Image
-                      source={require("../../assets/images/basketball.png")}
-                    />
-                  </View>
+                <View style={[styles.option, { borderColor: `${target === 7 ? Colors.border : "#D0DBE2"}` }]}>
+                  <TouchableOpacity onPress={() => handleChangeTarget(7)}>
+                    <View style={{ padding: 15 }}>
+                      <Text style={styles.optionTitle}>Thể thao</Text>
+                      <View style={global.flexBox}>
+                        <Text style={styles.optionTarget}>7 Ly</Text>
+                        <Image
+                          source={require("../../assets/images/basketball.png")}
+                        />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </View>
 
-              <View style={styles.option}>
-                <View style={{ padding: 15 }}>
-                  <Text style={styles.optionTitle}>Ngày lạnh</Text>
-                  <View style={global.flexBox}>
-                    <Text style={styles.optionTarget}>5 Ly</Text>
-                    <Image source={require("../../assets/images/cold.png")} />
-                  </View>
+                <View style={[styles.option, { borderColor: `${target === 5 ? Colors.border : "#D0DBE2"}` }]}>
+                  <TouchableOpacity onPress={() => handleChangeTarget(5)}>
+                    <View style={{ padding: 15 }}>
+                      <Text style={styles.optionTitle}>Ngày lạnh</Text>
+                      <View style={global.flexBox}>
+                        <Text style={styles.optionTarget}>5 Ly</Text>
+                        <Image source={require("../../assets/images/cold.png")} />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </View>
 
-              <View style={styles.option}>
-                <View style={{ padding: 15 }}>
-                  <Text style={styles.optionTitle}>Trẻ em</Text>
-                  <View style={global.flexBox}>
-                    <Text style={styles.optionTarget}>4 Ly</Text>
-                    <Image
-                      source={require("../../assets/images/rainbow.png")}
-                    />
+                <View style={[styles.option, { borderColor: `${target === 4 ? Colors.border : "#D0DBE2"}` }]}>
+                  <TouchableOpacity onPress={() => handleChangeTarget(4)}>
+                  <View style={{ padding: 15 }}>
+                    <Text style={styles.optionTitle}>Trẻ em</Text>
+                    <View style={global.flexBox}>
+                      <Text style={styles.optionTarget}>4 Ly</Text>
+                      <Image
+                        source={require("../../assets/images/rainbow.png")}
+                      />
+                    </View>
                   </View>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
           </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+      <Toast config={toastConfig} />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  picker: {
+  pickerOverlay: {
+    marginVertical: 10,
     borderColor: Colors.border,
     borderRadius: 8,
-    width: 240,
-    padding: 15,
-    fontSize: 18,
+    backgroundColor: 'white',
+    height: 75,
+    overflow: 'hidden'
   },
-  pickerOption: {
-    paddingLeft: 8,
+  picker: {
+    width: 260,
+    fontSize: 18,
+    top: '-92%'
   },
   water: {
     backgroundColor: Colors.primary,
@@ -181,8 +234,9 @@ const styles = StyleSheet.create({
     borderRightWidth: 3,
     display: "flex",
     alignItems: "center",
-    marginTop: 30,
-    marginBottom: 10,
+    justifyContent: 'center',
+    height: 120,
+    marginVertical: 30,
   },
   number: {
     color: "white",

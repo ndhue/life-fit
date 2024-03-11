@@ -9,18 +9,33 @@ import {
 } from "react-native";
 import { bg, global } from "../../constants/Global";
 import Header from "../../components/Header";
-import LargeButton from "../../components/LargeButton";
 import { router } from "expo-router";
+import { useGetWaterListQuery } from "../../controllers/api";
+import { useAppSelector } from "../../redux/store";
+import { formatDate, formatTime } from "../../toast/formatter";
 
 const WaterTracker = () => {
-  const [dt, setDt] = useState(new Date().toLocaleString());
+  const { token } = useAppSelector(state => state.auth);
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [listGoal, setListGoal] = useState([]);
+  const [currentGoal, setCurrentGoal] = useState({});
+  
+  const { data } = useGetWaterListQuery(token);
 
   useEffect(() => {
-    let secTimer = setInterval(() => {
-      setDt(new Date().toLocaleString());
+    if(data) {
+      setListGoal(data.slice(-6, -1));
+      setCurrentGoal(data[data.length-1]);
+    }
+  }, [data]);
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
     }, 1000);
 
-    return () => clearInterval(secTimer);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
@@ -38,8 +53,8 @@ const WaterTracker = () => {
               style={styles.img}
             />
             <View style={styles.content}>
-              <Text style={styles.time}>11:00 AM</Text>
-              <Text style={styles.qty}>200ml (2 Ly)</Text>
+              <Text style={styles.time}>{formatTime(currentTime)}</Text>
+              <Text style={styles.qty}>400ml (1 Ly)</Text>
 
               <View style={{ paddingTop: 40 }}>
                 <Pressable onPress={() => router.push('/activity/edit-water-tracker')} style={styles.button}>
@@ -64,15 +79,17 @@ const WaterTracker = () => {
           </View>
 
           <View style={styles.info}>
-            <View style={[styles.borderInfo, global.flexBox]}>
+            {listGoal && listGoal?.map((goal,index) => (
+              <View style={[styles.borderInfo, global.flexBox]} key={index}>
               <View>
-                <Text style={styles.subTitle}>Độ dài chu kì trước</Text>
-                <Text style={styles.subDetail}>36 ngày</Text>
+                <Text style={styles.subTitle}>{formatDate(new Date(goal.dategoal))}</Text>
+                <Text style={styles.subDetail}>{goal.watergoal}ml</Text>
               </View>
               <View>
-                <Text style={styles.conclusion}>BẤT THƯỜNG</Text>
+                <Text style={styles.conclusion}>HOÀN THÀNH</Text>
               </View>
             </View>
+            ))}
           </View>
 
         </View>
@@ -84,7 +101,7 @@ const WaterTracker = () => {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    width: 360,
+    width: '90%',
     height: 180,
     borderRadius: 15,
     marginTop: 30
@@ -136,9 +153,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   info: {
-    width: 348,
+    width: '90%',
     position: 'relative',
-    borderRadius: 20,
+    borderRadius: 10,
     backgroundColor: 'white',
     padding: 20,
     marginTop: 20

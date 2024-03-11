@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ImageBackground, KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,8 +10,14 @@ import LargeButton from "../components/LargeButton";
 import { StyleSheet } from "react-native";
 import { useUpdatePasswordMutation } from "../controllers/api";
 import { NewPassword } from "../types/user";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "../toast/config/toastConfig";
+import { showToastErrorNewPassWord, showToastSuccessNewPassWord } from "../toast/toaster";
+import { router } from "expo-router";
 
 const UpdatePassword = () => {
+  const [isLoading, setIsloading] = useState(false);
+
   const schema = yup.object().shape({
     password: yup.string().min(6, 'Mật khẩu cần có ít nhất 6 kí tự').required('Mật khẩu không được để trống'),
     confirmpassword: yup.string().oneOf([yup.ref('password'), ''], 'Mật khẩu không khớp').required('Mật khẩu không được để trống'),
@@ -32,46 +38,60 @@ const UpdatePassword = () => {
   const [updatePassword] = useUpdatePasswordMutation();
 
   const onSubmit = async (data: NewPassword) => {
+    setIsloading(true);
     try {
       const result = await updatePassword(data);
-      console.log('Send otp successful:', result);
+      if (result?.data) {
+        showToastSuccessNewPassWord();
+        setIsloading(false);
+        setTimeout(() => {
+          router.replace("/signin");
+        }, 1000);
+      }else {
+        setIsloading(false);
+        showToastErrorNewPassWord();
+      }
     } catch (error) {
-      console.error('Send otp failed:', error);
+      setIsloading(false);
+      showToastErrorNewPassWord();
     }
   }; 
 
   return (
-    <KeyboardAvoidingView
-      behavior={
-        Platform.OS === "ios" || Platform.OS === "android"
-          ? "padding"
-          : "height"
-      }
-      style={{ flex: 1 }}
-    >
-    <ImageBackground 
-      source={bg} 
-      style={global.backgroundImage}
-      resizeMode='cover'
-    >
-      <View style={global.wrapper}>
-        <View style={global.container}>
-        <View style={styles.fixedContainer}>
-        <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
-          <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('password', t)} />
-          {errors.password && <Text style={global.error}>{errors.password.message}</Text>}
-          
-          <InputField label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmpassword', t)} />
-          {errors.confirmpassword && <Text style={global.error}>{errors.confirmpassword.message}</Text>}
-          <View style={{ marginTop: 30 }}>
-            <LargeButton title="Gửi" variant="primary" onPress={handleSubmit(onSubmit)} />
+    <>
+      <KeyboardAvoidingView
+        behavior={
+          Platform.OS === "ios" || Platform.OS === "android"
+            ? "padding"
+            : "height"
+        }
+        style={{ flex: 1 }}
+      >
+      <ImageBackground 
+        source={bg} 
+        style={global.backgroundImage}
+        resizeMode='cover'
+      >
+        <View style={global.wrapper}>
+          <View style={global.container}>
+          <View style={styles.fixedContainer}>
+          <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
+            <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('password', t)} />
+            {errors.password && <Text style={global.error}>{errors.password.message}</Text>}
+            
+            <InputField label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmpassword', t)} />
+            {errors.confirmpassword && <Text style={global.error}>{errors.confirmpassword.message}</Text>}
+            <View style={{ marginTop: 30 }}>
+              <LargeButton loading={isLoading} title="Gửi" variant="primary" onPress={handleSubmit(onSubmit)} />
+            </View>
+            </View>
           </View>
           </View>
         </View>
-        </View>
-      </View>
-    </ImageBackground>
-    </KeyboardAvoidingView>
+      </ImageBackground>
+      </KeyboardAvoidingView>
+      <Toast config={toastConfig} />
+    </>
   );
 };
 const styles = StyleSheet.create({

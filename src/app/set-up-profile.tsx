@@ -23,11 +23,13 @@ import { useSetUpProfileMutation } from "../controllers/api";
 import { UserProfile } from "../types/user";
 import { router } from "expo-router";
 import Colors from "../constants/Colors";
+import { showToastErrorAuth, showToastSuccessEditProfile } from "../toast/toaster";
+import { ScrollView } from "react-native";
 
 const SetUpProfile = () => {
+  const [isLoading, setIsloading] = useState(false);
   const schema = yup.object().shape({
     gender: yup.string().required("Hãy chọn giới tính của bạn"),
-    age: yup.number().required("Hãy chọn tuổi của bạn"),
     weight: yup.number().required("Hãy chọn cân nặng của bạn"),
     height: yup.number().required("Hãy chọn chiều cao của bạn"),
     wakeup_time: yup.string().required("Hãy nhập giờ dậy của bạn"),
@@ -43,7 +45,6 @@ const SetUpProfile = () => {
     resolver: yupResolver(schema),
     defaultValues: {
       gender: "",
-      age: 0,
       weight: 0,
       height: 0,
       wakeup_time: new Date(),
@@ -56,12 +57,22 @@ const SetUpProfile = () => {
   const [setUpProfile] = useSetUpProfileMutation();
 
   const onSubmit = async (data: UserProfile) => {
+    setIsloading(true);
     try {
       const result = await setUpProfile(data);
-      console.log("setUpProfile successful:", result);
-      router.push("/set-up-profile");
+      if (result?.data) {
+        showToastSuccessEditProfile();
+        setIsloading(false);
+        setTimeout(() => {
+          router.replace("/");
+        }, 1000);
+      }else {
+        setIsloading(false);
+        showToastErrorAuth();
+      }
     } catch (error) {
-      console.error("setUpProfile failed:", error);
+      setIsloading(false);
+      showToastErrorAuth();
     }
   };
 
@@ -115,340 +126,272 @@ const SetUpProfile = () => {
           >
             <Text style={global.title}>Tổng quan về bạn</Text>
           </View>
-          <View style={global.container}>
-            {/* Gender */}
-            <View style={styles.choose}>
-              <View>
-                <Text style={styles.label}>Giới tính của bạn</Text>
-                <View style={[global.flexBox, { gap: 15 }]}>
-                  <TouchableOpacity onPress={() => handleSelectGender('male')}>
-                    <View style={styles.gender}>
-                      <Image
-                        source={require("../assets/images/male-svg-com.png")}
-                      />
-                      {select === "male" && (
-                        <View style={styles.check}>
-                          <AntDesign
-                            name="checkcircle"
-                            size={24}
-                            color="#009418"
-                          />
-                        </View>
-                      )}
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleSelectGender('female')}
-                  >
-                    <View style={styles.gender}>
-                      <Image
-                        source={require("../assets/images/female-svg-com.png")}
-                      />
-                      {select === "female" && (
-                        <View style={styles.check}>
-                          <AntDesign
-                            name="checkcircle"
-                            size={24}
-                            color="#009418"
-                          />
-                        </View>
-                      )}
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => handleSelectGender('other')}>
-                    <View style={styles.gender}>
-                      <Image
-                        source={require("../assets/images/gender-svg-com.png")}
-                      />
-                      {select === "other" && (
-                        <View style={styles.check}>
-                          <AntDesign
-                            name="checkcircle"
-                            size={24}
-                            color="#009418"
-                          />
-                        </View>
-                      )}
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              {errors.gender && (
-                <Text style={global.error}>{errors.gender.message}</Text>
-              )}
-            </View>
-
-            {/* Age */}
-            <View style={styles.choose}>
-              <View>
-                <Text style={styles.label}>Tuổi</Text>
-                <RangeSlider
-                  style={{ width: 350 }}
-                  gravity={"center"}
-                  min={0}
-                  max={100}
-                  step={1}
-                  rangeEnabled={false} // Disable range selection
-                  selectionColor="#FF1E52"
-                  blankColor="#2d4150"
-                  onValueChanged={(low, high) =>
-                    handleValueChange(low, high, "age")
-                  }
-                  renderThumb={(index) => (
-                    <View
-                      style={{
-                        width: 26,
-                        height: 26,
-                        borderRadius: 26,
-                        backgroundColor: "white",
-                        justifyContent: "center",
-                        alignItems: "center",
-
-                        opacity: index === "low" ? 1 : 0,
-                      }}
+          <ScrollView>
+            <View style={global.container}>
+              {/* Gender */}
+              <View style={styles.choose}>
+                <View>
+                  <Text style={styles.label}>Giới tính của bạn</Text>
+                  <View style={[global.flexBox, { gap: 15 }]}>
+                    <TouchableOpacity onPress={() => handleSelectGender('male')}>
+                      <View style={styles.gender}>
+                        <Image
+                          source={require("../assets/images/male-svg-com.png")}
+                        />
+                        {select === "male" && (
+                          <View style={styles.check}>
+                            <AntDesign
+                              name="checkcircle"
+                              size={24}
+                              color="#009418"
+                            />
+                          </View>
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleSelectGender('female')}
                     >
-                      <Text
+                      <View style={styles.gender}>
+                        <Image
+                          source={require("../assets/images/female-svg-com.png")}
+                        />
+                        {select === "female" && (
+                          <View style={styles.check}>
+                            <AntDesign
+                              name="checkcircle"
+                              size={24}
+                              color="#009418"
+                            />
+                          </View>
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSelectGender('other')}>
+                      <View style={styles.gender}>
+                        <Image
+                          source={require("../assets/images/gender-svg-com.png")}
+                        />
+                        {select === "other" && (
+                          <View style={styles.check}>
+                            <AntDesign
+                              name="checkcircle"
+                              size={24}
+                              color="#009418"
+                            />
+                          </View>
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {errors.gender && (
+                  <Text style={global.error}>{errors.gender.message}</Text>
+                )}
+              </View>
+
+              {/* Weight */}
+              <View style={styles.choose}>
+                <View>
+                  <Text style={styles.label}>
+                    Cân nặng
+                    <Text style={styles.subLabel}>(kg)</Text>
+                  </Text>
+                  <RangeSlider
+                    style={{ width: 350 }}
+                    gravity={"center"}
+                    min={0}
+                    max={200}
+                    step={1}
+                    rangeEnabled={false}
+                    onValueChanged={(low, high) =>
+                      handleValueChange(low, high, "weight")
+                    }
+                    renderThumb={(index) => (
+                      <View
                         style={{
-                          color: "black",
-                          fontWeight: "600",
-                          fontSize: 12,
+                          width: 26,
+                          height: 26,
+                          borderRadius: 26,
+                          backgroundColor: "white",
+                          justifyContent: "center",
+                          alignItems: "center",
+
+                          opacity: index === "low" ? 1 : 0,
                         }}
                       >
-                        {getValues("age")}
-                      </Text>
-                    </View>
-                  )}
-                  renderRail={() => (
-                    <View
-                      style={{
-                        flex: 1,
-                        height: 3,
-                        borderRadius: 2.5,
-                        backgroundColor: Colors.border,
-                      }}
-                    />
-                  )}
-                  renderRailSelected={() => (
-                    <View
-                      style={{
-                        flex: 1,
-                        height: 3,
-                        borderRadius: 2.5,
-                        backgroundColor: Colors.primary,
-                      }}
-                    />
-                  )}
-                />
-                <View style={[global.flexBox, { paddingHorizontal: 10 }]}>
-                  <Text style={styles.genderLabel}>0</Text>
-                  <Text style={styles.genderLabel}>100</Text>
-                </View>
-              </View>
-              {errors.age && (
-                <Text style={global.error}>{errors.age.message}</Text>
-              )}
-            </View>
-
-            {/* Weight */}
-            <View style={styles.choose}>
-              <View>
-                <Text style={styles.label}>
-                  Cân nặng
-                  <Text style={styles.subLabel}>(kg)</Text>
-                </Text>
-                <RangeSlider
-                  style={{ width: 350 }}
-                  gravity={"center"}
-                  min={0}
-                  max={200}
-                  step={1}
-                  rangeEnabled={false}
-                  onValueChanged={(low, high) =>
-                    handleValueChange(low, high, "weight")
-                  }
-                  renderThumb={(index) => (
-                    <View
-                      style={{
-                        width: 26,
-                        height: 26,
-                        borderRadius: 26,
-                        backgroundColor: "white",
-                        justifyContent: "center",
-                        alignItems: "center",
-
-                        opacity: index === "low" ? 1 : 0,
-                      }}
-                    >
-                      <Text
+                        <Text
+                          style={{
+                            color: "black",
+                            fontWeight: "600",
+                            fontSize: 12,
+                          }}
+                        >
+                          {getValues("weight")}
+                        </Text>
+                      </View>
+                    )}
+                    renderRail={() => (
+                      <View
                         style={{
-                          color: "black",
-                          fontWeight: "600",
-                          fontSize: 12,
+                          flex: 1,
+                          height: 3,
+                          borderRadius: 2.5,
+                          backgroundColor: Colors.border,
+                        }}
+                      />
+                    )}
+                    renderRailSelected={() => (
+                      <View
+                        style={{
+                          flex: 1,
+                          height: 3,
+                          borderRadius: 2.5,
+                          backgroundColor: Colors.primary,
+                        }}
+                      />
+                    )}
+                  />
+                  <View style={[global.flexBox, { paddingHorizontal: 10 }]}>
+                    <Text style={styles.genderLabel}>0</Text>
+                    <Text style={styles.genderLabel}>200</Text>
+                  </View>
+                </View>
+                {errors.weight && (
+                  <Text style={global.error}>{errors.weight.message}</Text>
+                )}
+              </View>
+
+              {/* Height */}
+              <View style={styles.choose}>
+                <View>
+                  <Text style={styles.label}>
+                    Chiều cao
+                    <Text style={styles.subLabel}>(cm)</Text>
+                  </Text>
+                  <RangeSlider
+                    style={{ width: 350 }}
+                    gravity={"center"}
+                    min={0}
+                    max={200}
+                    step={1}
+                    rangeEnabled={false} // Disable range selection
+                    onValueChanged={(low, high) =>
+                      handleValueChange(low, high, "height")
+                    }
+                    renderThumb={(index) => (
+                      <View
+                        style={{
+                          width: 26,
+                          height: 26,
+                          borderRadius: 26,
+                          backgroundColor: "white",
+                          justifyContent: "center",
+                          alignItems: "center",
+
+                          opacity: index === "low" ? 1 : 0,
                         }}
                       >
-                        {getValues("weight")}
-                      </Text>
-                    </View>
-                  )}
-                  renderRail={() => (
-                    <View
-                      style={{
-                        flex: 1,
-                        height: 3,
-                        borderRadius: 2.5,
-                        backgroundColor: Colors.border,
-                      }}
-                    />
-                  )}
-                  renderRailSelected={() => (
-                    <View
-                      style={{
-                        flex: 1,
-                        height: 3,
-                        borderRadius: 2.5,
-                        backgroundColor: Colors.primary,
-                      }}
-                    />
-                  )}
-                />
-                <View style={[global.flexBox, { paddingHorizontal: 10 }]}>
-                  <Text style={styles.genderLabel}>0</Text>
-                  <Text style={styles.genderLabel}>200</Text>
-                </View>
-              </View>
-              {errors.weight && (
-                <Text style={global.error}>{errors.weight.message}</Text>
-              )}
-            </View>
-
-            {/* Height */}
-            <View style={styles.choose}>
-              <View>
-                <Text style={styles.label}>
-                  Chiều cao
-                  <Text style={styles.subLabel}>(cm)</Text>
-                </Text>
-                <RangeSlider
-                  style={{ width: 350 }}
-                  gravity={"center"}
-                  min={0}
-                  max={200}
-                  step={1}
-                  rangeEnabled={false} // Disable range selection
-                  onValueChanged={(low, high) =>
-                    handleValueChange(low, high, "height")
-                  }
-                  renderThumb={(index) => (
-                    <View
-                      style={{
-                        width: 26,
-                        height: 26,
-                        borderRadius: 26,
-                        backgroundColor: "white",
-                        justifyContent: "center",
-                        alignItems: "center",
-
-                        opacity: index === "low" ? 1 : 0,
-                      }}
-                    >
-                      <Text
+                        <Text
+                          style={{
+                            color: "black",
+                            fontWeight: "600",
+                            fontSize: 12,
+                          }}
+                        >
+                          {getValues("height")}
+                        </Text>
+                      </View>
+                    )}
+                    renderRail={() => (
+                      <View
                         style={{
-                          color: "black",
-                          fontWeight: "600",
-                          fontSize: 12,
+                          flex: 1,
+                          height: 3,
+                          borderRadius: 2.5,
+                          backgroundColor: Colors.border,
                         }}
-                      >
-                        {getValues("height")}
-                      </Text>
-                    </View>
-                  )}
-                  renderRail={() => (
-                    <View
-                      style={{
-                        flex: 1,
-                        height: 3,
-                        borderRadius: 2.5,
-                        backgroundColor: Colors.border,
-                      }}
-                    />
-                  )}
-                  renderRailSelected={() => (
-                    <View
-                      style={{
-                        flex: 1,
-                        height: 3,
-                        borderRadius: 2.5,
-                        backgroundColor: Colors.primary,
-                      }}
-                    />
-                  )}
-                />
-                <View style={[global.flexBox, { paddingHorizontal: 10 }]}>
-                  <Text style={styles.genderLabel}>0</Text>
-                  <Text style={styles.genderLabel}>200</Text>
+                      />
+                    )}
+                    renderRailSelected={() => (
+                      <View
+                        style={{
+                          flex: 1,
+                          height: 3,
+                          borderRadius: 2.5,
+                          backgroundColor: Colors.primary,
+                        }}
+                      />
+                    )}
+                  />
+                  <View style={[global.flexBox, { paddingHorizontal: 10 }]}>
+                    <Text style={styles.genderLabel}>0</Text>
+                    <Text style={styles.genderLabel}>200</Text>
+                  </View>
                 </View>
+                {errors.height && (
+                  <Text style={global.error}>{errors.height.message}</Text>
+                )}
               </View>
-              {errors.height && (
-                <Text style={global.error}>{errors.height.message}</Text>
-              )}
-            </View>
 
-            {/* Wake up time */}
-            <View style={styles.choose}>
-              <View>
-                <Text style={[styles.label, { paddingBottom: 50 }]}>
-                  Giờ dậy
-                </Text>
-                <DateTimePicker
-                  value={getValues("wakeup_time")}
-                  mode="time"
-                  is24Hour={true}
-                  display="default"
-                  onChange={handleWakeupTimeChange}
-                  style={{
-                    position: "absolute",
-                    left: -10,
-                    top: 28,
-                  }}
+              {/* Wake up time */}
+              <View style={styles.choose}>
+                <View>
+                  <Text style={[styles.label, { paddingBottom: 50 }]}>
+                    Giờ dậy
+                  </Text>
+                  <DateTimePicker
+                    value={getValues("wakeup_time")}
+                    mode="time"
+                    is24Hour={true}
+                    display="default"
+                    onChange={handleWakeupTimeChange}
+                    style={{
+                      position: "absolute",
+                      left: -10,
+                      top: 28,
+                    }}
+                  />
+                </View>
+                {errors.wakeup_time && (
+                  <Text style={global.error}>{errors.wakeup_time.message}</Text>
+                )}
+              </View>
+
+              {/* Sleeping time */}
+              <View style={styles.choose}>
+                <View>
+                  <Text style={[styles.label, { paddingBottom: 50 }]}>
+                    Giờ ngủ
+                  </Text>
+                  <DateTimePicker
+                    value={getValues("sleeping_time")}
+                    mode="time"
+                    is24Hour={true}
+                    display="default"
+                    onChange={handleSleepingTimeChange}
+                    style={{
+                      position: "absolute",
+                      left: -10,
+                      top: 28,
+                    }}
+                  />
+                </View>
+                {errors.sleeping_time && (
+                  <Text style={global.error}>{errors.sleeping_time.message}</Text>
+                )}
+              </View>
+
+              <View style={{ paddingTop: 10 }}>
+                <LargeButton
+                  loading={isLoading}
+                  variant="secondary"
+                  title="Hoàn tất"
+                  onPress={handleSubmit(onSubmit)}
                 />
               </View>
-              {errors.wakeup_time && (
-                <Text style={global.error}>{errors.wakeup_time.message}</Text>
-              )}
             </View>
-
-            {/* Sleeping time */}
-            <View style={styles.choose}>
-              <View>
-                <Text style={[styles.label, { paddingBottom: 50 }]}>
-                  Giờ ngủ
-                </Text>
-                <DateTimePicker
-                  value={getValues("sleeping_time")}
-                  mode="time"
-                  is24Hour={true}
-                  display="default"
-                  onChange={handleSleepingTimeChange}
-                  style={{
-                    position: "absolute",
-                    left: -10,
-                    top: 28,
-                  }}
-                />
-              </View>
-              {errors.sleeping_time && (
-                <Text style={global.error}>{errors.sleeping_time.message}</Text>
-              )}
-            </View>
-
-            <View style={{ paddingTop: 10 }}>
-              <LargeButton
-                variant="secondary"
-                title="Hoàn tất"
-                onPress={handleSubmit(onSubmit)}
-              />
-            </View>
-          </View>
+          </ScrollView>
         </View>
       </KeyboardAvoidingView>
     </ImageBackground>

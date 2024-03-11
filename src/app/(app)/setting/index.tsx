@@ -1,4 +1,4 @@
-import { ImageBackground, Text, View } from "react-native";
+import { ImageBackground, Platform, Text, View } from "react-native";
 import ProfileButton from "../../../components/ProfileButton";
 import { bg, global } from "../../../constants/Global";
 import Header from "../../../components/Header";
@@ -13,8 +13,14 @@ export default function TabSettingScreen() {
   };
 
   const logOut = () => {
-    clearLoginId();
-    router.push('/signin');
+    if (Platform.OS === 'ios' || Platform.OS === 'android') {
+      clearLoginId();
+    }
+    if (Platform.OS === 'web') {
+      localStorage.removeItem('token');
+      
+    }
+    router.replace('/signin');
   }
 
   return (

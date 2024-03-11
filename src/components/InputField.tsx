@@ -11,9 +11,10 @@ type InputFieldProps = {
   onPress?: () => void;
   editable?: boolean;
   onChangeText?: (text: string) => void;
+  defaultValue?: string;
 }
 
-const InputField = ({ label, subLabel, placeholder, secure, value, onPress, editable, onChangeText }: InputFieldProps) => {
+const InputField = ({ label, subLabel, placeholder, secure, value, onPress, editable, onChangeText, defaultValue }: InputFieldProps) => {
   const handleTapOutside = () => {
     Keyboard.dismiss(); // Dismiss the keyboard when tapped outside
   };
@@ -28,6 +29,8 @@ const InputField = ({ label, subLabel, placeholder, secure, value, onPress, edit
             <Text style={styles.subLabel}>{subLabel}</Text>
           </Text>
           <TextInput 
+            defaultValue={defaultValue}
+            selectTextOnFocus={editable}
             editable={editable} 
             secureTextEntry={secure} 
             style={styles.input} 
@@ -45,7 +48,8 @@ const InputField = ({ label, subLabel, placeholder, secure, value, onPress, edit
             {label}
             <Text style={styles.subLabel}>{subLabel}</Text>
           </Text>
-          <TextInput 
+          <TextInput
+            selectTextOnFocus={editable}
             editable={editable} 
             secureTextEntry={secure} 
             style={styles.input} 
@@ -68,7 +72,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background2,
     borderWidth: 2,
     borderColor: Colors.border,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+
   },
   inputLabel: {
     fontWeight: '600',

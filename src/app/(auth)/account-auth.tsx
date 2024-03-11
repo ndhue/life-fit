@@ -18,15 +18,10 @@ import { useAppSelector } from "../../redux/store";
 import LargeButton from "../../components/LargeButton";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
+import { toastConfig } from "../../toast/config/toastConfig";
+import { showToastErrorAuth, showToastSuccessAuth } from "../../toast/toaster";
 
 const AccountAuthent = () => {
-  const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Your account is authorized',
-      text2: 'This is some something 👋'
-    });
-  }
   const [seconds, setSeconds] = useState(60);
   const [disabled, setDisabled] = useState(true);
   const [isLoading, setIsloading] = useState(false);
@@ -84,94 +79,102 @@ const AccountAuthent = () => {
       setDisabled(false);
       const result = await accountAuthen(data);
       if (result?.data) {
-        showToast();
+        showToastSuccessAuth();
         setIsloading(false);
-        router.push('/set-up-profile');
+        setTimeout(() => {
+          router.push('/set-up-profile');
+        }, 1000);
+      } else {
+        setIsloading(false);
+        showToastErrorAuth();
       }
     } catch (error) {
       setIsloading(false);
-      console.error("Auth otp failed:", error);
+      showToastErrorAuth();
     }
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={
-        Platform.OS === "ios" || Platform.OS === "android"
-          ? "padding"
-          : "height"
-      }
-      style={{ flex: 1 }}
-    >
-      <ImageBackground
-        source={bg}
-        style={global.backgroundImage}
-        resizeMode="cover"
+    <>
+      <KeyboardAvoidingView
+        behavior={
+          Platform.OS === "ios" || Platform.OS === "android"
+            ? "padding"
+            : "height"
+        }
+        style={{ flex: 1 }}
       >
-        <View style={global.wrapper}>
-          <View style={global.container}>
-            <View style={styles.fixedContainer}>
-              <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
-                <Text
-                  style={{
-                    fontWeight: "500",
-                    fontSize: 20,
-                    textAlign: "center",
-                  }}
-                >
-                  Nhập code
-                </Text>
-                <View style={[global.flexBox, { paddingVertical: 20 }]}>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={(t) => setValue("otp", t)}
-                  />
-                </View>
-                <View style={[global.flexBox, { justifyContent: "flex-end" }]}>
-                  {errors.otp && (
-                    <Text style={global.error}>{errors.otp.message}</Text>
-                  )}
-                </View>
-                <View
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    paddingVertical: 20
-                  }}
-                >
-                  <Text style={{
-                    color: "#72a5b6",
-                    fontSize: 32,
-                    fontWeight: '500',
-                    textAlign: 'center',
-                    paddingBottom: 30,
-                  }}>{seconds}s</Text>
-                  <View style={{ display: 'flex', flexDirection: 'row', justifyContent:'center', gap: 10 }}>
-                    <Text style={{ color: "#90A5B4", fontSize: 16 }}>Không nhận được OTP?</Text>
-                    <Text
-                      style={{ fontSize: 16, fontWeight: '600' }}
-                      onPress={handleSubmit(onSubmit)}
-                      disabled={seconds === 0}
-                    >
-                      Gửi lại mã
-                    </Text>
+        <ImageBackground
+          source={bg}
+          style={global.backgroundImage}
+          resizeMode="cover"
+        >
+          <View style={global.wrapper}>
+            <View style={global.container}>
+              <View style={styles.fixedContainer}>
+                <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
+                  <Text
+                    style={{
+                      fontWeight: "500",
+                      fontSize: 20,
+                      textAlign: "center",
+                    }}
+                  >
+                    Nhập code
+                  </Text>
+                  <View style={[global.flexBox, { paddingVertical: 20 }]}>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={(t) => setValue("otp", t)}
+                    />
                   </View>
-                <View style={{ marginTop: 30 }}>
-                  <LargeButton
-                    loading={isLoading}
-                    disabled={!disabled || getValues("otp").length < 6}
-                    title="XÁC NHẬN"
-                    variant="primary"
-                    onPress={handleSubmit(onSubmitAuth)}
-                  />
-                </View>
+                  <View style={[global.flexBox, { justifyContent: "flex-end" }]}>
+                    {errors.otp && (
+                      <Text style={global.error}>{errors.otp.message}</Text>
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      paddingVertical: 20
+                    }}
+                  >
+                    <Text style={{
+                      color: "#72a5b6",
+                      fontSize: 32,
+                      fontWeight: '500',
+                      textAlign: 'center',
+                      paddingBottom: 30,
+                    }}>{seconds}s</Text>
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent:'center', gap: 10 }}>
+                      <Text style={{ color: "#90A5B4", fontSize: 16 }}>Không nhận được OTP?</Text>
+                      <Text
+                        style={{ fontSize: 16, fontWeight: '600' }}
+                        onPress={handleSubmit(onSubmit)}
+                        disabled={seconds === 0}
+                      >
+                        Gửi lại mã
+                      </Text>
+                    </View>
+                  <View style={{ marginTop: 30 }}>
+                    <LargeButton
+                      loading={isLoading}
+                      disabled={!disabled || getValues("otp").length < 6}
+                      title="XÁC NHẬN"
+                      variant="primary"
+                      onPress={handleSubmit(onSubmitAuth)}
+                    />
+                  </View>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-      </ImageBackground>
-    </KeyboardAvoidingView>
+        </ImageBackground>
+      </KeyboardAvoidingView>
+      <Toast config={toastConfig} />
+    </>
   );
 };
 
