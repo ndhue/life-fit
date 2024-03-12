@@ -48,26 +48,26 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors.primary,
       }}
     >
-      <Tabs.Screen
-        name="activity/index"
+     <Tabs.Screen
+        name="period-tracker/index"
         options={{
-          title: "Hoạt động",
+          title: "Chu kì",
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="file-medical-alt" color={color} size={25} />
           ),
         }}
-      />
+      /> 
       <Tabs.Screen
-        name="health/index"
+        name="water-tracker/index"
         options={{
-          title: "Sức khỏe",
+          title: "Nước",
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="book-medical" color={color} size={25} />
+            <FontAwesome5 name="file-medical-alt" color={color} size={25} />
           ),
         }}
-      />
+      /> 
       <Tabs.Screen
         name="index"
         options={{
@@ -75,6 +75,16 @@ export default function TabLayout() {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <AntDesign name="home" color={color} size={25} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="eating-schedule/index"
+        options={{
+          title: "Dinh dưỡng",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="file-medical-alt" color={color} size={25} />
           ),
         }}
       />

@@ -11,22 +11,22 @@ import {
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import InputField from "../components/InputField";
-import { bg, global } from "../constants/Global";
-import Header from "../components/Header";
-import { useAppSelector } from "../redux/store";
+import InputField from "../../components/InputField";
+import { bg, global } from "../../constants/Global";
+import Header from "../../components/Header";
+import { useAppSelector } from "../../redux/store";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { StyleSheet } from "react-native";
 import { Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import LargeButton from "../components/LargeButton";
-import { useUpdateProfileMutation } from "../controllers/api";
+import LargeButton from "../../components/LargeButton";
+import { useUpdateProfileMutation } from "../../controllers/api";
 import { router } from "expo-router";
-import { showToastErrorEditProfile, showToastSuccessEditProfile } from "../toast/toaster";
-import Button from "../components/Button";
+import { showToastErrorEditProfile, showToastSuccessEditProfile } from "../../toast/toaster";
+import Button from "../../components/Button";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "../toast/config/toastConfig";
-import { formatDate } from "../toast/formatter";
+import { toastConfig } from "../../toast/config/toastConfig";
+import { formatDate } from "../../toast/formatter";
 
 export default function EditProfile() {
   const { token, profile } = useAppSelector((state) => state.auth);
@@ -209,7 +209,7 @@ export default function EditProfile() {
                       >
                         <View style={styles.gender}>
                           <Image
-                            source={require("../assets/images/male-svg-com.png")}
+                            source={require("../../assets/images/male-svg-com.png")}
                           />
                           {(select === "male" ||
                             profile.gender === "male") && (
@@ -228,7 +228,7 @@ export default function EditProfile() {
                       >
                         <View style={styles.gender}>
                           <Image
-                            source={require("../assets/images/female-svg-com.png")}
+                            source={require("../../assets/images/female-svg-com.png")}
                           />
                           {(select === "female" ||
                             profile.gender === "female") && (
@@ -247,7 +247,7 @@ export default function EditProfile() {
                       >
                         <View style={styles.gender}>
                           <Image
-                            source={require("../assets/images/gender-svg-com.png")}
+                            source={require("../../assets/images/gender-svg-com.png")}
                           />
                           {(select === "other" ||
                             profile.gender === "other") && (

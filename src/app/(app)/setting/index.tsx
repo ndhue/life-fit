@@ -54,7 +54,7 @@ export default function TabSettingScreen() {
             <ProfileButton
               icon={<FontAwesome name="user" size={30} color="#FFD43B" />}
               text="Hồ sơ"
-              onPress={handleButtonPress}
+              onPress={() => router.push('/profile/profile')}
             />
             <ProfileButton
               icon={<FontAwesome name="gear" size={30} color="#FFD43B" />}

@@ -12,23 +12,23 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Calendar } from "react-native-calendars";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { bg, global } from "../../constants/Global";
-import Header from "../../components/Header";
-import LargeButton from "../../components/LargeButton";
+import { bg, global } from "../../../constants/Global";
+import Header from "../../../components/Header";
+import LargeButton from "../../../components/LargeButton";
 import { router } from "expo-router";
-import { formatDate } from "../../toast/formatter";
+import { formatDate } from "../../../toast/formatter";
 import { AntDesign } from "@expo/vector-icons";
-import Colors from "../../constants/Colors";
-import { Modal } from "../../components/Modal";
-import Button from "../../components/Button";
-import InputField from "../../components/InputField";
-import { useAppSelector } from "../../redux/store";
+import Colors from "../../../constants/Colors";
+import { Modal } from "../../../components/Modal";
+import Button from "../../../components/Button";
+import InputField from "../../../components/InputField";
+import { useAppSelector } from "../../../redux/store";
 import {
   useAddDetailDietMutation,
   useDeleteDetailDietMutation,
   useEditDetailDietMutation,
   useGetDietGoalQuery,
-} from "../../controllers/api";
+} from "../../../controllers/api";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 const EatingSchedule = () => {
@@ -157,7 +157,7 @@ const EatingSchedule = () => {
       resizeMode="cover"
     >
       <View style={global.wrapper}>
-        <Header title="Chế độ ăn" route="/activity" main={true} />
+        <Header title="Chế độ dinh duỡng" />
         <View style={global.container}>
           <View style={styles.circle}>
             <View style={styles.line}>

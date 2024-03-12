@@ -1,8 +1,8 @@
 import React from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import { bg, global } from "../../constants/Global";
-import Header from "../../components/Header";
-import LargeButton from "../../components/LargeButton";
+import { bg, global } from "../../../constants/Global";
+import Header from "../../../components/Header";
+import LargeButton from "../../../components/LargeButton";
 import { router } from "expo-router";
 
 const PeriodTracker = () => {
@@ -13,7 +13,7 @@ const PeriodTracker = () => {
       resizeMode='cover'
     >
       <View style={global.wrapper}>
-        <Header title="Chu kì kinh nguyệt" route="/activity" main={true} />
+        <Header title="Chu kì kinh nguyệt" />
         <View style={global.container}>
           <View style={styles.circle}>
             <View style={styles.line}>

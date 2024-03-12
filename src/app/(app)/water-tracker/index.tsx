@@ -7,12 +7,12 @@ import {
   Text,
   View,
 } from "react-native";
-import { bg, global } from "../../constants/Global";
-import Header from "../../components/Header";
+import { bg, global } from "../../../constants/Global";
+import Header from "../../../components/Header";
 import { router } from "expo-router";
-import { useGetWaterListQuery } from "../../controllers/api";
-import { useAppSelector } from "../../redux/store";
-import { formatDate, formatTime } from "../../toast/formatter";
+import { useGetWaterListQuery} from "../../../controllers/api";
+import { useAppSelector } from "../../../redux/store";
+import { formatDate, formatTime } from "../../../toast/formatter";
 
 const WaterTracker = () => {
   const { token } = useAppSelector(state => state.auth);
@@ -45,11 +45,11 @@ const WaterTracker = () => {
       resizeMode="cover"
     >
       <View style={global.wrapper}>
-        <Header title="Chế độ uống nước" route="/activity" main={true} />
+        <Header title="Chế độ uống nước" />
         <View style={global.container}>
           <View style={styles.container}>
             <Image
-              source={require("../../assets/images/water-dashboard.png")}
+              source={require("../../../assets/images/water-dashboard.png")}
               style={styles.img}
             />
             <View style={styles.content}>
@@ -66,7 +66,7 @@ const WaterTracker = () => {
 
           <View style={styles.container}>
             <View>
-              <Image source={require("../../assets/images/process.png")} />
+              <Image source={require("../../../assets/images/process.png")} />
               <Text style={styles.target}>500ml</Text>
             </View>
 

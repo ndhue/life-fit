@@ -57,7 +57,11 @@ function RootLayoutNav() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="edit-profile"
+              name="profile/profile"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="profile/edit-profile"
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -70,18 +74,6 @@ function RootLayoutNav() {
             />
             <Stack.Screen name="confirm" options={{ headerShown: false }} />
 
-            <Stack.Screen
-              name="activity/eating-schedule"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="activity/period-tracker"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="activity/water-tracker"
-              options={{ headerShown: false }}
-            />
             <Stack.Screen
               name="activity/edit-period"
               options={{ headerShown: false }}

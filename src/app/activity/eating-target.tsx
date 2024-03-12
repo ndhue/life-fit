@@ -51,7 +51,7 @@ const SetDietGoal = () => {
         setIsloading(false);
         showToastSuccessSetGoal();
         setTimeout(() => {
-          router.replace("/activity/eating-schedule");
+          router.replace("/eating-schedule");
         }, 1000);
       } else {
         setIsloading(false);
@@ -74,7 +74,7 @@ const SetDietGoal = () => {
           <Header
             title="Mục tiêu của tôi"
             main={true}
-            route="/activity/eating-schedule"
+            route="/eating-schedule"
           />
           <View style={global.container}>
             <View style={styles.water}>

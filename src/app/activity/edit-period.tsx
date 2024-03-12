@@ -29,7 +29,7 @@ const EditPeriod = () => {
       resizeMode='cover'
     >
       <View style={global.wrapper}>
-        <Header title="Chu kì kinh nguyệt" route="/activity/period-tracker" main={true} />
+        <Header title="Chu kì kinh nguyệt" route="/period-tracker" main={true} />
         <View style={[global.container, { paddingVertical: 20}]}>
         <View style={{ width: '100%'}}>
           <Text

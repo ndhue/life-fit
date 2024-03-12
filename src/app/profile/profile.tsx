@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { ImageBackground, Text, View } from "react-native";
-import InputField from "../../../components/InputField";
-import { bg, global } from "../../../constants/Global";
-import Header from "../../../components/Header";
-import { useGetUserProfileQuery } from "../../../controllers/api";
-import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { doSaveProfile } from "../../../redux/slices/authSlice";
-import { formatDate, formatTime } from "../../../toast/formatter";
+import InputField from "../../components/InputField";
+import { bg, global } from "../../constants/Global";
+import Header from "../../components/Header";
+import { useGetUserProfileQuery } from "../../controllers/api";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { doSaveProfile } from "../../redux/slices/authSlice";
+import { formatDate, formatTime } from "../../toast/formatter";
 
 export default function TabProfileScreen() {
   const [profile, setProfile] = useState({
@@ -57,7 +57,7 @@ export default function TabProfileScreen() {
       resizeMode="cover"
     >
       <View style={global.wrapper}>
-        <Header title="Hồ sơ của tôi" edit={true} route="/" />
+        <Header title="Hồ sơ của tôi" edit={true} route="/setting" main={true} />
         <View style={global.container}>
           <View
             style={{

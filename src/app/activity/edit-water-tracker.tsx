@@ -46,7 +46,7 @@ const EditWaterTracker = () => {
         setIsloading(false);
         showToastSuccessSetGoal();
         setTimeout(() => {
-          router.replace("/activity/water-tracker");
+          router.replace("/water-tracker");
         }, 1000);
       } else {
         setIsloading(false);
@@ -69,7 +69,7 @@ const EditWaterTracker = () => {
           <Header
             title="Mục tiêu của tôi"
             main={true}
-            route="/activity/water-tracker"
+            route="/water-tracker"
           />
           <View style={global.container}>
             <View style={styles.water}>
