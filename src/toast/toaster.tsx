@@ -98,3 +98,54 @@ export const showToastErrorSetGoal = () => {
     position: 'bottom'
   });
 };
+
+// Update
+export const showToastSuccessUpdate = () => {
+  Toast.show({
+    type: "success",
+    text1: "Cập nhật thành công",
+    position: 'bottom'
+  });
+};
+
+export const showToastErrorUpdate = () => {
+  Toast.show({
+    type: "error",
+    text1: "Cập nhật thất bại",
+    position: 'bottom'
+  });
+};
+
+// Delete
+export const showToastSuccessDelete = () => {
+  Toast.show({
+    type: "success",
+    text1: "Xóa thành công",
+    position: 'bottom'
+  });
+};
+
+export const showToastErrorDelete = () => {
+  Toast.show({
+    type: "error",
+    text1: "Xóa thất bại",
+    position: 'bottom'
+  });
+};
+
+// Delete
+export const showToastSuccessAdd = () => {
+  Toast.show({
+    type: "success",
+    text1: "Thêm dữ liệu thành công",
+    position: 'bottom'
+  });
+};
+
+export const showToastErrorAdd = () => {
+  Toast.show({
+    type: "error",
+    text1: "Thêm dữ liệu thất bại",
+    position: 'bottom'
+  });
+};

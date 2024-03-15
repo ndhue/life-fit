@@ -3,7 +3,6 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { bg, global } from "../../constants/Global";
@@ -87,7 +86,7 @@ const SetDietGoal = () => {
                 loading={isLoading}
                 variant="secondary"
                 title="Hoàn tất"
-                onPress={handleSubmit}
+                onPress={() => handleSubmit()}
               />
             </View>
           <Calendar

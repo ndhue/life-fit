@@ -1,18 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Text, View } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
-import { useAppDispatch, useAppSelector } from "../redux/store";
-import { useGetUserProfileQuery } from "../controllers/api";
-import { doSaveProfile } from "../redux/slices/authSlice";
 
-const HomeHeader = () => {
-  const dispatch = useAppDispatch();
-  const { token } = useAppSelector(state => state.auth);
-  const { data } = useGetUserProfileQuery(token);
+interface props {
+  username: string;
+}
 
-  if (data) {
-    dispatch(doSaveProfile(data[0]));
-  }
+const HomeHeader = ({ username }: props) => {
+  
   return (
     <View 
       style={{
@@ -47,7 +42,7 @@ const HomeHeader = () => {
         <View>
           <Text style={{ fontSize: 14 }}>Xin chào</Text>
           <Text style={{ fontSize: 15, fontWeight: "700" }}>
-            {data && data[0].fullname}
+            {username || ''}
           </Text>
         </View>
       </View>

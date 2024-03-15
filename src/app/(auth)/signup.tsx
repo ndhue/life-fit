@@ -5,13 +5,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { router } from "expo-router";
-import { global } from "../constants/Global";
-import Colors from "../constants/Colors";
-import { useSignUpMutation } from "../controllers/api";
-import InputField from "../components/InputField";
-import LargeButton from "../components/LargeButton";
-import Button from "../components/Button";
-import { UserRegister } from "../types/user";
+import { global } from "../../constants/Global";
+import Colors from "../../constants/Colors";
+import { useSignUpMutation } from "../../controllers/api";
+import InputField from "../../components/InputField";
+import LargeButton from "../../components/LargeButton";
+import Button from "../../components/Button";
+import { UserRegister } from "../../types/user";
 
 const SignUp = () => {
   const [date, setDate] = useState(new Date());

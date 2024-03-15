@@ -112,7 +112,7 @@ const EditWaterTracker = () => {
                 loading={isLoading}
                 variant="secondary"
                 title="Hoàn tất"
-                onPress={handleSubmit}
+                onPress={() => handleSubmit()}
               />
             </View>
           </View>

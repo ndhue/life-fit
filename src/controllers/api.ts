@@ -5,7 +5,7 @@ export const api = createApi({
     baseUrl: process.env.EXPO_PUBLIC_API_URL,
   }),
   reducerPath: "adminApi",
-  tagTypes: ["Profile", "Weight", "Water", "Diet", "DietDetail", "Period", "Heart", "BloodPressure"],
+  tagTypes: ["Profile", "Weight", "WeightByDate", "Water", "WaterByDate", "Diet", "DietByDate", "DietDetail", "DietDetailByDate", "Period", "Heart", "HeartByDate",  "BloodPressure", "BloodPressureByDate", "CaloByDate"],
   endpoints: (build) => ({
     // Authentication
     authLogin: build.mutation({
@@ -26,6 +26,7 @@ export const api = createApi({
         body: userData,
       }),
     }),
+    // submit otp
     accountAuthen: build.mutation({
       query: (data) => ({
         url: "/otpaccount",
@@ -33,12 +34,24 @@ export const api = createApi({
         body: data,
       }),
     }),
-    saveAccount: build.mutation({
+    // reset otp
+    resetOtp:  build.mutation({
       query: (data) => ({
-        url: "/saveInfor",
+        url: "/resetotpaccount",
         method: "POST",
         body: data,
       }),
+    }),
+    saveAccount: build.mutation({
+      query: (data) => ({
+        url: "/saveInfor",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+        method: "PUT",
+        body: data.data,
+      }),
+      invalidatesTags: ["Profile"],
     }),
     // Set up profile
     setUpProfile: build.mutation({
@@ -56,6 +69,7 @@ export const api = createApi({
         body: data,
       }),
     }),
+    // Submit Otp
     authOtp: build.mutation({
       query: (data) => ({
         url: "/otpauthen",
@@ -63,6 +77,7 @@ export const api = createApi({
         body: data,
       }),
     }),
+     // Update
     updatePassword: build.mutation({
       query: (data) => ({
         url: "/updatepassword",
@@ -99,28 +114,14 @@ export const api = createApi({
       }),
       invalidatesTags: ["Profile"],
     }),
-    // Weight
-    getUserWeight: build.query({
-      query: () => "/getweight",
-      providesTags: ["Weight"],
-    }),
-    // update weiget
-    updateUserWeight: build.mutation({
+    // Change password
+    changePassword: build.mutation({
       query: (data) => ({
-        url: "/updateweight",
+        url: "/updatedPassword",
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Weight"],
-    }),
-    // delete weight
-    deleteUserWeight: build.mutation({
-      query: (data) => ({
-        url: "/deleteweight",
-        method: "DELETE",
-        body: data,
-      }),
-      invalidatesTags: ["Weight"],
+      invalidatesTags: ["Profile"]
     }),
     // Diet
     getDietGoal: build.query({
@@ -144,6 +145,20 @@ export const api = createApi({
         body: data.data,
       }),
       invalidatesTags: ["Diet"],
+    }),
+    // get diet by date
+    getDietGoalByDate: build.query({
+      query: (data) => {
+        const { date, token } = data;
+        return {
+          url: '/getdietBydate',
+          params: { date },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["DietByDate", "Diet"],
     }),
     // update diet
     updateDiet: build.mutation({
@@ -181,10 +196,25 @@ export const api = createApi({
       }),
       providesTags: ["DietDetail"],
     }),
+    // get diet detail by date
+    getDetailDietByDate: build.query({
+      query: (data) => {
+        const { diet_date, token } = data;
+        return {
+          url: '/getdietdetailBydate',
+          params: { diet_date },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      },
+      providesTags: ["DietDetailByDate", "DietDetail"],
+    }),
     // edit detail diet
     editDetailDiet: build.mutation({
       query: (data) => ({
-        url: "/updatedietdetail",
+        url: `/updatedietdetail/${data.id}`,
         method: "PUT",
         body: data.data,
         headers: {
@@ -192,19 +222,33 @@ export const api = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["DietDetail"],
+      invalidatesTags: ["DietDetail", "CaloByDate"],
     }),
-    // edit detail diet
-    deleteDetailDiet: build.mutation({
+     // edit detail diet
+     deleteDetailDiet: build.mutation({
       query: (data) => ({
-        url: `/deletedietdetail/:${data.id}`,
+        url: `/deletedietdetail/${data.id}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${data.token}`,
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["DietDetail"],
+      invalidatesTags: ["DietDetail", "CaloByDate"],
+    }),
+    // get calo by Date
+    getCaloByDate: build.query({
+      query: (data) => {
+        const { diet_date, token } = data;
+        return {
+          url: '/CalodietByDate',
+          params: { diet_date },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["CaloByDate"]
     }),
     // Water
     setWaterGoal: build.mutation({
@@ -230,6 +274,20 @@ export const api = createApi({
         },
       }),
       providesTags: ["Water"],
+    }),
+    // get water by date
+    getWaterGoalByDates: build.query({
+      query: (data) => {
+        const { token, dategoal } = data;
+        return {
+          url: "/getwaterBydate",
+          params: { dategoal },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["WaterByDate", "Water"],
     }),
     // edit water
     editWater: build.mutation({
@@ -284,7 +342,6 @@ export const api = createApi({
       invalidatesTags: ["Period"],
     }),
 
-
     // create heart
     createHeart: build.mutation({
       query: (data) => {
@@ -298,7 +355,7 @@ export const api = createApi({
           body: data.data,
         };
       },
-      invalidatesTags: ["Heart"],
+      invalidatesTags: ["Heart", "HeartByDate"],
     }),
     // get heart
     getHeart: build.query({
@@ -309,6 +366,20 @@ export const api = createApi({
         },
       }),
       providesTags: ["Heart"],
+    }),
+    // get heart by date
+    getHeartByDate: build.query({
+      query: (data) => {
+        const { token, date } = data;
+        return {
+          url: "/getheartBydate",
+          params: { date },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["HeartByDate"],
     }),
     // edit heart
     editHeart: build.mutation({
@@ -321,9 +392,20 @@ export const api = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["Heart"],
+      invalidatesTags: ["Heart", "HeartByDate"],
     }),
-
+    // delete heart
+    deleteHeart: build.mutation({
+      query: (data) => ({
+        url: `/deleteheart/${data.id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Heart", "HeartByDate"],
+    }),
     // create blood pressure
     createBloodPressure: build.mutation({
       query: (data) => {
@@ -337,7 +419,7 @@ export const api = createApi({
           body: data.data,
         };
       },
-      invalidatesTags: ["BloodPressure"],
+      invalidatesTags: ["BloodPressure", "BloodPressureByDate"],
     }),
     // get blood pressure
     getBloodPressure: build.query({
@@ -348,6 +430,20 @@ export const api = createApi({
         },
       }),
       providesTags: ["BloodPressure"],
+    }),
+    // get blood pressure by date
+    getBloodPressureByDate: build.query({
+      query: (data) => {
+        const { date, token } = data;
+        return {
+          url: "/getblood_pressureBydate",
+          params: { date },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["BloodPressureByDate"],
     }),
     // edit blood pressure
     editBloodPressure: build.mutation({
@@ -360,7 +456,83 @@ export const api = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["BloodPressure"],
+      invalidatesTags: ["BloodPressure", "BloodPressureByDate"],
+    }),
+    // delete blood pressure
+    deleteBloodPressure: build.mutation({
+      query: (data) => ({
+        url: `/deleteblood_pressure/${data.id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["BloodPressure", "BloodPressureByDate"],
+    }),
+     // Weight
+    getWeightRecord: build.query({
+      query: (token) => ({
+        url: "/getweightHistory",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ["Weight"],
+    }),
+     // Weight by date
+     getWeightRecordByDate: build.query({
+      query: (data) => {
+        const { date, token } = data;
+        return {
+          url: "/getweightHistoryBydate",
+          params: { date },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["WeightByDate"],
+    }),
+    // create new weight record
+    createWeightRecord: build.mutation({
+      query: (data) => {
+        return {
+          url: "/weightHistory",
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: data.data,
+        };
+      },
+      invalidatesTags: ["Weight", "WeightByDate"],
+    }),
+    // edit weight record
+    editWeightRecord: build.mutation({
+      query: (data) => ({
+        url: `/updateweightHistory/${data.id}`,
+        method: "PUT",
+        body: data.data,
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Weight", "WeightByDate"],
+    }),
+    // delete weight record
+    deleteWeightRecord: build.mutation({
+      query: (data) => ({
+        url: `/deleteweightHistory/${data.id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Weight", "WeightByDate"],
     }),
   }),
 });
@@ -375,20 +547,45 @@ export const {
   useAuthOtpMutation,
   useUpdatePasswordMutation,
   useAuthorizedUserMutation,
+  
   useGetUserProfileQuery,
   useUpdateProfileMutation,
+  useChangePasswordMutation,
+
   useGetDietGoalQuery,
   useSetDietGoalMutation,
   useUpdateDietMutation,
+
+  useGetDietGoalByDateQuery,
+  useGetDetailDietByDateQuery,
+
   useAddDetailDietMutation,
   useGetDetailDietQuery,
   useEditDetailDietMutation,
   useDeleteDetailDietMutation,
+
   useSetWaterGoalMutation,
   useGetWaterListQuery,
+  useGetWaterGoalByDatesQuery,
   useEditWaterMutation,
 
   useGetHeartQuery,
+  useGetHeartByDateQuery,
   useCreateHeartMutation,
   useEditHeartMutation,
+  useDeleteHeartMutation,
+
+  useGetBloodPressureQuery,
+  useGetBloodPressureByDateQuery,
+  useCreateBloodPressureMutation,
+  useEditBloodPressureMutation,
+  useDeleteBloodPressureMutation,
+
+  useGetWeightRecordQuery,
+  useGetWeightRecordByDateQuery,
+  useCreateWeightRecordMutation,
+  useEditWeightRecordMutation,
+  useDeleteWeightRecordMutation,
+
+  useGetCaloByDateQuery
 } = api;

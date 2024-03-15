@@ -1,9 +1,9 @@
 import { ImageBackground, Platform, Text, View } from "react-native";
-import ProfileButton from "../../../components/ProfileButton";
-import { bg, global } from "../../../constants/Global";
-import Header from "../../../components/Header";
+import ProfileButton from "../../components/ProfileButton";
+import { bg, global } from "../../constants/Global";
+import Header from "../../components/Header";
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { clearLoginId } from "../../../controllers/secureStore";
+import { clearLoginId } from "../../controllers/secureStore";
 import { router } from "expo-router";
 
 export default function TabSettingScreen() {
@@ -53,8 +53,8 @@ export default function TabSettingScreen() {
           >
             <ProfileButton
               icon={<FontAwesome name="user" size={30} color="#FFD43B" />}
-              text="Hồ sơ"
-              onPress={() => router.push('/profile/profile')}
+              text="Thay đổi mật khẩu"
+              onPress={() => router.push('/change-password')}
             />
             <ProfileButton
               icon={<FontAwesome name="gear" size={30} color="#FFD43B" />}

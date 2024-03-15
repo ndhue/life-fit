@@ -16,7 +16,6 @@ export const global = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    overflowY: 'auto'
   },
   flexBox: {
     display: "flex",

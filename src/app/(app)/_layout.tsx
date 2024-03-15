@@ -1,4 +1,4 @@
-import { FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome, MaterialIcons, Feather} from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import Colors from "../../constants/Colors";
 import { Redirect } from "expo-router";
@@ -48,23 +48,24 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors.primary,
       }}
     >
-     <Tabs.Screen
-        name="period-tracker/index"
+
+      <Tabs.Screen
+        name="health"
         options={{
-          title: "Chu kì",
+          title: "Sức khỏe",
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="file-medical-alt" color={color} size={25} />
+            <FontAwesome5 name="file-medical-alt" color={color} size={25}  />
           ),
         }}
       /> 
       <Tabs.Screen
-        name="water-tracker/index"
+        name="activity"
         options={{
-          title: "Nước",
+          title: "Hoạt động",
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="file-medical-alt" color={color} size={25} />
+            <Feather name="activity" color={color} size={25} />
           ),
         }}
       /> 
@@ -74,37 +75,27 @@ export default function TabLayout() {
           title: "Trang chủ",
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <AntDesign name="home" color={color} size={25} />
+            <MaterialIcons name="dashboard" color={color} size={25} />
           ),
         }}
       />
       <Tabs.Screen
-        name="eating-schedule/index"
-        options={{
-          title: "Dinh dưỡng",
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="file-medical-alt" color={color} size={25} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="setting/index"
-        options={{
-          title: "Cài đặt",
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="gear" color={color} size={25} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile/index"
+        name="profile"
         options={{
           title: "Hồ sơ",
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <FontAwesome name="user" color={color} size={25} />
+          ),
+        }}
+      />
+           <Tabs.Screen
+        name="setting"
+        options={{
+          title: "Cài đặt",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="gear" color={color} size={25} />
           ),
         }}
       />

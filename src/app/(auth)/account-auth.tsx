@@ -82,7 +82,7 @@ const AccountAuthent = () => {
         showToastSuccessAuth();
         setIsloading(false);
         setTimeout(() => {
-          router.push('/set-up-profile');
+          router.push('/sign-in');
         }, 1000);
       } else {
         setIsloading(false);

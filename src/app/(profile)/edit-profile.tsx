@@ -95,6 +95,7 @@ export default function EditProfile() {
     setIsloading(true);
     try {
       const result = await updateProfile({data, token});
+      console.log(result);
       
       if (result?.data) {
         setIsloading(false);

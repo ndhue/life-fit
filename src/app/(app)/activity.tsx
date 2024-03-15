@@ -12,8 +12,9 @@ import { DietView } from "../../components/DietView";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useGetUserProfileQuery } from "../../controllers/api";
 import { doSaveProfile } from "../../redux/slices/authSlice";
+import Header from "../../components/Header";
 
-export default function TabHomeScreen() {
+export default function TabActivityScreen() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const dispatch = useAppDispatch();
   const { token, profile } = useAppSelector(state => ({
@@ -45,8 +46,8 @@ export default function TabHomeScreen() {
     >
       <View style={global.wrapper}>
         <ScrollView>
-          <HomeHeader username={profile.fullname}/>
-          <View style={global.container}>
+        <Header title="Hoạt động của tôi" />
+          <View style={[global.container]}>
             <PeriodView />
             <DietView />
             <WaterView />

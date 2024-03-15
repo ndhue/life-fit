@@ -49,43 +49,13 @@ function RootLayoutNav() {
         <ThemeProvider value={DefaultTheme}>
           <Stack>
             <Stack.Screen name="(app)" options={{ headerShown: false }} />
-            <Stack.Screen name="signin" options={{ headerShown: false }} />
-            <Stack.Screen name="signup" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)/account-auth" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="set-up-profile"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="profile/profile"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="profile/edit-profile"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="forget-password"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="new-password"
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="(activity)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="(profile)" options={{ headerShown: false }} />
+            <Stack.Screen name="(history)" options={{ headerShown: false }} />
+            <Stack.Screen name="forget-password" options={{ headerShown: false }} />
+            <Stack.Screen name="new-password" options={{ headerShown: false }} />
             <Stack.Screen name="confirm" options={{ headerShown: false }} />
-
-            <Stack.Screen
-              name="activity/edit-period"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="activity/eating-target"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="activity/edit-water-tracker"
-              options={{ headerShown: false }}
-            />
           </Stack>
         </ThemeProvider>
       </Provider>

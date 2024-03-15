@@ -17,13 +17,13 @@ import RangeSlider from "rn-range-slider";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { bg, global } from "../constants/Global";
-import LargeButton from "../components/LargeButton";
-import { useSetUpProfileMutation } from "../controllers/api";
-import { UserProfile } from "../types/user";
+import { bg, global } from "../../constants/Global";
+import LargeButton from "../../components/LargeButton";
+import { useSetUpProfileMutation } from "../../controllers/api";
+import { UserProfile } from "../../types/user";
 import { router } from "expo-router";
-import Colors from "../constants/Colors";
-import { showToastErrorAuth, showToastSuccessEditProfile } from "../toast/toaster";
+import Colors from "../../constants/Colors";
+import { showToastErrorAuth, showToastSuccessEditProfile } from "../../toast/toaster";
 import { ScrollView } from "react-native";
 
 const SetUpProfile = () => {
@@ -136,7 +136,7 @@ const SetUpProfile = () => {
                     <TouchableOpacity onPress={() => handleSelectGender('male')}>
                       <View style={styles.gender}>
                         <Image
-                          source={require("../assets/images/male-svg-com.png")}
+                          source={require("../../assets/images/male-svg-com.png")}
                         />
                         {select === "male" && (
                           <View style={styles.check}>
@@ -154,7 +154,7 @@ const SetUpProfile = () => {
                     >
                       <View style={styles.gender}>
                         <Image
-                          source={require("../assets/images/female-svg-com.png")}
+                          source={require("../../assets/images/female-svg-com.png")}
                         />
                         {select === "female" && (
                           <View style={styles.check}>
@@ -170,7 +170,7 @@ const SetUpProfile = () => {
                     <TouchableOpacity onPress={() => handleSelectGender('other')}>
                       <View style={styles.gender}>
                         <Image
-                          source={require("../assets/images/gender-svg-com.png")}
+                          source={require("../../assets/images/gender-svg-com.png")}
                         />
                         {select === "other" && (
                           <View style={styles.check}>

@@ -7,28 +7,34 @@ import {
   Text,
   View,
 } from "react-native";
-import { bg, global } from "../../../constants/Global";
-import Header from "../../../components/Header";
+import { bg, global } from "../../constants/Global";
+import Header from "../../components/Header";
 import { router } from "expo-router";
-import { useGetWaterListQuery} from "../../../controllers/api";
-import { useAppSelector } from "../../../redux/store";
-import { formatDate, formatTime } from "../../../toast/formatter";
+import { useGetWaterGoalByDatesQuery, useGetWaterListQuery} from "../../controllers/api";
+import { useAppSelector } from "../../redux/store";
+import { formatDate, formatTime } from "../../toast/formatter";
 
 const WaterTracker = () => {
   const { token } = useAppSelector(state => state.auth);
 
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [today] = useState(new Date().toISOString());
   const [listGoal, setListGoal] = useState([]);
   const [currentGoal, setCurrentGoal] = useState({});
   
   const { data } = useGetWaterListQuery(token);
+  const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: today, token });
 
   useEffect(() => {
     if(data) {
-      setListGoal(data.slice(-6, -1));
-      setCurrentGoal(data[data.length-1]);
-    }
+      setListGoal(data?.result.slice(-6, -1));    }
   }, [data]);
+
+  useEffect(() => {
+    if(waterGoal) {
+      setCurrentGoal(waterGoal.result[0]);
+    }
+  }, [waterGoal])
   
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -45,35 +51,35 @@ const WaterTracker = () => {
       resizeMode="cover"
     >
       <View style={global.wrapper}>
-        <Header title="Chế độ uống nước" />
+        <Header title="Chế độ uống nước" route="/" main={true} />
         <View style={global.container}>
           <View style={styles.container}>
             <Image
-              source={require("../../../assets/images/water-dashboard.png")}
+              source={require("../../assets/images/water-dashboard.png")}
               style={styles.img}
             />
             <View style={styles.content}>
               <Text style={styles.time}>{formatTime(currentTime)}</Text>
               <Text style={styles.qty}>400ml (1 Ly)</Text>
 
-              <View style={{ paddingTop: 40 }}>
-                <Pressable onPress={() => router.push('/activity/edit-water-tracker')} style={styles.button}>
+              {!currentGoal && <View style={{ paddingTop: 40 }}>
+                <Pressable onPress={() => router.push('/edit-water-tracker')} style={styles.button}>
                   <Text style={{ color: 'black', fontWeight: '500' }}>Đặt mục tiêu</Text>
                 </Pressable>
-              </View>
+              </View>}
             </View>
           </View>
 
           <View style={styles.container}>
             <View>
-              <Image source={require("../../../assets/images/process.png")} />
+              <Image source={require("../../assets/images/process.png")} />
               <Text style={styles.target}>500ml</Text>
             </View>
 
             <View style={styles.targetContainer}>
               <Text style={{ color: "#90A5B4", fontSize: 15 }}>Mục tiêu</Text>
               <Text style={{ fontSize: 22, fontWeight: "600", paddingTop: 10 }}>
-                2000ml
+                { currentGoal ? `${currentGoal.watergoal}ml` : '0ml' }
               </Text>
             </View>
           </View>
