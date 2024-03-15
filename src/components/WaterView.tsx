@@ -3,20 +3,39 @@ import { Image } from "react-native";
 import { Pressable, Text } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-export const WaterView = () => {
+interface props {
+  waterGoal: Object;
+}
+export const WaterView = ({ waterGoal }: props) => {
   return (
     <View style={styles.container}>
       <View style={{ width: "50%" }}>
         <Text style={styles.text1}>Lượng nước bạn cần uống hôm nay</Text>
-        <Text style={styles.text2}>2000 ml</Text>
-        <Pressable
-          onPress={() => router.push("/water-tracker")}
-          style={styles.button}
-        >
-          <Text style={{ color: "black", fontWeight: "500" }}>
-            Chi tiết
-          </Text>
-        </Pressable>
+        {waterGoal ? (
+          <>
+            <Text style={styles.text2}>{waterGoal.watergoal} ml</Text>
+            <Pressable
+              onPress={() => router.push("/water-tracker")}
+              style={styles.button}
+            >
+              <Text style={{ color: "black", fontWeight: "500" }}>
+                Chi tiết
+              </Text>
+            </Pressable>
+          </>
+        ): (
+          <>
+            <Text style={[styles.text2, { fontSize: 16 }]}>Chưa đặt mục tiêu</Text>
+            <Pressable
+                onPress={() => router.push("/edit-water-tracker")}
+                style={styles.button}
+              >
+                <Text style={{ color: "black", fontWeight: "500" }}>
+                  Đặt mục tiêu
+                </Text>
+              </Pressable>
+          </>
+        )}
       </View>
       <Image 
         style={{
@@ -33,15 +52,12 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: "90%",
     height: 162,
-    backgroundColor: "white",
     borderRadius: 8,
-    shadowColor: "grey",
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    backgroundColor: 'white', 
+    shadowColor: 'gray', 
+    shadowOpacity: 0.5, 
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
     elevation: 5,
     padding: 20,
     display: "flex",

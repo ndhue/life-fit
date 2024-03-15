@@ -3,12 +3,18 @@ import { router } from "expo-router";
 import { Pressable, Text } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-export const DietView = () => {
+interface props {
+  dietGoal: Object;
+}
+
+export const DietView = ({ dietGoal }: props) => {
   return (
     <View style={styles.container}>
       <View style={{ width: "50%" }}>
         <Text style={styles.text1}>Mục tiêu dinh dưỡng hôm nay</Text>
-        <Text style={styles.text2}>2600 Kcal</Text>
+        { dietGoal ? (
+          <>
+            <Text style={styles.text2}>2600 Kcal</Text>
         <Pressable
           onPress={() => router.push("/eating-schedule")}
           style={styles.button}
@@ -17,6 +23,20 @@ export const DietView = () => {
             Chi tiết
           </Text>
         </Pressable>
+          </>
+        ): (
+          <>
+            <Text style={[styles.text2, { fontSize: 16 }]}>Chưa đặt mục tiêu</Text>
+            <Pressable
+                onPress={() => router.push("/eating-target")}
+                style={styles.button}
+              >
+                <Text style={{ color: "black", fontWeight: "500" }}>
+                  Đặt mục tiêu
+                </Text>
+              </Pressable>
+          </>
+        )}
       </View>
       <MaterialCommunityIcons name="nutrition"  size={112} color="#00FF66" />
     </View>
@@ -28,15 +48,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: "90%",
     height: 162,
-    backgroundColor: "white",
     borderRadius: 8,
-    shadowColor: "grey",
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    backgroundColor: 'white', 
+    shadowColor: 'gray', 
+    shadowOpacity: 0.5, 
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
     elevation: 5,
     padding: 20,
     display: "flex",

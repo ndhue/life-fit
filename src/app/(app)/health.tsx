@@ -273,20 +273,17 @@ export default function TabHealthScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     width: "90%",
-    backgroundColor: "white",
     marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
-    shadowColor: "grey",
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5, // This is for Android
     padding: 20,
+    backgroundColor: 'white', 
+    shadowColor: 'gray', 
+    shadowOpacity: 0.5, 
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 }
   },
   box: {
     paddingHorizontal: 15,
@@ -295,14 +292,6 @@ const styles = StyleSheet.create({
     width: "47%",
     height: 110,
     marginVertical: "3%",
-    shadowColor: "gray",
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 3.8,
-    elevation: 5, // This is for Android
     padding: 20,
   },
   datetime: {
@@ -334,9 +323,13 @@ const styles = StyleSheet.create({
     width: "90%",
     position: "relative",
     borderRadius: 10,
-    backgroundColor: "white",
     padding: 20,
     marginTop: 20,
+    backgroundColor: 'white', 
+    shadowColor: 'gray', 
+    shadowOpacity: 0.5, 
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 }
   },
   borderInfo: {
     borderBottomWidth: 1,

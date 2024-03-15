@@ -41,7 +41,9 @@ const ChangePassword = () => {
     setIsloading(true);
     try {
       const result = await changePassword(data);
+      console.log(result);
       if (result?.data) {
+        
         showToastSuccessNewPassWord();
         setIsloading(false);
         setTimeout(() => {
@@ -76,13 +78,13 @@ const ChangePassword = () => {
           <View style={global.container}>
           <View style={styles.fixedContainer}>
           <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
-            <InputField label="Mật khẩu cũ" onChangeText={(t) => setValue('oldpassword', t)} />
+            <InputField label="Mật khẩu cũ" onChangeText={(t) => setValue('oldpassword', t)} secure={true} />
             {errors.oldpassword && <Text style={global.error}>{errors.oldpassword.message}</Text>}
 
-            <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('password', t)} />
+            <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('password', t)} secure={true} />
             {errors.password && <Text style={global.error}>{errors.password.message}</Text>}
             
-            <InputField label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmpassword', t)} />
+            <InputField label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmpassword', t)} secure={true} />
             {errors.confirmpassword && <Text style={global.error}>{errors.confirmpassword.message}</Text>}
             <View style={{ marginTop: 30 }}>
               <LargeButton loading={isLoading} title="Gửi" variant="primary" onPress={handleSubmit(onSubmit)} />

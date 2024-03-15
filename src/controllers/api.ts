@@ -5,7 +5,7 @@ export const api = createApi({
     baseUrl: process.env.EXPO_PUBLIC_API_URL,
   }),
   reducerPath: "adminApi",
-  tagTypes: ["Profile", "Weight", "WeightByDate", "Water", "WaterByDate", "Diet", "DietByDate", "DietDetail", "DietDetailByDate", "Period", "Heart", "HeartByDate",  "BloodPressure", "BloodPressureByDate", "CaloByDate"],
+  tagTypes: ["Profile", "Weight", "WeightByDate", "Water", "WaterByDate", "Diet", "DietByDate", "DietDetail", "DietDetailByDate", "Period", "Heart", "HeartByDate",  "BloodPressure", "BloodPressureByDate", "CaloByDate", "Activity", "ActivityByDate"],
   endpoints: (build) => ({
     // Authentication
     authLogin: build.mutation({
@@ -302,46 +302,6 @@ export const api = createApi({
       }),
       invalidatesTags: ["Water"],
     }),
-
-    // create period
-    createPeriod: build.mutation({
-      query: (data) => {
-        return {
-          url: "/createPeriod",
-          headers: {
-            Authorization: `Bearer ${data.token}`,
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: data.data,
-        };
-      },
-      invalidatesTags: ["Period"],
-    }),
-    // get Period
-    getPeriod: build.query({
-      query: (token) => ({
-        url: "/getPeriod",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }),
-      providesTags: ["Period"],
-    }),
-    // edit period
-    editPeriod: build.mutation({
-      query: (data) => ({
-        url: `/updateperiod/${data.id}`,
-        method: "PUT",
-        body: data.data,
-        headers: {
-          Authorization: `Bearer ${data.token}`,
-          "Content-Type": "application/json",
-        },
-      }),
-      invalidatesTags: ["Period"],
-    }),
-
     // create heart
     createHeart: build.mutation({
       query: (data) => {
@@ -534,6 +494,111 @@ export const api = createApi({
       }),
       invalidatesTags: ["Weight", "WeightByDate"],
     }),
+    
+    // create period
+    createPeriod: build.mutation({
+      query: (data) => {
+        return {
+          url: "/createPeriod",
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: data.data,
+        };
+      },
+      invalidatesTags: ["Period"],
+    }),
+    // get Period
+    getPeriod: build.query({
+      query: (token) => ({
+        url: "/getPeriod",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ["Period"],
+    }),
+    // edit period
+    editPeriod: build.mutation({
+      query: (data) => ({
+        url: `/updateperiod/${data.id}`,
+        method: "PUT",
+        body: data.data,
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Period"],
+    }),
+
+
+    // create activity
+    createActivity: build.mutation({
+      query: (data) => {
+        return {
+          url: "/activity",
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: data.data,
+        };
+      },
+      invalidatesTags: ["Activity", "ActivityByDate"]
+    }),
+    // Get Activity
+    getActivity: build.query({
+      query: (token) => ({
+        url: "/getactivity",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ["Activity"],
+    }),
+     // Get Activity
+     getActivityByDate: build.query({
+      query: (data) => {
+        const { date, token } = data;
+        return {
+          url: "/getactivityBydate",
+          params: { date },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["ActivityByDate"],
+    }),
+     // edit activity
+     editActivity: build.mutation({
+      query: (data) => ({
+        url: `/updatedactivity/${data.id}`,
+        method: "PUT",
+        body: data.data,
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Activity", "ActivityByDate"],
+    }),
+    // delete activity
+    deleteActivity: build.mutation({
+      query: (data) => ({
+        url: `/deleteactivity/${data.id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Activity", "ActivityByDate"],
+    }),
   }),
 });
 
@@ -586,6 +651,12 @@ export const {
   useCreateWeightRecordMutation,
   useEditWeightRecordMutation,
   useDeleteWeightRecordMutation,
+
+  useGetActivityQuery,
+  useGetActivityByDateQuery,
+  useCreateActivityMutation,
+  useEditActivityMutation,
+  useDeleteActivityMutation,
 
   useGetCaloByDateQuery
 } = api;

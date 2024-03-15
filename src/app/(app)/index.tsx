@@ -9,29 +9,30 @@ import HomeHeader from "../../components/HomeHeader";
 import { WaterView } from "../../components/WaterView";
 import { PeriodView } from "../../components/PeriodView";
 import { DietView } from "../../components/DietView";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { useGetUserProfileQuery } from "../../controllers/api";
-import { doSaveProfile } from "../../redux/slices/authSlice";
+import { useAppSelector } from "../../redux/store";
+import { useGetActivityByDateQuery, useGetDietGoalByDateQuery, useGetUserProfileQuery, useGetWaterGoalByDatesQuery } from "../../controllers/api";
+import { ActivityView } from "../../components/ActivityView";
 
 export default function TabHomeScreen() {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const dispatch = useAppDispatch();
-  const { token, profile } = useAppSelector(state => ({
-    token: state.auth.token,
-    profile: state.auth.profile
-  
-  }));
+  const [currentTime, setCurrentTime] = useState(new Date().toISOString());
+  const [user, setUser] = useState({});
+
+  const { token } = useAppSelector(state => state.auth);
+
   const { data } = useGetUserProfileQuery(token);
+  const { data: currentActivity } = useGetActivityByDateQuery({ token, date: currentTime });
+  const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: currentTime, token });
+  const { data: dietGoal } = useGetDietGoalByDateQuery({ token, date: currentTime });
   
   useEffect(() => {
     if (data) {
-      dispatch(doSaveProfile(data[0]));
+      setUser(data[0]);
     }
-  }, [data])
-
+  }, [data]);
+  
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentTime(new Date());
+      setCurrentTime(new Date().toISOString());
     }, 360000);
 
     return () => clearInterval(intervalId);
@@ -45,11 +46,12 @@ export default function TabHomeScreen() {
     >
       <View style={global.wrapper}>
         <ScrollView>
-          <HomeHeader username={profile.fullname}/>
+          <HomeHeader username={user?.fullname || ""} />
           <View style={global.container}>
+            <ActivityView currentActivity={currentActivity?.result} />
             <PeriodView />
-            <DietView />
-            <WaterView />
+            <DietView dietGoal={dietGoal?.result[0]}/>
+            <WaterView waterGoal={waterGoal?.result[0]}/>
           </View>
         </ScrollView>
       </View>
