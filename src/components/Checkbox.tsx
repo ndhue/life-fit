@@ -35,7 +35,7 @@ const Checkbox = ({ activity }: props) => {
   };
 
   return (
-    <TouchableOpacity style={styles.checkboxContainer} onPress={toggleCheckbox}>
+    <TouchableOpacity style={styles.checkboxContainer} onPress={toggleCheckbox} disabled={isChecked}>
       <View style={[styles.checkbox, isChecked && styles.checked]}>
         {isChecked && <Ionicons name="checkmark" size={18} color="white" />}
       </View>

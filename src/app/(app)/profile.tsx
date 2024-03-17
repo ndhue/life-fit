@@ -9,21 +9,10 @@ import { doSaveProfile } from "../../redux/slices/authSlice";
 import { formatDate, formatTime } from "../../toast/formatter";
 
 export default function TabProfileScreen() {
-  const [profile, setProfile] = useState({
-    email: "",
-    fullname: "",
-    birthday: "",
-    gender: "",
-    weight: 0,
-    height: 0,
-    wakeup_time: "",
-    sleeping_time: "",
-  });
-  const { token } = useAppSelector((state) => state.auth);
+
+  const { token, profile } = useAppSelector((state) => state.auth);
   const { data } = useGetUserProfileQuery(token);
   
-  const dispatch = useAppDispatch();
-
   const customGender = (gender: string) => {
     switch (gender) {
       case "female": {
@@ -37,19 +26,6 @@ export default function TabProfileScreen() {
     }
   };
 
-  useEffect(() => {
-    if (data) {
-      setProfile({
-        ...data[0],
-        gender: customGender(data[0].gender),
-        birthday: formatDate(new Date(data[0].birthday)),
-        wakeup_time: formatTime(new Date(data[0].wakeup_time)),
-        sleeping_time: formatTime(new Date(data[0].sleeping_time)),
-      });
-      dispatch(doSaveProfile(data[0]));
-    }
-  }, [data]);
-
   return (
     <ImageBackground
       source={bg}
@@ -57,7 +33,7 @@ export default function TabProfileScreen() {
       resizeMode="cover"
     >
       <View style={global.wrapper}>
-        <Header title="Hồ sơ của tôi" edit={true} route="/setting" main={true} />
+        <Header title="Hồ sơ của tôi" edit={true} />
         <View style={global.container}>
           <View
             style={{
@@ -91,7 +67,7 @@ export default function TabProfileScreen() {
                 <InputField
                   label="Giới tính"
                   editable={false}
-                  value={profile.gender}
+                  value={customGender(profile.gender) || ""}
                 />
               </View>
             </View>
@@ -106,7 +82,7 @@ export default function TabProfileScreen() {
                   label="Cân nặng"
                   subLabel="(kg)"
                   editable={false}
-                  value={profile.weight.toString()}
+                  value={profile.weight.toString() || 0}
                 />
               </View>
               <View style={{ marginLeft: "4%", width: "48%" }}>
@@ -114,7 +90,7 @@ export default function TabProfileScreen() {
                   label="Chiều cao"
                   subLabel="(cm)"
                   editable={false}
-                  value={profile.height.toString()}
+                  value={profile.height.toString() || 0}
                 />
               </View>
             </View>
@@ -128,14 +104,14 @@ export default function TabProfileScreen() {
                 <InputField
                   label="Giờ dậy"
                   editable={false}
-                  value={profile.wakeup_time}
+                  value={formatTime(profile.wakeup_time) || ""}
                 />
               </View>
               <View style={{ marginLeft: "4%", width: "48%" }}>
                 <InputField
                   label="Giờ ngủ"
                   editable={false}
-                  value={profile.sleeping_time}
+                  value={formatTime(profile.sleeping_time) || ""}
                 />
               </View>
             </View>

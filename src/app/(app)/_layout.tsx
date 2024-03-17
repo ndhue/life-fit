@@ -6,9 +6,11 @@ import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { LOGIN_ID_KEY } from "../../controllers/secureStore";
 import { useAppDispatch } from "../../redux/store";
-import { doSaveUser } from "../../redux/slices/authSlice";
+import { doSaveProfile, doSaveUser } from "../../redux/slices/authSlice";
+import { useGetUserProfileQuery } from "../../controllers/api";
 
 export default function TabLayout() {
+
   const dispatch = useAppDispatch();
   if (Platform.OS === 'ios' || Platform.OS === 'android') {
     async function getLoginId() {
@@ -17,6 +19,10 @@ export default function TabLayout() {
         return <Redirect href="/signin" />;
       } else {
         dispatch(doSaveUser(token));
+        const { data } = useGetUserProfileQuery(token);
+        if (data) {
+          dispatch(doSaveProfile(data.result[0]));
+        }
       }
     }
     getLoginId();
@@ -27,6 +33,15 @@ export default function TabLayout() {
       return <Redirect href="/signin" />;
     } else {
       dispatch(doSaveUser(token));
+      const { data } = useGetUserProfileQuery(token);
+      if (data) {
+        if (data?.result[0].gender) {
+          
+          dispatch(doSaveProfile(data?.result[0]));
+        } else {
+          return <Redirect href="/set-up-profile" />
+        }
+      }
     }
   }
 

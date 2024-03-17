@@ -23,12 +23,12 @@ const Header = ({ main, title, edit, route }: HeaderProps) => {
         },
       ]}
     >
-      {main ? <AntDesign name="arrowleft" size={25} color="#FFD43B" onPress={() => router.replace(route)} /> : <View style={{width: 20}}/>}
+      {main ? <AntDesign name="arrowleft" size={25} color="#FFD43B" onPress={() => router.push(route)} /> : <View style={{width: 20}}/>}
       <Text style={global.title}>{title}</Text>
       {edit 
       ? 
       <FontAwesome name="pencil" size={25} color="#FFD43B" onPress={() => router.push('/edit-profile')} />
-      : <FontAwesome name="bell" size={25} color="#FFD43B" />
+      : <FontAwesome name="bell" size={25} color="#FFD43B" onPress={() => router.push('/notification')} />
       }
     </View>
   );

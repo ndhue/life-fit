@@ -5,12 +5,10 @@ import Header from "../../components/Header";
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { clearLoginId } from "../../controllers/secureStore";
 import { router } from "expo-router";
+import { useAppSelector } from "../../redux/store";
 
 export default function TabSettingScreen() {
-  const handleButtonPress = () => {
-    // Your button press logic here
-    console.log("Button pressed!");
-  };
+  const { profile } = useAppSelector(state => state.auth);
 
   const logOut = () => {
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
@@ -41,7 +39,7 @@ export default function TabSettingScreen() {
             }}
           ></View>
           <Text style={{ fontSize: 20, fontWeight: "700", paddingTop: 10 }}>
-            Antonnia Antonnia
+            {profile.fullname}
           </Text>
           <View
             style={{
@@ -59,12 +57,10 @@ export default function TabSettingScreen() {
             <ProfileButton
               icon={<FontAwesome name="gear" size={30} color="#FFD43B" />}
               text="Cài đặt"
-              onPress={handleButtonPress}
             />
             <ProfileButton
               icon={<AntDesign name="filetext1" size={30} color="#FFD43B" />}
               text="Chính sách & bảo mật"
-              onPress={handleButtonPress}
             />
             <ProfileButton
               icon={<AntDesign name="logout" size={30} color="#FFD43B" />}

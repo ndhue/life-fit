@@ -181,18 +181,18 @@ const EatingSchedule = () => {
       if (result?.data) {
         showToastSuccessAdd();
         setTimeout(() => {
-          setIsEditModalVisible(false);
+          setIsModalVisible(false);
         }, 1000);
       } else {
         showToastErrorAdd();
         setTimeout(() => {
-          setIsEditModalVisible(false);
+          setIsModalVisible(false);
         }, 1000);
       }
     } catch (error) {
       showToastErrorAdd();
       setTimeout(() => {
-        setIsEditModalVisible(false);
+        setIsModalVisible(false);
       }, 1000);
     }
   };

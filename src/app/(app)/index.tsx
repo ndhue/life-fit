@@ -10,34 +10,19 @@ import { WaterView } from "../../components/WaterView";
 import { PeriodView } from "../../components/PeriodView";
 import { DietView } from "../../components/DietView";
 import { useAppSelector } from "../../redux/store";
-import { useGetActivityByDateQuery, useGetDietGoalByDateQuery, useGetUserProfileQuery, useGetWaterGoalByDatesQuery } from "../../controllers/api";
+import { useGetActivityByDateQuery, useGetDietGoalByDateQuery, useGetPeriodLengthCurrentQuery, useGetWaterGoalByDatesQuery } from "../../controllers/api";
 import { ActivityView } from "../../components/ActivityView";
 
 export default function TabHomeScreen() {
-  const [currentTime, setCurrentTime] = useState(new Date().toISOString());
-  const [user, setUser] = useState({});
+  const [currentTime] = useState(new Date().toISOString());
 
-  const { token } = useAppSelector(state => state.auth);
+  const { token, profile } = useAppSelector(state => state.auth);
 
-  const { data } = useGetUserProfileQuery(token);
   const { data: currentActivity } = useGetActivityByDateQuery({ token, date: currentTime });
   const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: currentTime, token });
   const { data: dietGoal } = useGetDietGoalByDateQuery({ token, date: currentTime });
+  const { data: periodLengthCurrent } = useGetPeriodLengthCurrentQuery(token);
   
-  useEffect(() => {
-    if (data) {
-      setUser(data[0]);
-    }
-  }, [data]);
-  
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTime(new Date().toISOString());
-    }, 360000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
   return (
     <ImageBackground
       source={bg}
@@ -46,10 +31,10 @@ export default function TabHomeScreen() {
     >
       <View style={global.wrapper}>
         <ScrollView>
-          <HomeHeader username={user?.fullname || ""} />
+          <HomeHeader username={profile.fullname || ""} />
           <View style={global.container}>
             <ActivityView currentActivity={currentActivity?.result} />
-            <PeriodView />
+            <PeriodView periodLengthCurrent={periodLengthCurrent}/>
             <DietView dietGoal={dietGoal?.result[0]}/>
             <WaterView waterGoal={waterGoal?.result[0]}/>
           </View>

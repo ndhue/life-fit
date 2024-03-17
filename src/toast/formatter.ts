@@ -1,12 +1,9 @@
-export const formatTime = (time: Date) => {
-  // Check if time is a string, and convert it to a Date object if necessary
+export const formatTime = (time: Date | string) => {
   if (typeof time === 'string') {
     time = new Date(time);
   }
 
-  // Check if time is a valid Date object
   if (!(time instanceof Date) || isNaN(time.getTime())) {
-    // Handle invalid date
     return '';
   }
   return time.toLocaleTimeString('en-US', {

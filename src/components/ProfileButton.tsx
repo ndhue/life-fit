@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Colors from '../constants/Colors';
 
 type ProfileButtonProps = {
-  onPress: () => void;
+  onPress?: () => void;
   icon?: React.ReactNode;
   text: string;
 }

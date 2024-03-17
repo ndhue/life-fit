@@ -7,7 +7,7 @@ type InputFieldProps = {
   subLabel?: string;
   placeholder?: string;
   secure?: boolean;
-  value?: string;
+  value?: string | number;
   onPress?: () => void;
   editable?: boolean;
   onChangeText?: (text: string) => void;

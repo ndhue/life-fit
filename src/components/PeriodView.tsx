@@ -3,13 +3,19 @@ import { router } from "expo-router";
 import { Pressable, Text } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-export const PeriodView = () => {
+interface props {
+  periodLengthCurrent: {}
+}
+
+export const PeriodView = ({ periodLengthCurrent }: props) => {
   return (
     <View style={styles.container}>
       <View style={{ width: "50%" }}>
         <Text style={styles.text1}>Chu kỳ kinh nguyệt</Text>
-        <Text style={styles.text2}>Ngày 3</Text>
-        <Pressable
+        { periodLengthCurrent?.lengthperiod ? (
+          <>
+          <Text style={styles.text2}>Ngày {periodLengthCurrent?.lengthperiod}</Text>
+            <Pressable
           onPress={() => router.push("/period-tracker")}
           style={styles.button}
         >
@@ -17,6 +23,20 @@ export const PeriodView = () => {
             Chi tiết
           </Text>
         </Pressable>
+          </>
+        ) : (
+          <>
+          <Text style={[styles.text2, { fontSize: 16 }]}>Chưa có chu kỳ mới</Text>
+            <Pressable
+                onPress={() => router.push("/eating-target")}
+                style={styles.button}
+              >
+                <Text style={{ color: "black", fontWeight: "500" }}>
+                  Bắt đầu
+                </Text>
+              </Pressable>
+          </>
+        )}
       </View>
       <MaterialCommunityIcons name="flower" size={112} color="#FF1E52" />
     </View>

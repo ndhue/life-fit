@@ -14,7 +14,7 @@ export const DietView = ({ dietGoal }: props) => {
         <Text style={styles.text1}>Mục tiêu dinh dưỡng hôm nay</Text>
         { dietGoal ? (
           <>
-            <Text style={styles.text2}>2600 Kcal</Text>
+            <Text style={styles.text2}>{dietGoal.goal} Kcal</Text>
         <Pressable
           onPress={() => router.push("/eating-schedule")}
           style={styles.button}

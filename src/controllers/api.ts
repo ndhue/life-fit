@@ -5,7 +5,7 @@ export const api = createApi({
     baseUrl: process.env.EXPO_PUBLIC_API_URL,
   }),
   reducerPath: "adminApi",
-  tagTypes: ["Profile", "Weight", "WeightByDate", "Water", "WaterByDate", "Diet", "DietByDate", "DietDetail", "DietDetailByDate", "Period", "Heart", "HeartByDate",  "BloodPressure", "BloodPressureByDate", "CaloByDate", "Activity", "ActivityByDate"],
+  tagTypes: ["Profile", "Weight", "WeightByDate", "Water", "WaterByDate", "Diet", "DietByDate", "DietDetail", "DietDetailByDate", "Period", "Heart", "HeartByDate",  "BloodPressure", "BloodPressureByDate", "CaloByDate", "Activity", "ActivityByDate", "PeriodLengthCurrent", "PeriodLengthPre", "Notification", "WaterHistory"],
   endpoints: (build) => ({
     // Authentication
     authLogin: build.mutation({
@@ -118,8 +118,12 @@ export const api = createApi({
     changePassword: build.mutation({
       query: (data) => ({
         url: "/updatedPassword",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+          "Content-Type": "application/json",
+        },
         method: "PUT",
-        body: data,
+        body: data.data,
       }),
       invalidatesTags: ["Profile"]
     }),
@@ -520,6 +524,26 @@ export const api = createApi({
       }),
       providesTags: ["Period"],
     }),
+    // get period length current
+    getPeriodLengthCurrent: build.query({
+      query: (token) => ({
+        url: "/getPeriodlengthCurrent",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ["PeriodLengthCurrent"],
+    }),
+    // get peripd length previous
+    getPeriodLengthPrevious: build.query({
+      query: (token) => ({
+        url: "/getmenstrualPeriodPre",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ["PeriodLengthPre"],
+    }),
     // edit period
     editPeriod: build.mutation({
       query: (data) => ({
@@ -585,7 +609,7 @@ export const api = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["Activity", "ActivityByDate"],
+      invalidatesTags: ["Activity", "ActivityByDate", "Notification"],
     }),
     // delete activity
     deleteActivity: build.mutation({
@@ -598,6 +622,56 @@ export const api = createApi({
         },
       }),
       invalidatesTags: ["Activity", "ActivityByDate"],
+    }),
+    // get Notification
+    getNoti: build.query({
+      query: (token) => {
+        return {
+          url: "/getnoti",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["Notification"],
+    }),
+
+    setWaterTrackerHistory: build.mutation({
+      query: (data) => ({
+        url: "/watertrackerHistory",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+        method: "POST",
+        body: data.data,
+      }),
+      invalidatesTags: ["WaterHistory"],
+    }),
+    getSumWaterByDate: build.query({
+      query: (data) => {
+        const { dategoal, token } = data;
+        return {
+          url: "/WaterByDate",
+          params: { dategoal },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["WaterHistory"],
+    }),
+    getWaterHistoryByDate: build.query({
+      query: (data) => {
+        const { dategoal, token } = data;
+        return {
+          url: "/getwaterhistoryBydate",
+          params: { dategoal },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      },
+      providesTags: ["WaterHistory"],
     }),
   }),
 });
@@ -658,5 +732,15 @@ export const {
   useEditActivityMutation,
   useDeleteActivityMutation,
 
-  useGetCaloByDateQuery
+  useGetPeriodQuery,
+  useGetPeriodLengthCurrentQuery,
+  useGetPeriodLengthPreviousQuery,
+  useCreatePeriodMutation,
+  useEditPeriodMutation,
+
+  useGetCaloByDateQuery,
+  useGetNotiQuery,
+  useSetWaterTrackerHistoryMutation,
+  useGetWaterHistoryByDateQuery,
+  useGetSumWaterByDateQuery
 } = api;

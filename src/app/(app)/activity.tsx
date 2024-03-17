@@ -70,7 +70,7 @@ export default function TabActivityScreen() {
       const filterList = activityList?.result.filter(
         (activity) => formatDate(activity.date) !== formatDate(currentTime)
       );
-      setItemList(filterList);
+      setItemList([...filterList].reverse());
     }
   }, [activityList]);
 
@@ -222,6 +222,44 @@ export default function TabActivityScreen() {
     </View>
   );
 
+  const renderCurrentActivity = (rowData) => (
+    <View
+      style={[global.flexBox, { paddingVertical: 10,borderBottomWidth: 1, borderBottomColor: '#d1d1d1', backgroundColor: "#fff"}]}
+      key={rowData.item.id}
+    >
+      <Text
+        style={
+          rowData.item.goal
+            ? styles.textFinished
+            : styles.textUnfinished
+        }
+      >
+        {rowData.item.name}
+      </Text>
+      <Checkbox activity={rowData.item} />
+    </View>
+  )
+
+  const renderHiddenItemCurrent = (rowData, rowMap) => (
+    <View style={[styles.hiddenContainer]} key={rowData.item.id}>
+      <TouchableOpacity
+        style={[styles.hiddenButtonEit, { backgroundColor: Colors.secondary }]}
+        onPress={() => handleOpenEditModal(rowData.item.id)}
+      >
+        <AntDesign name="edit" size={16} color="white" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.hiddenButtonEit,
+          { backgroundColor: 'black' },
+        ]}
+        onPress={() => handleDeleteActivity(rowData.item.id)}
+      >
+        <AntDesign name="delete" size={16} color="white" />
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <>
       <KeyboardAvoidingView
@@ -257,23 +295,19 @@ export default function TabActivityScreen() {
                   <Text style={styles.textHistory}>Hoạt động hôm nay</Text>
                   <ScrollView>
                     {sortedList.length !== 0 ? (
-                      sortedList.map((activity) => (
-                        <View
-                          style={[global.flexBox, { paddingVertical: 10,borderBottomWidth: 1, borderBottomColor: '#d1d1d1'}]}
-                          key={activity.id}
-                        >
-                          <Text
-                            style={
-                              activity.goal
-                                ? styles.textFinished
-                                : styles.textUnfinished
-                            }
-                          >
-                            {activity.name}
-                          </Text>
-                          <Checkbox activity={activity} />
-                        </View>
-                      ))
+                      <SwipeListView
+                      data={sortedList}
+                      renderItem={renderCurrentActivity}
+                      renderHiddenItem={renderHiddenItemCurrent}
+                      rightOpenValue={-130}
+                      previewRowKey={"0"}
+                      previewOpenValue={-40}
+                      previewOpenDelay={3000}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                    />
                     ) : (
                         <Text style={[styles.textUnfinished, { paddingTop: 10, textAlign: 'center' }]}>
                           Chưa có hoạt động
@@ -360,7 +394,7 @@ export default function TabActivityScreen() {
                   />
                   <InputField
                     label="Tên hoạt động"
-                    onChangeText={(t) => setValue("name", Number(t))}
+                    onChangeText={(t) => setValue("name", t)}
                     defaultValue={getValues("name")}
                   />
                   {errors.name && (
@@ -448,6 +482,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     padding: 15,
+  },
+  hiddenButtonEit: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 2,
+    padding: 6,
   },
   textFinished: {
     color: "#adadad",

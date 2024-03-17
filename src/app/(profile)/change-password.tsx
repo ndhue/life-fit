@@ -12,25 +12,28 @@ import InputField from "../../components/InputField";
 import { useChangePasswordMutation, useUpdatePasswordMutation } from "../../controllers/api";
 import { toastConfig } from "../../toast/config/toastConfig";
 import { showToastErrorNewPassWord, showToastSuccessNewPassWord } from "../../toast/toaster";
+import { useAppSelector } from "../../redux/store";
 
 const ChangePassword = () => {
+  const { token } = useAppSelector(state => state.auth);
   const [isLoading, setIsloading] = useState(false);
 
   const schema = yup.object().shape({
     oldpassword: yup.string().min(6, 'Mật khẩu cần có ít nhất 6 kí tự').required('Mật khẩu không được để trống'),
-    password: yup.string().min(6, 'Mật khẩu cần có ít nhất 6 kí tự').required('Mật khẩu không được để trống'),
-    confirmpassword: yup.string().oneOf([yup.ref('password'), ''], 'Mật khẩu không khớp').required('Mật khẩu không được để trống'),
+    newpassword: yup.string().min(6, 'Mật khẩu cần có ít nhất 6 kí tự').required('Mật khẩu không được để trống'),
+    confirmpassword: yup.string().oneOf([yup.ref('newpassword'), ''], 'Mật khẩu không khớp').required('Mật khẩu không được để trống'),
   });
 
   const { 
     handleSubmit, 
     setValue,
+    clearErrors,
     formState: { errors }, 
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       oldpassword: "",
-      password: "",
+      newpassword: "",
       confirmpassword: ""
     }
   });
@@ -40,22 +43,30 @@ const ChangePassword = () => {
   const onSubmit = async (data) => {
     setIsloading(true);
     try {
-      const result = await changePassword(data);
-      console.log(result);
+      const result = await changePassword({token, data});
       if (result?.data) {
-        
         showToastSuccessNewPassWord();
         setIsloading(false);
         setTimeout(() => {
           router.replace("/signin");
         }, 1000);
+        clearErrors();
+        setValue('confirmpassword', '');
+        setValue('newpassword', '');
+        setValue('oldpassword', '');
       }else {
         setIsloading(false);
         showToastErrorNewPassWord();
+        setValue('confirmpassword', '');
+        setValue('newpassword', '');
+        setValue('oldpassword', '');
       }
     } catch (error) {
       setIsloading(false);
       showToastErrorNewPassWord();
+      setValue('confirmpassword', '');
+      setValue('newpassword', '');
+      setValue('oldpassword', '');
     }
   }; 
 
@@ -81,8 +92,8 @@ const ChangePassword = () => {
             <InputField label="Mật khẩu cũ" onChangeText={(t) => setValue('oldpassword', t)} secure={true} />
             {errors.oldpassword && <Text style={global.error}>{errors.oldpassword.message}</Text>}
 
-            <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('password', t)} secure={true} />
-            {errors.password && <Text style={global.error}>{errors.password.message}</Text>}
+            <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('newpassword', t)} secure={true} />
+            {errors.newpassword && <Text style={global.error}>{errors.newpassword.message}</Text>}
             
             <InputField label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmpassword', t)} secure={true} />
             {errors.confirmpassword && <Text style={global.error}>{errors.confirmpassword.message}</Text>}

@@ -45,7 +45,7 @@ export const ActivityView = ({ currentActivity }: props) => {
     <View style={styles.container}>
       <Text style={styles.text1}>{formatDate(currentTime)}</Text>
       <ScrollView>
-        {currentActivity ? (
+        {currentActivity?.length !== 0 ? (
           sortedList.map((activity) => (
             <View
               style={[global.flexBox, { paddingVertical: 10, backgroundColor: "white", borderBottomWidth: 1, borderBottomColor: '#d1d1d1' }]}
@@ -62,17 +62,17 @@ export const ActivityView = ({ currentActivity }: props) => {
             </View>
           ))
         ) : (
-          <>
+          <View style={{ display: 'flex', justifyContent: 'center', alignItems:'center'}}>
             <Text style={styles.textUnfinished}>Chưa có hoạt động</Text>
             <Pressable
               onPress={() => router.push("/activity")}
               style={styles.button}
             >
-              <Text style={{ color: "black", fontWeight: "500" }}>
+              <Text style={{ color: "black", fontWeight: "500", textAlign: 'center' }}>
                 Tạo hoạt động
               </Text>
             </Pressable>
-          </>
+          </View>
         )}
       </ScrollView>
     </View>

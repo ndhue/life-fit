@@ -3,16 +3,29 @@ import {
   Image,
   ImageBackground,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import { bg, global } from "../../constants/Global";
 import Header from "../../components/Header";
 import { router } from "expo-router";
-import { useGetWaterGoalByDatesQuery, useGetWaterListQuery} from "../../controllers/api";
+import { useGetSumWaterByDateQuery, useGetWaterGoalByDatesQuery, useGetWaterHistoryByDateQuery, useSetWaterTrackerHistoryMutation} from "../../controllers/api";
 import { useAppSelector } from "../../redux/store";
-import { formatDate, formatTime } from "../../toast/formatter";
+import { formatTime } from "../../toast/formatter";
+import { Modal } from "../../components/Modal";
+import InputField from "../../components/InputField";
+import moment from "moment";
+import Button from "../../components/Button";
+import { showToastErrorAdd, showToastSuccessAdd } from "../../toast/toaster";
+import { AntDesign } from "@expo/vector-icons";
+import Colors from "../../constants/Colors";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "../../toast/config/toastConfig";
 
 const WaterTracker = () => {
   const { token } = useAppSelector(state => state.auth);
@@ -21,18 +34,24 @@ const WaterTracker = () => {
   const [today] = useState(new Date().toISOString());
   const [listGoal, setListGoal] = useState([]);
   const [currentGoal, setCurrentGoal] = useState({});
-  
-  const { data } = useGetWaterListQuery(token);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: today, token });
+  const { data: sumWater} = useGetSumWaterByDateQuery({ token, dategoal: today });
+  const { data: waterHisory } = useGetWaterHistoryByDateQuery({ token, dategoal: today });
+
+  const [setWaterTrackerHistory] = useSetWaterTrackerHistoryMutation();
 
   useEffect(() => {
-    if(data) {
-      setListGoal(data?.result.slice(-6, -1));    }
-  }, [data]);
+    if(waterHisory) {
+      setListGoal([...waterHisory?.result].reverse());    }
+  }, [waterHisory]);
 
   useEffect(() => {
     if(waterGoal) {
       setCurrentGoal(waterGoal.result[0]);
+      setValue('watertracker_id', waterGoal.result[0].id);
+      setValue('water', Math.ceil(waterGoal.result[0].watergoal / 8));
     }
   }, [waterGoal])
   
@@ -44,63 +63,168 @@ const WaterTracker = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+
+  const schema = yup.object().shape({
+    water: yup.number().required('Không được để trống'),
+    time: yup.date().required('Không được để trống'),
+    watertracker_id: yup.number().required('Không được để trống'),
+  });
+
+  const {
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      water: 0,
+      time: new Date(),
+      watertracker_id: 1,
+    },
+  });
+  
+  const onSubmit = async (data) => {
+    try {
+      const result = await setWaterTrackerHistory({ data, token });
+      if (result?.data) {
+        showToastSuccessAdd();
+        setIsModalVisible(false);
+      } else {
+        showToastErrorAdd();
+        setIsModalVisible(false);
+      }
+    } catch (error) {
+      showToastErrorAdd();
+      setIsModalVisible(false);
+    }
+  };
+
   return (
-    <ImageBackground
-      source={bg}
-      style={global.backgroundImage}
-      resizeMode="cover"
-    >
-      <View style={global.wrapper}>
-        <Header title="Chế độ uống nước" route="/" main={true} />
-        <View style={global.container}>
-          <View style={styles.container}>
-            <Image
-              source={require("../../assets/images/water-dashboard.png")}
-              style={styles.img}
-            />
-            <View style={styles.content}>
-              <Text style={styles.time}>{formatTime(currentTime)}</Text>
-              <Text style={styles.qty}>400ml (1 Ly)</Text>
+    <>
+      <ImageBackground
+        source={bg}
+        style={global.backgroundImage}
+        resizeMode="cover"
+      >
+        <View style={global.wrapper}>
+          <Header title="Chế độ uống nước" route="/" main={true} />
+          <View style={global.container}>
+            <View style={styles.container}>
+              <Image
+                source={require("../../assets/images/water-dashboard.png")}
+                style={styles.img}
+              />
+              <View style={styles.content}>
+                <Text style={styles.time}>{formatTime(currentTime)}</Text>
+                <Text style={styles.qty}>{getValues('water')}ml (1 ly)</Text>
 
-              {!currentGoal && <View style={{ paddingTop: 40 }}>
-                <Pressable onPress={() => router.push('/edit-water-tracker')} style={styles.button}>
-                  <Text style={{ color: 'black', fontWeight: '500' }}>Đặt mục tiêu</Text>
-                </Pressable>
-              </View>}
-            </View>
-          </View>
+                {!currentGoal && (
+                    <View style={{ paddingTop: 40 }}>
+                    <Pressable onPress={() => router.push('/edit-water-tracker')} style={styles.button}>
+                      <Text style={{ color: 'black', fontWeight: '500' }}>Đặt mục tiêu</Text>
+                    </Pressable>
+                  </View>
+                  )}
 
-          <View style={styles.container}>
-            <View>
-              <Image source={require("../../assets/images/process.png")} />
-              <Text style={styles.target}>500ml</Text>
-            </View>
-
-            <View style={styles.targetContainer}>
-              <Text style={{ color: "#90A5B4", fontSize: 15 }}>Mục tiêu</Text>
-              <Text style={{ fontSize: 22, fontWeight: "600", paddingTop: 10 }}>
-                { currentGoal ? `${currentGoal.watergoal}ml` : '0ml' }
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.info}>
-            {listGoal && listGoal?.map((goal,index) => (
-              <View style={[styles.borderInfo, global.flexBox]} key={index}>
-              <View>
-                <Text style={styles.subTitle}>{formatDate(new Date(goal.dategoal))}</Text>
-                <Text style={styles.subDetail}>{goal.watergoal}ml</Text>
-              </View>
-              <View>
-                <Text style={styles.conclusion}>HOÀN THÀNH</Text>
+                 {sumWater?.Sumwater < currentGoal?.watergoal  ? (
+                  (
+                    <View style={{ paddingTop: 40 }}>
+                      <Pressable onPress={handleModal} style={styles.button}>
+                        <Text style={{ color: 'black', fontWeight: '500' }}>Cập nhật nước đã uống</Text>
+                      </Pressable>
+                    </View>
+                    )
+                 ) : (
+                  (
+                    <View style={{ paddingTop: 40 }}>
+                      <Pressable style={styles.button} disabled>
+                        <Text style={{ color: 'black', fontWeight: '500' }}>Mục tiêu đã hoàn thành</Text>
+                      </Pressable>
+                    </View>
+                    )
+                 )} 
               </View>
             </View>
-            ))}
-          </View>
 
+            <View style={styles.container}>
+              <View>
+                <Image source={require("../../assets/images/process.png")} />
+                <Text style={styles.target}>{sumWater ? sumWater.Sumwater : 0}ml</Text>
+              </View>
+
+              <View style={styles.targetContainer}>
+                <Text style={{ color: "#90A5B4", fontSize: 15 }}>Mục tiêu</Text>
+                <Text style={{ fontSize: 22, fontWeight: "600", paddingTop: 10 }}>
+                  { currentGoal ? `${currentGoal.watergoal}ml` : '0ml' }
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.info}>
+              <ScrollView>
+                {listGoal && listGoal?.map((goal,index) => (
+                  <View style={[styles.borderInfo, global.flexBox]} key={index}>
+                  <View>
+                    <Text style={styles.subTitle}>{formatTime(new Date(goal.time))}</Text>
+                    <Text style={styles.subDetail}>{goal.water}ml</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.conclusion}>HOÀN THÀNH</Text>
+                  </View>
+                </View>
+                ))}
+                {listGoal.length === 0 && <Text style={[styles.subDetail, { textAlign: 'center'}]}>Chưa có lịch sử</Text>}
+
+              </ScrollView>
+            </View>
+              {/* modal add */}
+              <Modal isVisible={isModalVisible}>
+                <Modal.Container>
+                  <AntDesign
+                    name="close"
+                    size={20}
+                    color={Colors.border}
+                    onPress={handleModal}
+                    style={{
+                      textAlign: "right",
+                      marginTop: 8,
+                      marginRight: 8,
+                    }}
+                  />
+                  <Modal.Header title="Lịch sử uống nước" />
+                  <Modal.Body>
+                    <InputField
+                      label="Ngày cập nhật"
+                      value={moment(new Date()).format('DD/MM/YYYY hh:mm A')}
+                      editable={false}
+                    />
+                    <InputField
+                      label="Lượng nước đã uống"
+                      subLabel="(ml)"
+                      editable={false}
+                      value={getValues('water')}
+                      onChangeText={(t) => setValue("water", Number(t))}
+                    />
+                    {errors.water && (
+                      <Text style={global.error}>{errors.water.message}</Text>
+                    )}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="primary"
+                      title="Hoàn tất"
+                      onPress={handleSubmit(onSubmit)}
+                    />
+                  </Modal.Footer>
+                </Modal.Container>
+              </Modal>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+      <Toast config={toastConfig} />
+    </>
   );
 };
 
@@ -146,7 +270,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: 160,
     position: "absolute",
-    right: "5%",
+    right: 0,
     top: "20%",
   },
   button: {
@@ -159,6 +283,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   info: {
+    height: 280,
     width: '90%',
     position: 'relative',
     borderRadius: 10,

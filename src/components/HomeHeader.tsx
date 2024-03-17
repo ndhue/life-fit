@@ -1,6 +1,7 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
+import { router } from "expo-router";
 
 interface props {
   username: string;
@@ -46,7 +47,9 @@ const HomeHeader = ({ username }: props) => {
           </Text>
         </View>
       </View>
-      <FontAwesome name="bell" size={25} color="#FFD43B" />
+      <TouchableOpacity onPress={() => router.push('/notification')}>
+        <FontAwesome name="bell" size={25} color="#FFD43B" />
+      </TouchableOpacity>
     </View>
   );
 };

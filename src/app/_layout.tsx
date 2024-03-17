@@ -53,9 +53,11 @@ function RootLayoutNav() {
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen name="(profile)" options={{ headerShown: false }} />
             <Stack.Screen name="(history)" options={{ headerShown: false }} />
+            <Stack.Screen name="(notification)" options={{ headerShown: false }} />
             <Stack.Screen name="forget-password" options={{ headerShown: false }} />
             <Stack.Screen name="new-password" options={{ headerShown: false }} />
             <Stack.Screen name="confirm" options={{ headerShown: false }} />
+            <Stack.Screen name="set-up-profile" options={{ headerShown: false }} />
           </Stack>
         </ThemeProvider>
       </Provider>
