@@ -117,9 +117,8 @@ export default function TabActivityScreen() {
 
   const handleEditActivity = async (data) => {
     try {
-      const result = editActivity({ id: editedActivity.id, token, data });
-      console.log(result);
-      if (result?.data) {
+      const result = await editActivity({ id: editedActivity.id, token, data });
+      if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
         setTimeout(() => {
           setIsEditModalVisible(false);
@@ -177,9 +176,10 @@ export default function TabActivityScreen() {
 
   const handleDeleteActivity = async (id: number) => {
     try {
-      const result = deleteActivity({ id, token });
+      const result = await deleteActivity({ id, token });
       console.log(result);
-      if (result?.data.message === "Xóa thành công") {
+      
+      if (result?.data.message === "Xoá thành công") {
         showToastSuccessDelete();
       } else {
         showToastErrorDelete();
@@ -293,7 +293,7 @@ export default function TabActivityScreen() {
                 </View>
                 <View style={[styles.container, { height: 250 }]}>
                   <Text style={styles.textHistory}>Hoạt động hôm nay</Text>
-                  <ScrollView>
+              
                     {sortedList.length !== 0 ? (
                       <SwipeListView
                       data={sortedList}
@@ -313,7 +313,6 @@ export default function TabActivityScreen() {
                           Chưa có hoạt động
                         </Text>
                     )}
-                  </ScrollView>
                 </View>
                 <View style={[styles.container, { height: 250 }]}>
                   <Text style={styles.textHistory}>Lịch sử hoạt động</Text>
@@ -346,7 +345,7 @@ export default function TabActivityScreen() {
                     marginRight: 8,
                   }}
                 />
-                <Modal.Header title="Cân nặng" />
+                <Modal.Header title="Hoạt động" />
                 <Modal.Body>
                   <InputField
                     label="Ngày cập nhật"
@@ -385,7 +384,7 @@ export default function TabActivityScreen() {
                     marginRight: 8,
                   }}
                 />
-                <Modal.Header title="Cân nặng" />
+                <Modal.Header title="Hoạt động" />
                 <Modal.Body>
                   <InputField
                     label="Ngày cập nhật"

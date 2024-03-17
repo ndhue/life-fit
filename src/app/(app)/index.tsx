@@ -9,19 +9,28 @@ import HomeHeader from "../../components/HomeHeader";
 import { WaterView } from "../../components/WaterView";
 import { PeriodView } from "../../components/PeriodView";
 import { DietView } from "../../components/DietView";
-import { useAppSelector } from "../../redux/store";
-import { useGetActivityByDateQuery, useGetDietGoalByDateQuery, useGetPeriodLengthCurrentQuery, useGetWaterGoalByDatesQuery } from "../../controllers/api";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useGetActivityByDateQuery, useGetDietGoalByDateQuery, useGetPeriodLengthCurrentQuery, useGetUserProfileQuery, useGetWaterGoalByDatesQuery } from "../../controllers/api";
 import { ActivityView } from "../../components/ActivityView";
+import { doSaveProfile } from "../../redux/slices/authSlice";
 
 export default function TabHomeScreen() {
   const [currentTime] = useState(new Date().toISOString());
+  const dispatch = useAppDispatch();
 
   const { token, profile } = useAppSelector(state => state.auth);
 
+  const { data } = useGetUserProfileQuery(token);
   const { data: currentActivity } = useGetActivityByDateQuery({ token, date: currentTime });
   const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: currentTime, token });
   const { data: dietGoal } = useGetDietGoalByDateQuery({ token, date: currentTime });
   const { data: periodLengthCurrent } = useGetPeriodLengthCurrentQuery(token);
+
+  useEffect(() => {
+    if (data) {
+      dispatch(doSaveProfile(data.result[0]));
+    }
+  }, [data]);
   
   return (
     <ImageBackground
@@ -31,7 +40,7 @@ export default function TabHomeScreen() {
     >
       <View style={global.wrapper}>
         <ScrollView>
-          <HomeHeader username={profile.fullname || ""} />
+          <HomeHeader username={profile.fullname} />
           <View style={global.container}>
             <ActivityView currentActivity={currentActivity?.result} />
             <PeriodView periodLengthCurrent={periodLengthCurrent}/>

@@ -12,6 +12,14 @@ export default function TabProfileScreen() {
 
   const { token, profile } = useAppSelector((state) => state.auth);
   const { data } = useGetUserProfileQuery(token);
+  const dispatch = useAppDispatch();
+console.log(data.result[0]);
+
+  useEffect(() => {
+    if (data) {
+      dispatch(doSaveProfile(data.result[0]));
+    }
+  }, [data]);
   
   const customGender = (gender: string) => {
     switch (gender) {
@@ -60,7 +68,7 @@ export default function TabProfileScreen() {
                 <InputField
                   label="Ngày sinh"
                   editable={false}
-                  value={profile.birthday}
+                  value={formatDate(profile.birthday)}
                 />
               </View>
               <View style={{ marginLeft: "4%", width: "48%" }}>

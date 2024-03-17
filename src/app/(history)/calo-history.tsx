@@ -23,24 +23,22 @@ import { useEffect, useState } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
 import {
   showToastErrorAdd,
-  showToastErrorDelete,
   showToastErrorUpdate,
   showToastSuccessAdd,
-  showToastSuccessDelete,
   showToastSuccessUpdate,
 } from "../../toast/toaster";
 import {
-  useCreateHeartMutation,
-  useDeleteHeartMutation,
-  useEditHeartMutation,
-  useGetHeartByDateQuery,
-  useGetHeartQuery,
+  useGetDietGoalByDateQuery,
+  useGetDietGoalQuery,
+  useSetDietGoalMutation,
+  useUpdateDietMutation,
 } from "../../controllers/api";
 import { useAppSelector } from "../../redux/store";
 import { formatDate } from "../../toast/formatter";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
 import Button from "../../components/Button";
+import moment from "moment";
 
 const CaloHistory = () => {
   const { token } = useAppSelector((state) => state.auth);
@@ -51,31 +49,30 @@ const CaloHistory = () => {
   const [currentHeart, setCurrentHeart] = useState({});
   const [editedHeart, setEditedHeart] = useState({});
 
-  const { data: heartRateHistory } = useGetHeartQuery(token);
-  const { data: currentHearRate } = useGetHeartByDateQuery({
+  const { data: dietGoal } = useGetDietGoalQuery(token);
+  const { data: currentDietDetail } = useGetDietGoalByDateQuery({
     token,
-    date: today,
+    date: moment(new Date()).format("YYYY-MM-DD"),
   });
 
   useEffect(() => {
-    if (heartRateHistory) {
-      setItemList([...heartRateHistory?.result].slice(0, -1).reverse());
+    if (dietGoal) {
+      setItemList([...dietGoal?.result].reverse());
     }
-  }, [heartRateHistory]);
+  }, [dietGoal]);
 
   useEffect(() => {
-    if (currentHearRate) {
-      setCurrentHeart(currentHearRate?.result[0]);
+    if (currentDietDetail) {
+      setCurrentHeart(currentDietDetail?.result[0]);
     }
-  }, [currentHearRate]);
+  }, [currentDietDetail]);
 
-  const [createHeart] = useCreateHeartMutation();
-  const [editHeart] = useEditHeartMutation();
-  const [deleteHeart] = useDeleteHeartMutation();
+  const [createHeart] = useSetDietGoalMutation();
+  const [updateDiet] = useUpdateDietMutation();
 
   const schema = yup.object().shape({
-    date: yup.date().required("Không để thời gian trống"),
-    heartbeat: yup.number().required("Hãy nhập nhịp tim"),
+    date: yup.string().required("Không để thời gian trống"),
+   goal: yup.number().required("Hãy nhập nhịp mục tiêu calo"),
   });
 
   const {
@@ -86,8 +83,8 @@ const CaloHistory = () => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      date: new Date(),
-      heartbeat: 0,
+      date: moment(new Date()).format('YYYY-MM-DD'),
+      goal: 0,
     },
   });
 
@@ -123,14 +120,14 @@ const CaloHistory = () => {
     setIsEditModalVisible(true);
     const editHeart = itemList.find((item) => item.id === id) || {};
     setEditedHeart(editHeart);
-    setValue("date", new Date(editHeart.date));
-    setValue("heartbeat", editHeart.heartbeat);
+    setValue("date", moment(new Date(editHeart.date)).format('YYYY-MM-DD'));
+    setValue("goal", editHeart.goal);
   };
 
   const handleEditHeart = async (data) => {
     try {
-      const result = editHeart({ id: editedHeart.id, token, data });
-      if (result?.message === "Cập nhật thành công") {
+      const result = await updateDiet({ id: editedHeart.id, token, data });
+      if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
         setTimeout(() => {
           setIsEditModalVisible(false);
@@ -149,26 +146,13 @@ const CaloHistory = () => {
     }
   };
 
-  const handleDeleteHeart = async (id: number) => {
-    try {
-      const result = deleteHeart({ id, token });
-      if (result?.message === "Xóa thành công") {
-        showToastSuccessDelete();
-      } else {
-        showToastErrorDelete();
-      }
-    } catch (error) {
-      showToastErrorDelete();
-    }
-  };
-
   const renderListHeartRate = (rowData) => (
     <View style={styles.container}>
       <Text style={styles.date}>{formatDate(rowData.item.date)}</Text>
       <View style={[global.flexBox, { justifyContent: "flex-start" }]}>
-        <Text style={styles.text}>Nhịp tim cập nhật: </Text>
+        <Text style={styles.text}>Calo cập nhật: </Text>
         <Text style={[styles.text, styles.static]}>
-          {rowData.item.heartbeat} bpm
+          {rowData.item.goal} Kcal
         </Text>
       </View>
     </View>
@@ -181,12 +165,6 @@ const CaloHistory = () => {
         onPress={() => handleOpenEditModal(rowData.item.id)}
       >
         <AntDesign name="edit" size={20} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.hiddenButton, { backgroundColor: "black" }]}
-        onPress={() => handleDeleteHeart(rowData.item.id)}
-      >
-        <AntDesign name="delete" size={20} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -207,7 +185,6 @@ const CaloHistory = () => {
           resizeMode="cover"
         >
           <View style={global.wrapper}>
-            <ScrollView>
               <Header title="Lịch sử calo" route="/health" main={true} />
               <View style={[global.container, { justifyContent: "center" }]}>
                 <View style={styles.currentContainer}>
@@ -221,7 +198,7 @@ const CaloHistory = () => {
                       <Text style={styles.title}>Calories</Text>
                     </View>
 
-                    {currentHeart ? (
+                    {currentHeart?.goal ? (
                       <View
                         style={[
                           styles.detail,
@@ -229,13 +206,13 @@ const CaloHistory = () => {
                         ]}
                       >
                         <Text style={styles.staticCurrent}>
-                          {currentHeart ? currentHeart?.heartbeat : 0}
+                          {currentHeart ? currentHeart?.goal : 0}
                         </Text>
                         <Text style={styles.type}>Kcal</Text>
                       </View>
                     ) : (
                       <>
-                        <Text style={styles.type}>Chưa cập nhật hôm nay</Text>
+                        <Text style={[styles.type, { fontSize: 14 }]}>Chưa cập nhật</Text>
                           <Pressable onPress={handleModal} style={styles.button}>
                           <Text style={{ color: "black", fontWeight: "500" }}>
                             Thêm
@@ -244,7 +221,7 @@ const CaloHistory = () => {
                       </>
                     )}
                   </View>
-                  <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <View style={{ alignItems: "flex-end" }}>
                     <Text style={styles.dateCurrent}>{formatDate(today)}</Text>
                     
                   </View>
@@ -265,7 +242,6 @@ const CaloHistory = () => {
                 />
               </View>
               <View style={{ paddingBottom: 20 }} />
-            </ScrollView>
 
             {/* modal add */}
             <Modal isVisible={isModalVisible}>
@@ -281,19 +257,19 @@ const CaloHistory = () => {
                     marginRight: 8,
                   }}
                 />
-                <Modal.Header title="Nhịp tim" />
+                <Modal.Header title="Calo" />
                 <Modal.Body>
                   <InputField
                     label="Ngày cập nhật"
-                    value={formatDate(getValues("date"))}
+                    value={moment(getValues("date")).format('YYYY-MM-DD')}
                     editable={false}
                   />
                   <InputField
-                    label="Nhịp tim"
-                    onChangeText={(t) => setValue("heartbeat", Number(t))}
+                    label="Calo"
+                    onChangeText={(t) => setValue("goal", Number(t))}
                   />
-                  {errors.heartbeat && (
-                    <Text style={global.error}>{errors.heartbeat.message}</Text>
+                  {errors.goal && (
+                    <Text style={global.error}>{errors.goal.message}</Text>
                   )}
                 </Modal.Body>
                 <Modal.Footer>
@@ -320,20 +296,20 @@ const CaloHistory = () => {
                     marginRight: 8,
                   }}
                 />
-                <Modal.Header title="Nhịp tim" />
+                <Modal.Header title="Calo" />
                 <Modal.Body>
                   <InputField
                     label="Ngày cập nhật"
-                    value={formatDate(getValues("date"))}
+                    value={moment(getValues("date")).format('YYYY-MM-DD')}
                     editable={false}
                   />
                   <InputField
-                    label="Nhịp tim"
-                    onChangeText={(t) => setValue("heartbeat", Number(t))}
-                    defaultValue={getValues("heartbeat").toString()}
+                    label="Calo"
+                    onChangeText={(t) => setValue("goal", Number(t))}
+                    defaultValue={getValues("goal").toString()}
                   />
-                  {errors.heartbeat && (
-                    <Text style={global.error}>{errors.heartbeat.message}</Text>
+                  {errors.goalt && (
+                    <Text style={global.error}>{errors.goal.message}</Text>
                   )}
                 </Modal.Body>
                 <Modal.Footer>
@@ -428,7 +404,7 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   staticCurrent: {
-    fontSize: 62,
+    fontSize: 58,
     fontWeight: "700",
     color: "#0DB1AD",
   },
@@ -440,12 +416,12 @@ const styles = StyleSheet.create({
   dateCurrent: {
     color: "#525252",
     fontWeight: "500",
-    fontSize: 18,
+    fontSize: 16,
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
-    width: "50%",
+    width: "70%",
     paddingVertical: 8,
     borderRadius: 30,
     elevation: 3,

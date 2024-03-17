@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     position: "absolute",
     top: "60%",
-    left: "14%",
+    left: "12%",
   },
   targetContainer: {
     backgroundColor: "white",

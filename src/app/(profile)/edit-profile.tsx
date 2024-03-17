@@ -15,7 +15,7 @@ import InputField from "../../components/InputField";
 import { bg, global } from "../../constants/Global";
 import Header from "../../components/Header";
 import { useAppSelector } from "../../redux/store";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { StyleSheet } from "react-native";
 import { Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -31,7 +31,7 @@ import { formatDate } from "../../toast/formatter";
 export default function EditProfile() {
   const { token, profile } = useAppSelector((state) => state.auth);
 
-  const [dateValue, setDateValue] = useState("");
+  const [dateValue, setDateValue] = useState(formatDate(profile.birthday));
   const [isLoading, setIsloading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -73,6 +73,7 @@ export default function EditProfile() {
   const {
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -88,7 +89,6 @@ export default function EditProfile() {
     },
   });
 
-
   const [updateProfile] = useUpdateProfileMutation();
 
   const onSubmit = async (data) => {
@@ -101,7 +101,7 @@ export default function EditProfile() {
         setIsloading(false);
         showToastSuccessEditProfile();
         setTimeout(() => {
-          router.replace("/profile");
+          router.back();
         }, 1000);
       } else {
         setIsloading(false);
@@ -116,6 +116,24 @@ export default function EditProfile() {
   const handleSelectGender = (gender: string) => {
     setValue('gender', gender);
     setSelect(gender);
+  };
+
+  const handleWakeupTimeChange = (
+    event: DateTimePickerEvent,
+    selectedTime?: Date
+  ) => {
+    console.log(selectedTime);
+    
+    setValue("wakeup_time", selectedTime);
+  };
+
+  const handleSleepingTimeChange = (
+    event: DateTimePickerEvent,
+    selectedTime?: Date
+  ) => {
+    console.log(selectedTime?.toISOString());
+    
+    setValue("sleeping_time", selectedTime);
   };
 
   return (
@@ -149,12 +167,12 @@ export default function EditProfile() {
                 <InputField
                   label="Email"
                   onChangeText={(t) => setValue('email', t)}
-                  defaultValue={profile.email}
+                  defaultValue={getValues('email')}
                 />
                 <InputField
                   label="Họ và tên"
                   onChangeText={(t) => setValue('fullname', t)}
-                  defaultValue={profile.fullname}
+                  defaultValue={getValues('fullname')}
                 />
                 {/* Birthday */}
                 <InputField
@@ -163,6 +181,7 @@ export default function EditProfile() {
                   onPress={toggleDatePicker}
                   editable={false}   
                   value={dateValue}
+                  defaultValue={getValues('birthday')}
                   onChangeText={t => setValue('birthday', t)}
                 />
                 {errors.birthday && <Text style={global.error}>{errors.birthday.message}</Text>}
@@ -213,7 +232,7 @@ export default function EditProfile() {
                             source={require("../../assets/images/male-svg-com.png")}
                           />
                           {(select === "male" ||
-                            profile.gender === "male") && (
+                            getValues('gender') === "male") && (
                             <View style={styles.check}>
                               <AntDesign
                                 name="checkcircle"
@@ -232,7 +251,7 @@ export default function EditProfile() {
                             source={require("../../assets/images/female-svg-com.png")}
                           />
                           {(select === "female" ||
-                            profile.gender === "female") && (
+                            getValues('gender') === "female") && (
                             <View style={styles.check}>
                               <AntDesign
                                 name="checkcircle"
@@ -251,7 +270,7 @@ export default function EditProfile() {
                             source={require("../../assets/images/gender-svg-com.png")}
                           />
                           {(select === "other" ||
-                            profile.gender === "other") && (
+                            getValues('gender') === "other") && (
                             <View style={styles.check}>
                               <AntDesign
                                 name="checkcircle"
@@ -279,7 +298,7 @@ export default function EditProfile() {
                 <InputField
                   label="Cân nặng"
                   subLabel="(kg)"
-                  defaultValue={profile.weight.toString()}
+                  defaultValue={getValues('weight').toString()}
                   onChangeText={t => setValue('weight', Number(t))}
                 />
               </View>
@@ -287,7 +306,7 @@ export default function EditProfile() {
                 <InputField
                   label="Chiều cao"
                   subLabel="(cm)"
-                  defaultValue={profile.height.toString()}
+                  defaultValue={getValues('height').toString()}
                   onChangeText={t => setValue('height', Number(t))}
                 />
               </View>
@@ -300,11 +319,11 @@ export default function EditProfile() {
                       Giờ dậy
                     </Text>
                     <DateTimePicker
-                      value={new Date()}
+                      value={getValues("wakeup_time")}
                       mode="time"
                       is24Hour={true}
                       display="default"
-                      onChange={t => setValue('wakeup_time', t)}
+                      onChange={handleWakeupTimeChange}
                       style={{
                         position: "absolute",
                         left: -10,
@@ -324,11 +343,11 @@ export default function EditProfile() {
                       Giờ ngủ
                     </Text>
                     <DateTimePicker
-                      value={new Date()}
+                      value={getValues("sleeping_time")}
                       mode="time"
                       is24Hour={true}
                       display="default"
-                      onChange={t => setValue('sleeping_time', t)}
+                      onChange={handleSleepingTimeChange}
                       style={{
                         position: "absolute",
                         left: -10,

@@ -30,7 +30,6 @@ import {
 } from "../../toast/toaster";
 import {
   useCreateWeightRecordMutation,
-  useDeleteHeartMutation,
   useDeleteWeightRecordMutation,
   useEditWeightRecordMutation,
   useGetWeightRecordQuery,
@@ -43,7 +42,6 @@ import Button from "../../components/Button";
 
 const WeightHistory = () => {
   const { token } = useAppSelector((state) => state.auth);
-  const [today] = useState(new Date().toISOString());
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [itemList, setItemList] = useState([]);
@@ -119,9 +117,9 @@ const WeightHistory = () => {
 
   const handleEditHeart = async (data) => {
     try {
-      const result = editWeightRecord({ id: editedHeart.id, token, data });
-      console.log(result);
-      if (result?.message === "Cập nhật thành công") {
+      const result = await editWeightRecord({ id: editedHeart.id, token, data });
+
+      if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
         setTimeout(() => {
           setIsEditModalVisible(false);
@@ -142,9 +140,8 @@ const WeightHistory = () => {
 
   const handleDeleteHeart = async (id: number) => {
     try {
-      const result = deleteWeightRecord({ id, token });
-      console.log(result);
-      if (result?.message === "Xóa thành công") {
+      const result = await deleteWeightRecord({ id, token });
+      if (result?.data.message === "Xoá thành công") {
         showToastSuccessDelete();
       } else {
         showToastErrorDelete();
@@ -199,7 +196,6 @@ const WeightHistory = () => {
           resizeMode="cover"
         >
           <View style={global.wrapper}>
-            <ScrollView>
               <Header title="Lịch sử cân nặng" route="/health" main={true} />
               <View style={[global.container, { justifyContent: "center" }]}>
                 <View style={styles.currentContainer}>
@@ -248,7 +244,6 @@ const WeightHistory = () => {
                 />
               </View>
               <View style={{ paddingBottom: 20 }} />
-            </ScrollView>
 
             {/* modal add */}
             <Modal isVisible={isModalVisible}>
@@ -423,7 +418,7 @@ const styles = StyleSheet.create({
   dateCurrent: {
     color: "#525252",
     fontWeight: "500",
-    fontSize: 18,
+    fontSize: 16,
   },
   button: {
     alignItems: "center",

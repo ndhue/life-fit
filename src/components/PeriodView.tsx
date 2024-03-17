@@ -28,7 +28,7 @@ export const PeriodView = ({ periodLengthCurrent }: props) => {
           <>
           <Text style={[styles.text2, { fontSize: 16 }]}>Chưa có chu kỳ mới</Text>
             <Pressable
-                onPress={() => router.push("/eating-target")}
+                onPress={() => router.push("/period-tracker")}
                 style={styles.button}
               >
                 <Text style={{ color: "black", fontWeight: "500" }}>

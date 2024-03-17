@@ -41,6 +41,7 @@ import { formatDate } from "../../toast/formatter";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
 import Button from "../../components/Button";
+import moment from "moment";
 
 const HeartHistory = () => {
   const { token } = useAppSelector((state) => state.auth);
@@ -54,7 +55,7 @@ const HeartHistory = () => {
   const { data: heartRateHistory } = useGetHeartQuery(token);
   const { data: currentHearRate } = useGetHeartByDateQuery({
     token,
-    date: today,
+    date: moment(today).format("YYYY-MM-DD"),
   });
 
   useEffect(() => {
@@ -129,9 +130,8 @@ const HeartHistory = () => {
 
   const handleEditHeart = async (data) => {
     try {
-      const result = editHeart({ id: editedHeart.id, token, data });
-      console.log(result);
-      if (result?.message === "Cập nhật thành công") {
+      const result = await editHeart({ id: editedHeart.id, token, data });
+      if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
         setTimeout(() => {
           setIsEditModalVisible(false);
@@ -152,9 +152,8 @@ const HeartHistory = () => {
 
   const handleDeleteHeart = async (id: number) => {
     try {
-      const result = deleteHeart({ id, token });
-      console.log(result);
-      if (result?.message === "Xóa thành công") {
+      const result = await deleteHeart({ id, token });
+      if (result?.data.message === "Xoá thành công") {
         showToastSuccessDelete();
       } else {
         showToastErrorDelete();
@@ -209,7 +208,6 @@ const HeartHistory = () => {
           resizeMode="cover"
         >
           <View style={global.wrapper}>
-            <ScrollView>
               <Header title="Lịch sử nhịp tim" route="/health" main={true} />
               <View style={[global.container, { justifyContent: "center" }]}>
                 <View style={styles.currentContainer}>
@@ -233,7 +231,7 @@ const HeartHistory = () => {
                       </View>
                     ) : (
                       <>
-                        <Text style={styles.type}>Chưa cập nhật hôm nay</Text>
+                        <Text style={[styles.type, { fontSize: 16 }]}>Chưa cập nhật</Text>
                           <Pressable onPress={handleModal} style={styles.button}>
                           <Text style={{ color: "black", fontWeight: "500" }}>
                             Thêm
@@ -263,8 +261,7 @@ const HeartHistory = () => {
                 />
               </View>
               <View style={{ paddingBottom: 20 }} />
-            </ScrollView>
-
+         
             {/* modal add */}
             <Modal isVisible={isModalVisible}>
               <Modal.Container>
@@ -438,12 +435,12 @@ const styles = StyleSheet.create({
   dateCurrent: {
     color: "#525252",
     fontWeight: "500",
-    fontSize: 18,
+    fontSize: 16,
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
-    width: "50%",
+    width: "60%",
     paddingVertical: 8,
     borderRadius: 30,
     elevation: 3,

@@ -12,7 +12,6 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { bg, global } from "../../constants/Global";
-import { ScrollView } from "react-native-gesture-handler";
 import Header from "../../components/Header";
 import Colors from "../../constants/Colors";
 import InputField from "../../components/InputField";
@@ -40,6 +39,7 @@ import { formatDate } from "../../toast/formatter";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
 import Button from "../../components/Button";
+import moment from "moment";
 
 const BloodPressureHistory = () => {
   const { token } = useAppSelector((state) => state.auth);
@@ -53,7 +53,7 @@ const BloodPressureHistory = () => {
   const { data: bloodPressureHistory } = useGetBloodPressureQuery(token);
   const { data: currentbloodPressure } = useGetBloodPressureByDateQuery({
     token,
-    date: today,
+    date: moment(today).format("YYYY-MM-DD"),
   });
 
   useEffect(() => {
@@ -126,10 +126,10 @@ const BloodPressureHistory = () => {
     setValue("blood_pressure", editHeart.blood_pressure);
   };
 
-  const handleEditHeart = async (data) => {
+  const handleEditBloodPressure = async (data) => {
     try {
-      const result = editBloodPressure({ id: editedBloodPressure.id, token, data });
-      if (result?.message === "Cập nhật thành công") {
+      const result = await editBloodPressure({ id: editedBloodPressure.id, token, data });
+      if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
         setTimeout(() => {
           setIsEditModalVisible(false);
@@ -150,10 +150,8 @@ const BloodPressureHistory = () => {
 
   const handleDeleteHeart = async (id: number) => {
     try {
-      const result = deleteBloodPressure({ id, token });
-      
-      
-      if (result?.message === "Xóa thành công") {
+      const result = await deleteBloodPressure({ id, token });
+      if (result?.data.message === "Xoá thành công") {
         showToastSuccessDelete();
       } else {
         showToastErrorDelete();
@@ -208,7 +206,6 @@ const BloodPressureHistory = () => {
           resizeMode="cover"
         >
           <View style={global.wrapper}>
-            <ScrollView>
               <Header title="Lịch sử huyết áp" route="/health" main={true} />
               <View style={[global.container, { justifyContent: "center" }]}>
                 <View style={styles.currentContainer}>
@@ -232,7 +229,7 @@ const BloodPressureHistory = () => {
                       </View>
                     ) : (
                       <>
-                        <Text style={styles.type}>Chưa cập nhật hôm nay</Text>
+                        <Text style={[styles.type, { fontSize: 14 }]}>Chưa cập nhật</Text>
                           <Pressable onPress={handleModal} style={styles.button}>
                           <Text style={{ color: "black", fontWeight: "500" }}>
                             Thêm
@@ -262,7 +259,6 @@ const BloodPressureHistory = () => {
                 />
               </View>
               <View style={{ paddingBottom: 20 }} />
-            </ScrollView>
 
             {/* modal add */}
             <Modal isVisible={isModalVisible}>
@@ -337,7 +333,7 @@ const BloodPressureHistory = () => {
                   <Button
                     variant="primary"
                     title="Hoàn tất"
-                    onPress={handleSubmit(handleEditHeart)}
+                    onPress={handleSubmit(handleEditBloodPressure)}
                   />
                 </Modal.Footer>
               </Modal.Container>
@@ -435,14 +431,14 @@ const styles = StyleSheet.create({
     color: "#7042C9",
   },
   dateCurrent: {
-    color: "#7042C9",
+    color: "#525252",
     fontWeight: "500",
-    fontSize: 18,
+    fontSize: 16,
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
-    width: "50%",
+    width: "70%",
     paddingVertical: 8,
     borderRadius: 30,
     elevation: 3,

@@ -5,11 +5,12 @@ import { Redirect } from "expo-router";
 import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { LOGIN_ID_KEY } from "../../controllers/secureStore";
-import { useAppDispatch } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { doSaveProfile, doSaveUser } from "../../redux/slices/authSlice";
 import { useGetUserProfileQuery } from "../../controllers/api";
 
 export default function TabLayout() {
+  const { profile } = useAppSelector(state => state.auth);
 
   const dispatch = useAppDispatch();
   if (Platform.OS === 'ios' || Platform.OS === 'android') {
@@ -35,8 +36,7 @@ export default function TabLayout() {
       dispatch(doSaveUser(token));
       const { data } = useGetUserProfileQuery(token);
       if (data) {
-        if (data?.result[0].gender) {
-          
+        if (data?.result[0].gender) { 
           dispatch(doSaveProfile(data?.result[0]));
         } else {
           return <Redirect href="/set-up-profile" />

@@ -167,7 +167,7 @@ export const api = createApi({
     // update diet
     updateDiet: build.mutation({
       query: (data) => ({
-        url: "/updateddiet",
+        url: `/updateddiet/${data.id}`,
         headers: {
           Authorization: `Bearer ${data.token}`,
           "Content-Type": "application/json",
@@ -512,7 +512,7 @@ export const api = createApi({
           body: data.data,
         };
       },
-      invalidatesTags: ["Period"],
+      invalidatesTags: ["Period", "PeriodLengthCurrent", "PeriodLengthPre"],
     }),
     // get Period
     getPeriod: build.query({
@@ -555,7 +555,7 @@ export const api = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["Period"],
+      invalidatesTags: ["Period", "PeriodLengthCurrent", "PeriodLengthPre"],
     }),
 
 

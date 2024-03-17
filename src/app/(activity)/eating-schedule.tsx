@@ -57,7 +57,7 @@ const EatingSchedule = () => {
   const [itemList, setItemList] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
 
-  const { data } = useGetDietGoalByDateQuery({ token, date: today });
+  const { data } = useGetDietGoalByDateQuery({ token, date: formatDate(today) });
   const { data: dietDetailData } = useGetDetailDietByDateQuery({
     token,
     diet_date: today,
@@ -107,10 +107,9 @@ const EatingSchedule = () => {
 
   const handleEditDetail = async (data) => {
     try {
-      const result = editDetailDiet({ id: dataDetail.id, token, data });
-      console.log(result);
-
-      if (result?.data) {
+      const result = await editDetailDiet({ id: dataDetail.id, token, data });
+      if (result?.data.message === "Cập nhật thành công") {
+        
         showToastSuccessUpdate();
         setTimeout(() => {
           setIsEditModalVisible(false);
@@ -131,8 +130,8 @@ const EatingSchedule = () => {
 
   const handleDeleteDetail = async (id: number) => {
     try {
-      const result = deleteDetailDiet({ id, token });
-      if (result?.data) {
+      const result = await deleteDetailDiet({ id, token });
+      if (result?.data.message === "Xoá thành công") {
         showToastSuccessDelete();
       } else {
         showToastErrorDelete();
@@ -423,7 +422,7 @@ const EatingSchedule = () => {
                     mode="time"
                     is24Hour={true}
                     display="default"
-                    onChange={(t) => setValue("diet_date", t)}
+                    onChange={handleTimeChange}
                     style={{
                       position: "absolute",
                       left: -10,
@@ -525,12 +524,13 @@ const styles = StyleSheet.create({
   },
   subDetail: {
     fontWeight: "600",
-    fontSize: 18,
+    fontSize: 17,
+    paddingTop: 5
   },
   conclusion: {
     color: "#6b6b6b",
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 18,
   },
   label: {
     fontWeight: "600",
