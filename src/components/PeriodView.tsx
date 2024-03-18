@@ -1,18 +1,33 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useEffect, useState } from "react";
 import { Pressable, Text } from "react-native";
 import { StyleSheet, View } from "react-native";
+import { useGetPeriodQuery } from "../controllers/api";
+import { useAppSelector } from "../redux/store";
 
 interface props {
   periodLengthCurrent: {}
 }
 
 export const PeriodView = ({ periodLengthCurrent }: props) => {
+  const { token } = useAppSelector((state) => state.auth);
+
+  const [periodCurr, setPeriodCurr] = useState({});
+  const { data: period } = useGetPeriodQuery(token);
+
+  useEffect(() => {
+    if (periodLengthCurrent && period) {
+      const find = period.period.find(p => p.id === periodLengthCurrent?.id);
+      setPeriodCurr(find);
+    }
+  }, [period, periodLengthCurrent])
+
   return (
     <View style={styles.container}>
       <View style={{ width: "50%" }}>
         <Text style={styles.text1}>Chu kỳ kinh nguyệt</Text>
-        { periodLengthCurrent?.lengthperiod ? (
+        { periodLengthCurrent?.lengthperiod && !periodCurr.end_date ? (
           <>
           <Text style={styles.text2}>Ngày {periodLengthCurrent?.lengthperiod}</Text>
             <Pressable

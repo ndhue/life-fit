@@ -45,7 +45,6 @@ const SetDietGoal = () => {
     setIsloading(true);
     try {
       const result = await setDietGoal({data, token});
-      console.log("diet goal successful:", result);
       if (result?.data) {
         setIsloading(false);
         showToastSuccessSetGoal();

@@ -177,8 +177,7 @@ export default function TabActivityScreen() {
   const handleDeleteActivity = async (id: number) => {
     try {
       const result = await deleteActivity({ id, token });
-      console.log(result);
-      
+   
       if (result?.data.message === "Xoá thành công") {
         showToastSuccessDelete();
       } else {

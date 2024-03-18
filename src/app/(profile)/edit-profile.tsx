@@ -27,6 +27,7 @@ import Button from "../../components/Button";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
 import { formatDate } from "../../toast/formatter";
+import moment from "moment";
 
 export default function EditProfile() {
   const { token, profile } = useAppSelector((state) => state.auth);
@@ -36,6 +37,8 @@ export default function EditProfile() {
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [select, setSelect] = useState("");
+  const [selectWakeupTime, setSelectWakeupTime] = useState(new Date(profile.wakeup_time));
+  const [selectSleepingTime, setSelectSleepingTime] = useState(new Date(profile.sleeping_time));
 
   const toggleDatePicker = () => {
     setShowPicker(!showPicker);
@@ -94,9 +97,7 @@ export default function EditProfile() {
   const onSubmit = async (data) => {
     setIsloading(true);
     try {
-      const result = await updateProfile({data, token});
-      console.log(result);
-      
+      const result = await updateProfile({data, token}); 
       if (result?.data) {
         setIsloading(false);
         showToastSuccessEditProfile();
@@ -122,8 +123,7 @@ export default function EditProfile() {
     event: DateTimePickerEvent,
     selectedTime?: Date
   ) => {
-    console.log(selectedTime);
-    
+    setSelectWakeupTime(selectedTime);
     setValue("wakeup_time", selectedTime);
   };
 
@@ -131,8 +131,7 @@ export default function EditProfile() {
     event: DateTimePickerEvent,
     selectedTime?: Date
   ) => {
-    console.log(selectedTime?.toISOString());
-    
+    setSelectSleepingTime(selectedTime);
     setValue("sleeping_time", selectedTime);
   };
 
@@ -319,7 +318,7 @@ export default function EditProfile() {
                       Giờ dậy
                     </Text>
                     <DateTimePicker
-                      value={getValues("wakeup_time")}
+                      value={selectWakeupTime}
                       mode="time"
                       is24Hour={true}
                       display="default"
@@ -343,7 +342,7 @@ export default function EditProfile() {
                       Giờ ngủ
                     </Text>
                     <DateTimePicker
-                      value={getValues("sleeping_time")}
+                      value={selectSleepingTime}
                       mode="time"
                       is24Hour={true}
                       display="default"

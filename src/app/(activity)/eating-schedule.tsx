@@ -49,8 +49,7 @@ import moment from "moment";
 const EatingSchedule = () => {
   const { token } = useAppSelector((state) => state.auth);
   const [goal, setGoal] = useState({});
-  const [selectedDate, setSelectedDate] = useState("2024-03-08");
-  const [markedDates, setMarkedDates] = useState({});
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentTime, setCurrentTime] = useState(formatDate(new Date()));
   const [today] = useState(new Date().toISOString());
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -104,11 +103,12 @@ const EatingSchedule = () => {
     setValue("content", editDetail?.content);
     setValue("diet_date", new Date(editDetail.diet_date));
     setValue("calo", editDetail.calo);
+    setSelectedDate(new Date(editDetail.diet_date));
   };
 
   const handleEditDetail = async (data) => {
     try {
-      const result = await editDetailDiet({ id: dataDetail.id, token, data });
+      const result = await editDetailDiet({ id: dataDetail.id, token, data });   
       if (result?.data.message === "Cập nhật thành công") {
         
         showToastSuccessUpdate();
@@ -141,18 +141,6 @@ const EatingSchedule = () => {
       showToastErrorDelete();
     }
   };
-
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-
-    const newMarkedDates = { markedDates };
-    newMarkedDates[date] = { selected: true, selectedColor: "#00FF66" };
-    setMarkedDates(newMarkedDates);
-  };
-
-  useEffect(() => {
-    handleDateSelect(selectedDate);
-  }, []);
 
   const schema = yup.object().shape({
     content: yup.string().required("Hãy nhập mô tả bữa ăn của bạn"),
@@ -201,6 +189,7 @@ const EatingSchedule = () => {
     event: DateTimePickerEvent,
     selectedTime?: Date
   ) => {
+    setSelectedDate(selectedTime);
     setValue("diet_date", selectedTime);
   };
 
@@ -419,7 +408,7 @@ const EatingSchedule = () => {
                     Thời gian
                   </Text>
                   <DateTimePicker
-                    value={getValues("diet_date")}
+                    value={selectedDate}
                     mode="time"
                     is24Hour={true}
                     display="default"

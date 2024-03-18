@@ -532,7 +532,7 @@ export const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ["PeriodLengthCurrent"],
+      providesTags: ["Period"],
     }),
     // get peripd length previous
     getPeriodLengthPrevious: build.query({
@@ -542,7 +542,7 @@ export const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ["PeriodLengthPre"],
+      providesTags: ["Period"],
     }),
     // edit period
     editPeriod: build.mutation({

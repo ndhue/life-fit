@@ -68,12 +68,11 @@ const SignUp = () => {
     setIsloading(true);
     try {
       const result = await signUp(data);
-      console.log('SignUp successful:', result); 
       if (result?.data) {
         setIsloading(false);
         setTimeout(() => {
           router.push('/account-auth');
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       setIsloading(false);
@@ -140,14 +139,15 @@ const SignUp = () => {
               {errors.birthday && <Text style={global.error}>{errors.birthday.message}</Text>}
               {showPicker && <View
                 style={{
-                  height: 350,
+                  height: 250,
                   top: 100,
                   bottom: 0,
                   margin: 'auto',
                   position: 'absolute',
                   left: 0,
                   right: 0,
-                  backgroundColor: 'rgba(52, 52, 52, 0.8)',
+                  backgroundColor: 'white',
+                  borderRadius: 8,
                   zIndex: 99,
                   alignItems: 'center',
                   justifyContent: 'center'
@@ -155,8 +155,10 @@ const SignUp = () => {
               >
                 <DateTimePicker 
                   style={{
-                    height: 250
+                    height: 180,
+                    backgroundColor: 'white'
                   }}
+                  textColor="black"
                   display="spinner" 
                   value={date} 
                   mode="date" 

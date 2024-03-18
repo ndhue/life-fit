@@ -16,13 +16,14 @@ import { router } from "expo-router";
 import { useAppSelector } from "../../redux/store";
 import {
   useCreatePeriodMutation,
+  useEditPeriodMutation,
   useGetPeriodLengthCurrentQuery,
   useGetPeriodLengthPreviousQuery,
   useGetPeriodQuery,
 } from "../../controllers/api";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
-import { showToastErrorAdd, showToastSuccessAdd } from "../../toast/toaster";
+import { showToastErrorAdd, showToastErrorUpdate, showToastSuccessAdd, showToastSuccessUpdate } from "../../toast/toaster";
 import { Modal } from "../../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
@@ -41,6 +42,7 @@ const PeriodTracker = () => {
   const [selectedDays, setSelectedDays] = useState({});
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
+  const [periodCurr, setPeriodCurr] = useState({});
 
   const toggleDatePicker = () => {
     setShowPicker(!showPicker);
@@ -69,6 +71,13 @@ const PeriodTracker = () => {
     }
   }, [period]);
 
+  useEffect(() => {
+    if (periodLengthCurrent && period) {
+      const find = period.period.find(p => p.id === periodLengthCurrent?.id);
+      setPeriodCurr(find);
+    }
+  }, [period, periodLengthCurrent])
+
   const schema = yup.object().shape({
     note: yup.string(),
     start_date: yup.string().required("Hãy chọn giờ ăn của bạn"),
@@ -91,6 +100,7 @@ const PeriodTracker = () => {
   const handleEndModal = () => setEndIsModalVisible(() => !isEndModalVisible);
 
   const [createPeriod] = useCreatePeriodMutation();
+  const [editPeriod] = useEditPeriodMutation();
 
   const onChange = ({ type }, selectedDate: Date) => {
     if (type == "set") {
@@ -122,6 +132,27 @@ const PeriodTracker = () => {
     }
   };
 
+  const handleEndPeriod = async (data) => {
+    try {
+      const end = {
+        ...periodCurr,
+        note: data.note, 
+        end_date: data.start_date
+      }
+      const result = await editPeriod({ token, id: periodLengthCurrent?.id ,data: end });
+      if (result?.data.message === "Cập nhật thành công") {
+        showToastSuccessUpdate();
+        handleEndModal();
+      } else {
+        showToastErrorUpdate();
+        handleEndModal();
+      }
+    } catch (error) {
+      showToastErrorUpdate();
+      handleEndModal();
+    }
+  };
+
   return (
     <>
       <ImageBackground
@@ -136,7 +167,7 @@ const PeriodTracker = () => {
               <View style={styles.circle}>
                 <View style={styles.line}>
                   <View style={styles.summarized}>
-                    {periodLengthCurrent?.lengthperiod ? (
+                    {periodLengthCurrent?.lengthperiod && !periodCurr.end_date ? (
                       <>
                         <Text style={styles.text1}>Kỳ kinh:</Text>
                         <Text style={styles.text2}>
@@ -150,11 +181,14 @@ const PeriodTracker = () => {
                 </View>
               </View>
               <View style={{ paddingVertical: 20 }}>
-                {periodLengthCurrent?.lengthperiod ? (
+                {periodLengthCurrent?.lengthperiod && !periodCurr.end_date ? (
                   <LargeButton
                     variant="secondary"
                     title="Kết thúc chu kì"
-                    onPress={handleEndModal}
+                    onPress={() => {
+                      handleEndModal();
+                      setValue('start_date', moment(new Date()).format("YYYY-MM-DD"))
+                    }}
                   />
                 ) : (
                   <LargeButton
@@ -191,7 +225,7 @@ const PeriodTracker = () => {
                   <View>
                     <Text style={styles.subTitle}>Độ dài kỳ kinh trước</Text>
                     <Text style={styles.subDetail}>
-                      {periodLengthPrev?.periodLengthDay} ngày
+                      {periodLengthPrev?.periodLengthDay ? periodLengthPrev?.periodLengthDay : 0} ngày
                     </Text>
                   </View>
                   <View>
@@ -242,29 +276,31 @@ const PeriodTracker = () => {
                 )}
                 {showPicker && (
                   <View
+                  style={{
+                    height: 250,
+                    top: -40,
+                    bottom: 0,
+                    margin: "auto",
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    backgroundColor: 'white',
+                    zIndex: 9999,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <DateTimePicker
                     style={{
-                      height: 350,
-                      top: 100,
-                      bottom: 0,
-                      margin: "auto",
-                      position: "absolute",
-                      left: 0,
-                      right: 0,
-                      backgroundColor: "rgba(52, 52, 52, 0.8)",
-                      zIndex: 99,
-                      alignItems: "center",
-                      justifyContent: "center",
+                      height: 180,
+                      backgroundColor: 'white'
                     }}
-                  >
-                    <DateTimePicker
-                      style={{
-                        height: 250,
-                      }}
-                      display="spinner"
-                      value={date}
-                      mode="date"
-                      onChange={onChange}
-                    />
+                    textColor="black"
+                    display="spinner"
+                    value={date}
+                    mode="date"
+                    onChange={onChange}
+                  />
                     <View
                       style={{
                         paddingHorizontal: 20,
@@ -330,23 +366,25 @@ const PeriodTracker = () => {
                 {showPicker && (
                   <View
                     style={{
-                      height: 350,
-                      top: 100,
+                      height: 250,
+                      top: -40,
                       bottom: 0,
                       margin: "auto",
                       position: "absolute",
                       left: 0,
                       right: 0,
-                      backgroundColor: "rgba(52, 52, 52, 0.8)",
-                      zIndex: 99,
+                      backgroundColor: 'white',
+                      zIndex: 9999,
                       alignItems: "center",
                       justifyContent: "center",
                     }}
                   >
                     <DateTimePicker
                       style={{
-                        height: 250,
+                        height: 180,
+                        backgroundColor: 'white'
                       }}
+                      textColor="black"
                       display="spinner"
                       value={date}
                       mode="date"
@@ -381,7 +419,7 @@ const PeriodTracker = () => {
                 <Button
                   variant="primary"
                   title="Hoàn tất"
-                  onPress={handleSubmit(handleStartPeriod)}
+                  onPress={handleSubmit(handleEndPeriod)}
                 />
               </Modal.Footer>
             </Modal.Container>

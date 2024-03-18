@@ -33,6 +33,8 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "../toast/config/toastConfig";
 
 const SetUpProfile = () => {
+  const [selectWakeupTime, setSelectWakeupTime] = useState(new Date());
+  const [selectSleepingTime, setSelectSleepingTime] = useState(new Date());
   const dispatch = useAppDispatch();
   if (Platform.OS === "ios" || Platform.OS === "android") {
     async function getLoginId() {
@@ -92,7 +94,6 @@ const SetUpProfile = () => {
       if (result?.data) {
         showToastSuccessEditProfile();
         setIsloading(false);
-        console.log(data);
         dispatch(doUpdateProfile(data))
         
         setTimeout(() => {
@@ -121,6 +122,7 @@ const SetUpProfile = () => {
     event: DateTimePickerEvent,
     selectedTime?: Date
   ) => {
+    setSelectWakeupTime(selectedTime);
     setValue("wakeup_time", selectedTime);
   };
 
@@ -128,6 +130,7 @@ const SetUpProfile = () => {
     event: DateTimePickerEvent,
     selectedTime?: Date
   ) => {
+    setSelectSleepingTime(selectedTime);
     setValue("sleeping_time", selectedTime);
   };
 
@@ -374,7 +377,7 @@ const SetUpProfile = () => {
                       Giờ dậy
                     </Text>
                     <DateTimePicker
-                      value={getValues("wakeup_time")}
+                      value={selectWakeupTime}
                       mode="time"
                       is24Hour={true}
                       display="default"
@@ -398,7 +401,7 @@ const SetUpProfile = () => {
                       Giờ ngủ
                     </Text>
                     <DateTimePicker
-                      value={getValues("sleeping_time")}
+                      value={selectSleepingTime}
                       mode="time"
                       is24Hour={true}
                       display="default"

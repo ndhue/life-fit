@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useGetActivityByDateQuery, useGetDietGoalByDateQuery, useGetPeriodLengthCurrentQuery, useGetUserProfileQuery, useGetWaterGoalByDatesQuery } from "../../controllers/api";
 import { ActivityView } from "../../components/ActivityView";
 import { doSaveProfile } from "../../redux/slices/authSlice";
-import { Redirect, router } from "expo-router";
+import { router } from "expo-router";
 
 export default function TabHomeScreen() {
   const [currentTime] = useState(new Date().toISOString());
@@ -31,6 +31,7 @@ export default function TabHomeScreen() {
     if (data) {
       dispatch(doSaveProfile(data.result[0]));
       if(!profile.gender && !data.result[0].gender) {
+        
         router.replace('/set-up-profile')
       }
     }

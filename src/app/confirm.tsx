@@ -45,7 +45,6 @@ const Confirm = () => {
   const {
     handleSubmit,
     setValue,
-    getValues,
   } = useForm({
     defaultValues: {
       otp: "",

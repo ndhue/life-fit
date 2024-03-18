@@ -19,7 +19,7 @@ import LargeButton from "../../components/LargeButton";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
-import { showToastErrorAuth, showToastSuccessAuth } from "../../toast/toaster";
+import { showToastErrorAuth, showToastErrorSendOtp, showToastSuccessAuth, showToastSuccessSendOtp } from "../../toast/toaster";
 
 const AccountAuthent = () => {
   const [seconds, setSeconds] = useState(60);
@@ -63,13 +63,18 @@ const AccountAuthent = () => {
 
   const onSubmit = async () => {
     try {
-      setSeconds(60);
-      setDisabled(false);
       const result = await accountAuthen({ email });
-      console.log("Send otp successful:", result);
-    } catch (error) {
-      console.error("Send otp failed:", error);
+      if (result?.data) {
+        setSeconds(60);
+        setDisabled(false);
+        showToastSuccessSendOtp();
+      } else {
+      showToastErrorSendOtp();
     }
+  } catch (error) {
+    setIsloading(false);
+    showToastErrorSendOtp();
+  }
   };
 
   const onSubmitAuth = async (data: { otp: string }) => {

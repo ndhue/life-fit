@@ -41,7 +41,6 @@ const EditWaterTracker = () => {
     setIsloading(true);
     try {
       const result = await setWaterGoal({data, token});
-      console.log("water goal successful:", result);
       if (result?.data) {
         setIsloading(false);
         showToastSuccessSetGoal();
