@@ -11,7 +11,7 @@ type InputFieldProps = {
   onPress?: () => void;
   editable?: boolean;
   onChangeText?: (text: string) => void;
-  defaultValue?: string;
+  defaultValue?: string | number;
 }
 
 const InputField = ({ label, subLabel, placeholder, secure, value, onPress, editable, onChangeText, defaultValue }: InputFieldProps) => {

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { formatTime } from "../../toast/formatter";
 const initialState = {
   token: "",
   email: "",
@@ -48,6 +49,17 @@ const authSlice = createSlice({
     doSaveProfile: (state, action) => {
       state.profile = action.payload
     },
+    doUpdateProfile: (state, action) => {
+      const updated = {
+        ...state.profile,
+        gender: action.payload.gender,
+        height: action.payload.height,
+        weight: action.payload.weight,
+        wakeup_time: formatTime(action.payload.wakeup_time),
+        sleeping_time: formatTime(action.payload.sleeping_time),
+      }
+      state.profile = updated;
+    }
   }
 })
 
@@ -56,6 +68,7 @@ export const {
   doSaveEmail,
   doSaveSignUpData,
   doClearSignUpData,
-  doSaveProfile
+  doSaveProfile,
+  doUpdateProfile
  } = authSlice.actions;
 export default authSlice.reducer;

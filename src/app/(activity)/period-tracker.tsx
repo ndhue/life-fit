@@ -109,7 +109,7 @@ const PeriodTracker = () => {
   const handleStartPeriod = async (data) => {
     try {
       const result = await createPeriod({ token, data });
-      if (result?.message === "Thành công") {
+      if (result?.data.message === "Thành công") {
         showToastSuccessAdd();
         handleModal();
       } else {

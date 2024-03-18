@@ -94,20 +94,14 @@ const CaloHistory = () => {
 
       if (result?.data) {
         showToastSuccessAdd();
-        setTimeout(() => {
-          setIsModalVisible(false);
-        }, 1000);
+        setIsModalVisible(false);
       } else {
         showToastErrorAdd();
-        setTimeout(() => {
-          setIsModalVisible(false);
-        }, 1000);
+        setIsModalVisible(false);
       }
     } catch (error) {
       showToastErrorAdd();
-      setTimeout(() => {
-        setIsModalVisible(false);
-      }, 1000);
+      setIsModalVisible(false);
     }
   };
 
@@ -129,20 +123,14 @@ const CaloHistory = () => {
       const result = await updateDiet({ id: editedHeart.id, token, data });
       if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
-        setTimeout(() => {
-          setIsEditModalVisible(false);
-        }, 1000);
+        setIsEditModalVisible(false);
       } else {
         showToastSuccessUpdate();
-        setTimeout(() => {
-          setIsEditModalVisible(false);
-        }, 1000);
+        setIsEditModalVisible(false);
       }
     } catch (error) {
       showToastErrorUpdate();
-      setTimeout(() => {
-        setIsEditModalVisible(false);
-      }, 1000);
+      setIsEditModalVisible(false);
     }
   };
 

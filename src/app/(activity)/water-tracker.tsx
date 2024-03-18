@@ -197,7 +197,7 @@ const WaterTracker = () => {
                   <Modal.Body>
                     <InputField
                       label="Ngày cập nhật"
-                      value={moment(new Date()).format('DD/MM/YYYY hh:mm A')}
+                      value={moment(new Date()).format('YYYY-MM-DD hh:mm A')}
                       editable={false}
                     />
                     <InputField
@@ -205,6 +205,7 @@ const WaterTracker = () => {
                       subLabel="(ml)"
                       editable={false}
                       value={getValues('water')}
+                      defaultValue={getValues('water')}
                       onChangeText={(t) => setValue("water", Number(t))}
                     />
                     {errors.water && (

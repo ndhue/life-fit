@@ -87,7 +87,7 @@ export default function TabHealthScreen() {
                       <Text style={[styles.type, { color: "#D2416E" }]}>bpm</Text>
                     </View>
                     ) : (
-                      <Text style={[styles.type, { color: "#D2416E", fontSize: 12  }]}>
+                      <Text style={[styles.type, { color: "#D2416E", fontSize: 12 }]}>
                         Chưa có lịch sử
                       </Text>
                     )}
@@ -96,7 +96,7 @@ export default function TabHealthScreen() {
                       <FontAwesome name="history" size={20} color="#D2416E" />
                     </TouchableOpacity>
                   </View>
-                  {!health.bloodPressure && (
+                  {!health.heartRate && (
                     <Pressable onPress={() => router.push('/heart-history')} style={styles.button}>
                     <Text style={{ color: "black", fontWeight: "500" }}>
                       Thêm
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 15,
     width: "47%",
-    height: 110,
+    height: 120,
     marginVertical: "3%",
     padding: 20,
   },
@@ -298,7 +298,6 @@ const styles = StyleSheet.create({
     color: "#6b6b6b",
     fontSize: 12,
     fontWeight: "600",
-    paddingTop: 2
   },
   title: {
     fontSize: 14,

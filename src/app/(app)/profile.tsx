@@ -7,13 +7,16 @@ import { useGetUserProfileQuery } from "../../controllers/api";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { doSaveProfile } from "../../redux/slices/authSlice";
 import { formatDate, formatTime } from "../../toast/formatter";
+import { Redirect } from "expo-router";
 
 export default function TabProfileScreen() {
 
   const { token, profile } = useAppSelector((state) => state.auth);
   const { data } = useGetUserProfileQuery(token);
   const dispatch = useAppDispatch();
-console.log(data.result[0]);
+  if(!data?.result[0].gender) {
+    return <Redirect href="/set-up-profile" />
+  }
 
   useEffect(() => {
     if (data) {

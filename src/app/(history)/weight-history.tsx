@@ -121,20 +121,14 @@ const WeightHistory = () => {
 
       if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
-        setTimeout(() => {
-          setIsEditModalVisible(false);
-        }, 1000);
+        setIsEditModalVisible(false);
       } else {
         showToastSuccessUpdate();
-        setTimeout(() => {
-          setIsEditModalVisible(false);
-        }, 1000);
+        setIsEditModalVisible(false);
       }
     } catch (error) {
       showToastErrorUpdate();
-      setTimeout(() => {
-        setIsEditModalVisible(false);
-      }, 1000);
+      setIsEditModalVisible(false);
     }
   };
 

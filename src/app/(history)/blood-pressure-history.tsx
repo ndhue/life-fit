@@ -96,20 +96,14 @@ const BloodPressureHistory = () => {
 
       if (result?.data) {
         showToastSuccessAdd();
-        setTimeout(() => {
-          setIsModalVisible(false);
-        }, 1000);
+        setIsModalVisible(false);
       } else {
         showToastErrorAdd();
-        setTimeout(() => {
-          setIsModalVisible(false);
-        }, 1000);
+        setIsModalVisible(false);
       }
     } catch (error) {
       showToastErrorAdd();
-      setTimeout(() => {
-        setIsModalVisible(false);
-      }, 1000);
+      setIsModalVisible(false);
     }
   };
 
@@ -131,20 +125,14 @@ const BloodPressureHistory = () => {
       const result = await editBloodPressure({ id: editedBloodPressure.id, token, data });
       if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
-        setTimeout(() => {
-          setIsEditModalVisible(false);
-        }, 1000);
+        setIsEditModalVisible(false);
       } else {
         showToastSuccessUpdate();
-        setTimeout(() => {
-          setIsEditModalVisible(false);
-        }, 1000);
+        setIsEditModalVisible(false);
       }
     } catch (error) {
       showToastErrorUpdate();
-      setTimeout(() => {
-        setIsEditModalVisible(false);
-      }, 1000);
+      setIsEditModalVisible(false);
     }
   };
 

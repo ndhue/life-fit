@@ -195,7 +195,8 @@ const styles = StyleSheet.create({
   },
   input: {
     borderRadius: 8,
-    border: `2px solid ${Colors.border}`,
+    borderColor: Colors.border,
+    borderWidth: 2,
     backgroundColor: Colors.background2,
     width: "100%",
     paddingVertical: 10,

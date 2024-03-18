@@ -28,7 +28,7 @@ import { showToastErrorAuth, showToastSuccessEditProfile } from "../toast/toaste
 import { ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { LOGIN_ID_KEY } from "../controllers/secureStore";
-import { doSaveUser } from "../redux/slices/authSlice";
+import { doSaveUser, doUpdateProfile } from "../redux/slices/authSlice";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../toast/config/toastConfig";
 
@@ -92,6 +92,9 @@ const SetUpProfile = () => {
       if (result?.data) {
         showToastSuccessEditProfile();
         setIsloading(false);
+        console.log(data);
+        dispatch(doUpdateProfile(data))
+        
         setTimeout(() => {
           router.push("/");
         }, 1000);

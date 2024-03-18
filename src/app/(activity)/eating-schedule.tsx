@@ -44,6 +44,7 @@ import {
 } from "../../toast/toaster";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
+import moment from "moment";
 
 const EatingSchedule = () => {
   const { token } = useAppSelector((state) => state.auth);
@@ -57,10 +58,10 @@ const EatingSchedule = () => {
   const [itemList, setItemList] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
 
-  const { data } = useGetDietGoalByDateQuery({ token, date: formatDate(today) });
+  const { data } = useGetDietGoalByDateQuery({ token, date: moment(today).format('YYYY-MM-DD') });
   const { data: dietDetailData } = useGetDetailDietByDateQuery({
     token,
-    diet_date: today,
+    diet_date: moment(today).format('YYYY-MM-DD'),
   });
   const { data: caloByDate } = useGetCaloByDateQuery({
     token,

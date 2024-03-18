@@ -12,6 +12,7 @@ import InputField from "../../components/InputField";
 import LargeButton from "../../components/LargeButton";
 import Button from "../../components/Button";
 import { UserRegister } from "../../types/user";
+import moment from "moment";
 
 const SignUp = () => {
   const [date, setDate] = useState(new Date());
@@ -31,11 +32,7 @@ const SignUp = () => {
   }
 
   const confirmDate = () => {
-    const formattedDate = new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
+    const formattedDate = moment(new Date(date)).format('YYYY-MM-DD');
     setDateValue(formattedDate)
     setValue('birthday', formattedDate)
     toggleDatePicker();
@@ -134,10 +131,10 @@ const SignUp = () => {
               {errors.fullname && <Text style={global.error}>{errors.fullname.message}</Text>}
               <InputField
                 label='Ngày sinh'
-                placeholder='YYYY/MM/DD'
+                placeholder='YYYY-MM-DD'
                 onPress={toggleDatePicker}
-                // editable={false}   
-                // value={dateValue}
+                editable={false}   
+                value={dateValue}
                 onChangeText={text => setValue('birthday', text)}
               />
               {errors.birthday && <Text style={global.error}>{errors.birthday.message}</Text>}
