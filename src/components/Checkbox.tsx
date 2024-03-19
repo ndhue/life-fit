@@ -12,7 +12,7 @@ interface props {
 
 const Checkbox = ({ activity }: props) => {
   const { token } = useAppSelector(state => state.auth);
-  const [isChecked, setIsChecked] = useState(activity.goal !== 0); 
+  const [isChecked, setIsChecked] = useState(activity.goal); 
 
   const [editActivity] = useEditActivityMutation();
 

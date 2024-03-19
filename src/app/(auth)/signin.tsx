@@ -83,7 +83,7 @@ const SignIn = () => {
           <View
             style={{
               width: 393,
-              height: 440,
+              height: 500,
               borderRadius: 20,
               paddingVertical: 20,
               paddingHorizontal: 10,

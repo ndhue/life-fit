@@ -19,8 +19,8 @@ const UpdatePassword = () => {
   const [isLoading, setIsloading] = useState(false);
 
   const schema = yup.object().shape({
-    password: yup.string().min(6, 'Mật khẩu cần có ít nhất 6 kí tự').required('Mật khẩu không được để trống'),
-    confirmpassword: yup.string().oneOf([yup.ref('password'), ''], 'Mật khẩu không khớp').required('Mật khẩu không được để trống'),
+    newPassword: yup.string().min(6, 'Mật khẩu cần có ít nhất 6 kí tự').required('Mật khẩu không được để trống'),
+    confirmPassword: yup.string().oneOf([yup.ref('newPassword'), ''], 'Mật khẩu không khớp').required('Mật khẩu không được để trống'),
   });
 
   const { 
@@ -30,8 +30,8 @@ const UpdatePassword = () => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      password: "",
-      confirmpassword: ""
+      newPassword: "",
+      confirmPassword: ""
     }
   });
 
@@ -76,11 +76,11 @@ const UpdatePassword = () => {
           <View style={global.container}>
           <View style={styles.fixedContainer}>
           <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
-            <InputField label="Mật khẩu mới" onChangeText={(t) => setValue('password', t)} />
-            {errors.password && <Text style={global.error}>{errors.password.message}</Text>}
+            <InputField secure={true} label="Mật khẩu mới" onChangeText={(t) => setValue('newPassword', t)} />
+            {errors.newPassword && <Text style={global.error}>{errors.newPassword.message}</Text>}
             
-            <InputField label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmpassword', t)} />
-            {errors.confirmpassword && <Text style={global.error}>{errors.confirmpassword.message}</Text>}
+            <InputField secure={true} label="Xác nhận mật khẩu" onChangeText={(t) => setValue('confirmPassword', t)} />
+            {errors.confirmPassword && <Text style={global.error}>{errors.confirmPassword.message}</Text>}
             <View style={{ marginTop: 30 }}>
               <LargeButton loading={isLoading} title="Gửi" variant="primary" onPress={handleSubmit(onSubmit)} />
             </View>

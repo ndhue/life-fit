@@ -77,10 +77,11 @@ const PeriodTracker = () => {
       setPeriodCurr(find);
     }
   }, [period, periodLengthCurrent])
+console.log(periodCurr);
 
   const schema = yup.object().shape({
     note: yup.string(),
-    start_date: yup.string().required("Hãy chọn giờ ăn của bạn"),
+    start_date: yup.string().required("Cập nhật thời gian"),
   });
 
   const {
@@ -152,6 +153,7 @@ const PeriodTracker = () => {
       handleEndModal();
     }
   };
+console.log(new Date(periodCurr.end_date));
 
   return (
     <>
@@ -167,7 +169,7 @@ const PeriodTracker = () => {
               <View style={styles.circle}>
                 <View style={styles.line}>
                   <View style={styles.summarized}>
-                    {periodLengthCurrent?.lengthperiod && !periodCurr.end_date ? (
+                    {periodLengthCurrent?.lengthperiod && isNaN(new Date(periodCurr.end_date)) ? (
                       <>
                         <Text style={styles.text1}>Kỳ kinh:</Text>
                         <Text style={styles.text2}>
@@ -181,7 +183,7 @@ const PeriodTracker = () => {
                 </View>
               </View>
               <View style={{ paddingVertical: 20 }}>
-                {periodLengthCurrent?.lengthperiod && !periodCurr.end_date ? (
+                {periodLengthCurrent?.lengthperiod && isNaN(new Date(periodCurr.end_date)) ? (
                   <LargeButton
                     variant="secondary"
                     title="Kết thúc chu kì"

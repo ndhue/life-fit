@@ -88,6 +88,7 @@ const ForgetPassword = () => {
           <View style={global.wrapper}>
             <View style={global.container}>
               <View style={styles.fixedContainer}>
+                <Text style={styles.title}>Quên mật khẩu</Text>
                 <View style={{ marginHorizontal: 30, marginVertical: 100 }}>
                   <InputField
                     label="EMAIL"
@@ -117,6 +118,13 @@ const ForgetPassword = () => {
 };
 
 const styles = StyleSheet.create({
+  title: {
+    fontWeight: '600',
+    fontSize: 20,
+    position: 'absolute',
+    top: 30,
+    left: 30
+  },
   box: {
     backgroundColor: Colors.primary,
     borderRightColor: "black",

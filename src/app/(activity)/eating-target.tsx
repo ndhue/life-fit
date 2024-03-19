@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   ImageBackground,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   View,
@@ -17,6 +18,7 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
 import InputField from "../../components/InputField";
 import { Calendar } from "react-native-calendars";
+import { Platform } from "react-native";
 
 const SetDietGoal = () => {
   const { token } = useAppSelector((state) => state.auth);
@@ -63,47 +65,56 @@ const SetDietGoal = () => {
   
   return (
     <>
-      <ImageBackground
-        source={bg}
-        style={global.backgroundImage}
-        resizeMode="cover"
+    <KeyboardAvoidingView
+        behavior={
+          Platform.OS === "ios" || Platform.OS === "android"
+            ? "padding"
+            : "height"
+        }
+        style={{ flex: 1 }}
       >
-        <View style={global.wrapper}>
-          <Header
-            title="Mục tiêu của tôi"
-            main={true}
-            route="/eating-schedule"
-          />
-          <View style={global.container}>
-            <View style={styles.water}>
-              <Text style={styles.number}>{goal}</Text>
-            </View>
-            <InputField label="" onChangeText={(t) => setGoal(Number(t))} />
+        <ImageBackground
+          source={bg}
+          style={global.backgroundImage}
+          resizeMode="cover"
+        >
+          <View style={global.wrapper}>
+            <Header
+              title="Mục tiêu của tôi"
+              main={true}
+              route="/eating-schedule"
+            />
+            <View style={global.container}>
+              <View style={styles.water}>
+                <Text style={styles.number}>{goal}</Text>
+              </View>
+              <InputField label="" onChangeText={(t) => setGoal(Number(t))} />
 
-            <View style={{ paddingVertical: 20 }}>
-              <LargeButton
-                loading={isLoading}
-                variant="secondary"
-                title="Hoàn tất"
-                onPress={() => handleSubmit()}
-              />
+              <View style={{ paddingVertical: 20 }}>
+                <LargeButton
+                  loading={isLoading}
+                  variant="secondary"
+                  title="Hoàn tất"
+                  onPress={() => handleSubmit()}
+                />
+              </View>
+            <Calendar
+              onDayPress={day => {
+                handleDateSelect(day.dateString);
+              }}
+              monthFormat={'MM/yyyy'}
+              markedDates={markedDates}
+              style={{ width: 348, marginTop: 20, borderRadius: 10 }}
+              theme={{
+                todayTextColor: '#2d4150',
+                arrowColor: '#00FF66'
+              }}
+            />
             </View>
-          <Calendar
-            onDayPress={day => {
-              handleDateSelect(day.dateString);
-            }}
-            monthFormat={'MM/yyyy'}
-            markedDates={markedDates}
-            style={{ width: 348, marginTop: 20, borderRadius: 10 }}
-            theme={{
-              todayTextColor: '#2d4150',
-              arrowColor: '#00FF66'
-            }}
-          />
+            
           </View>
-          
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      </KeyboardAvoidingView>
       <Toast config={toastConfig} />
     </>
   );

@@ -2,7 +2,6 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -23,7 +22,7 @@ import {
   useGetActivityQuery,
 } from "../../controllers/api";
 import { formatDate } from "../../toast/formatter";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { SwipeListView } from "react-native-swipe-list-view";
 import Colors from "../../constants/Colors";
 import {
@@ -36,7 +35,6 @@ import {
 } from "../../toast/toaster";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
-import Checkbox from "../../components/Checkbox";
 import { Modal } from "../../components/Modal";
 import InputField from "../../components/InputField";
 import Button from "../../components/Button";
@@ -79,11 +77,9 @@ export default function TabActivityScreen() {
       const array = [...currentActivity?.result].sort((a, b) => {
         if (a.goal === 0 && b.goal === 1) {
           return -1;
-        }
-        else if (a.goal === 1 && b.goal === 0) {
+        } else if (a.goal === 1 && b.goal === 0) {
           return 1;
-        }
-        else {
+        } else {
           return 0;
         }
       });
@@ -97,8 +93,8 @@ export default function TabActivityScreen() {
 
   const schema = yup.object().shape({
     name: yup.string().required("Nhập tên hoạt động"),
-    goal: yup.number().required('Không được để trống'),
-    date: yup.date().required('Không được để trống'),
+    goal: yup.number().required("Không được để trống"),
+    date: yup.date().required("Không được để trống"),
   });
 
   const {
@@ -173,11 +169,10 @@ export default function TabActivityScreen() {
     setValue("goal", editActivity.goal);
   };
 
-
   const handleDeleteActivity = async (id: number) => {
     try {
       const result = await deleteActivity({ id, token });
-   
+
       if (result?.data.message === "Xoá thành công") {
         showToastSuccessDelete();
       } else {
@@ -188,11 +183,36 @@ export default function TabActivityScreen() {
     }
   };
 
+  const [isChecked, setIsChecked] = useState(false); 
+
+  const toggleCheckbox = async (name, id) => {
+    try {
+      const data = {
+        name: name,
+        goal: 1
+      }
+      const result = await editActivity({token, id: id, data })
+      if (result?.data.message === "Cập nhật thành công") {
+        showToastSuccessUpdate();
+      } else {
+        showToastErrorUpdate();
+      }
+    } catch (error) {
+      showToastErrorUpdate();
+    }
+  };
+
   const renderActivityList = (rowData) => (
     <View
       style={[
         global.flexBox,
-        { paddingVertical: 10, paddingHorizontal: 5, backgroundColor: "white", borderBottomWidth: 1, borderBottomColor: '#d1d1d1' },
+        {
+          paddingVertical: 10,
+          paddingHorizontal: 5,
+          backgroundColor: "white",
+          borderBottomWidth: 1,
+          borderBottomColor: "#d1d1d1",
+        },
       ]}
     >
       <View>
@@ -223,21 +243,35 @@ export default function TabActivityScreen() {
 
   const renderCurrentActivity = (rowData) => (
     <View
-      style={[global.flexBox, { paddingVertical: 10,borderBottomWidth: 1, borderBottomColor: '#d1d1d1', backgroundColor: "#fff"}]}
+      style={[
+        global.flexBox,
+        {
+          paddingVertical: 10,
+          borderBottomWidth: 1,
+          borderBottomColor: "#d1d1d1",
+          backgroundColor: "#fff",
+        },
+      ]}
       key={rowData.item.id}
     >
       <Text
-        style={
-          rowData.item.goal
-            ? styles.textFinished
-            : styles.textUnfinished
-        }
+        style={rowData.item.goal ? styles.textFinished : styles.textUnfinished}
       >
         {rowData.item.name}
       </Text>
-      <Checkbox activity={rowData.item} />
+      <TouchableOpacity
+        style={styles.checkboxContainer}
+        onPress={() => toggleCheckbox(rowData.item.name, rowData.item.id)}
+        disabled={rowData.item.goal == 1}
+      >
+        <View style={[styles.checkbox, rowData.item.goal && styles.checked]}>
+          {rowData.item.goal == 1 && (
+            <Ionicons name="checkmark" size={18} color="white" />
+          )}
+        </View>
+      </TouchableOpacity>
     </View>
-  )
+  );
 
   const renderHiddenItemCurrent = (rowData, rowMap) => (
     <View style={[styles.hiddenContainer]} key={rowData.item.id}>
@@ -248,10 +282,7 @@ export default function TabActivityScreen() {
         <AntDesign name="edit" size={16} color="white" />
       </TouchableOpacity>
       <TouchableOpacity
-        style={[
-          styles.hiddenButtonEit,
-          { backgroundColor: 'black' },
-        ]}
+        style={[styles.hiddenButtonEit, { backgroundColor: "black" }]}
         onPress={() => handleDeleteActivity(rowData.item.id)}
       >
         <AntDesign name="delete" size={16} color="white" />
@@ -275,61 +306,65 @@ export default function TabActivityScreen() {
           resizeMode="cover"
         >
           <View style={global.wrapper}>
-              <Header title="Hoạt động của tôi" />
-              <View style={global.container}>
-                <View style={[global.flexBox, { width: "90%" }]}>
-                  <Text style={[styles.text1, { fontSize: 18 }]}>
-                    {formatDate(currentTime)}
-                  </Text>
-                  <TouchableOpacity onPress={handleModal}>
-                    <AntDesign
-                      name="plussquareo"
-                      size={24}
-                      color={Colors.border}
-                      
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={[styles.container, { height: 250 }]}>
-                  <Text style={styles.textHistory}>Hoạt động hôm nay</Text>
-              
-                    {sortedList.length !== 0 ? (
-                      <SwipeListView
-                      data={sortedList}
-                      renderItem={renderCurrentActivity}
-                      renderHiddenItem={renderHiddenItemCurrent}
-                      rightOpenValue={-130}
-                      previewRowKey={"0"}
-                      previewOpenValue={-40}
-                      previewOpenDelay={3000}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                      }}
-                    />
-                    ) : (
-                        <Text style={[styles.textUnfinished, { paddingTop: 10, textAlign: 'center' }]}>
-                          Chưa có hoạt động
-                        </Text>
-                    )}
-                </View>
-                <View style={[styles.container, { height: 250 }]}>
-                  <Text style={styles.textHistory}>Lịch sử hoạt động</Text>
-                    <SwipeListView
-                      data={itemList}
-                      renderItem={renderActivityList}
-                      renderHiddenItem={renderHiddenItem}
-                      rightOpenValue={-130}
-                      previewRowKey={"0"}
-                      previewOpenValue={-40}
-                      previewOpenDelay={3000}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                      }}
-                    />
-                </View>
+            <Header title="Hoạt động của tôi" />
+            <View style={global.container}>
+              <View style={[global.flexBox, { width: "90%" }]}>
+                <Text style={[styles.text1, { fontSize: 18 }]}>
+                  {formatDate(currentTime)}
+                </Text>
+                <TouchableOpacity onPress={handleModal}>
+                  <AntDesign
+                    name="plussquareo"
+                    size={24}
+                    color={Colors.border}
+                  />
+                </TouchableOpacity>
               </View>
+              <View style={[styles.container, { height: 250 }]}>
+                <Text style={styles.textHistory}>Hoạt động hôm nay</Text>
+
+                {sortedList.length !== 0 ? (
+                  <SwipeListView
+                    data={sortedList}
+                    renderItem={renderCurrentActivity}
+                    renderHiddenItem={renderHiddenItemCurrent}
+                    rightOpenValue={-130}
+                    previewRowKey={"0"}
+                    previewOpenValue={-40}
+                    previewOpenDelay={3000}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                  />
+                ) : (
+                  <Text
+                    style={[
+                      styles.textUnfinished,
+                      { paddingTop: 10, textAlign: "center" },
+                    ]}
+                  >
+                    Chưa có hoạt động
+                  </Text>
+                )}
+              </View>
+              <View style={[styles.container, { height: 250 }]}>
+                <Text style={styles.textHistory}>Lịch sử hoạt động</Text>
+                <SwipeListView
+                  data={itemList}
+                  renderItem={renderActivityList}
+                  renderHiddenItem={renderHiddenItem}
+                  rightOpenValue={-130}
+                  previewRowKey={"0"}
+                  previewOpenValue={-40}
+                  previewOpenDelay={3000}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                  }}
+                />
+              </View>
+            </View>
             {/* modal add */}
             <Modal isVisible={isModalVisible}>
               <Modal.Container>
@@ -416,6 +451,23 @@ export default function TabActivityScreen() {
   );
 }
 const styles = StyleSheet.create({
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderRadius: 4,
+    borderColor: "#ccc",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  checked: {
+    backgroundColor: Colors.primary,
+  },
   container: {
     marginTop: 20,
     width: "90%",
@@ -435,7 +487,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     fontWeight: "600",
-    paddingBottom: 8
+    paddingBottom: 8,
   },
   text1: {
     color: "#adadad",

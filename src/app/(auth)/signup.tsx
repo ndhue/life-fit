@@ -43,7 +43,7 @@ const SignUp = () => {
     fullname: yup.string().required('Họ tên không được để trống'),
     birthday: yup.string().required('Ngày sinh không được để trống'),
     password: yup.string().min(6, 'Mật khẩu cần có ít nhất 6 kí tự').required('Mật khẩu không được để trống'),
-    confirmpassword: yup.string().oneOf([yup.ref('password'), null], 'Mật khẩu không khớp').required('Mật khẩu không được để trống'),
+    confirmpassword: yup.string().oneOf([yup.ref('password'), ''], 'Mật khẩu không khớp').required('Mật khẩu không được để trống'),
   });
 
   const { 
@@ -89,7 +89,7 @@ const SignUp = () => {
         <View
           style={{
             width: 393,
-            height: 680,
+            height: 780,
             borderRadius: 20,
             paddingVertical: 20,
             paddingHorizontal: 10,

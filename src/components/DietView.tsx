@@ -26,7 +26,7 @@ export const DietView = ({ dietGoal }: props) => {
           </>
         ): (
           <>
-            <Text style={[styles.text2, { fontSize: 16 }]}>Chưa đặt mục tiêu</Text>
+            <Text style={[styles.text2, { fontSize: 15 }]}>Chưa đặt mục tiêu</Text>
             <Pressable
                 onPress={() => router.push("/eating-target")}
                 style={styles.button}

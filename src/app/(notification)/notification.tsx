@@ -15,7 +15,6 @@ import { useAppSelector } from "../../redux/store";
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { formatDate } from "../../toast/formatter";
 import moment from "moment";
 
 const Notification = () => {
@@ -84,7 +83,6 @@ const Notification = () => {
               <Text style={global.title}>Thông báo</Text>
               <View style={{ width: 20 }} />
             </View>
-            <ScrollView>
             <View style={[global.container, { justifyContent: "center" }]}>
               <SwipeListView
                     data={notiList}
@@ -100,7 +98,6 @@ const Notification = () => {
                     }}
                   />
             </View>
-            </ScrollView>
           </View>
         </ImageBackground>
       </KeyboardAvoidingView>

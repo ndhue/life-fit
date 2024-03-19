@@ -81,7 +81,7 @@ export const api = createApi({
     updatePassword: build.mutation({
       query: (data) => ({
         url: "/updatepassword",
-        method: "POST",
+        method: "PUT",
         body: data,
       }),
     }),
@@ -188,7 +188,7 @@ export const api = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["DietDetail"],
+      invalidatesTags: ["DietDetail", "CaloByDate"],
     }),
     // Get detail diet
     getDetailDiet: build.query({
@@ -522,7 +522,7 @@ export const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ["Period"],
+      providesTags: ["Period", "PeriodLengthCurrent", "PeriodLengthPre"],
     }),
     // get period length current
     getPeriodLengthCurrent: build.query({
@@ -532,7 +532,7 @@ export const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ["Period"],
+      providesTags: ["Period", "PeriodLengthCurrent", "PeriodLengthPre"],
     }),
     // get peripd length previous
     getPeriodLengthPrevious: build.query({
@@ -542,7 +542,7 @@ export const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ["Period"],
+      providesTags: ["Period", "PeriodLengthCurrent", "PeriodLengthPre"],
     }),
     // edit period
     editPeriod: build.mutation({

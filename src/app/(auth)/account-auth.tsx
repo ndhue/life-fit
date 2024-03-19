@@ -192,11 +192,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   fixedContainer: {
-    position: "fixed",
+    position: "absolute",
     width: "100%",
     backgroundColor: "white",
     borderStartStartRadius: 40,
     bottom: 0,
+    
   },
   input: {
     borderRadius: 8,

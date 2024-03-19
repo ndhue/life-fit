@@ -13,6 +13,7 @@ export const global = StyleSheet.create({
     height: "100%",
   },
   container: {
+    position: 'relative',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -34,8 +35,7 @@ export const global = StyleSheet.create({
     paddingBottom: 11
   },
   error: {
-    fontSize: 12,
+    fontSize: 10,
     color: 'red',
-    paddingTop: 5
   }
 });

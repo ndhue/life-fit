@@ -88,6 +88,8 @@ const WaterTracker = () => {
   const onSubmit = async (data) => {
     try {
       const result = await setWaterTrackerHistory({ data, token });
+      console.log(result);
+      
       if (result?.data) {
         showToastSuccessAdd();
         setIsModalVisible(false);
@@ -128,7 +130,7 @@ const WaterTracker = () => {
                   </View>
                   )}
 
-                 {sumWater?.Sumwater < currentGoal?.watergoal  ? (
+                 {!currentGoal?.watergoal || sumWater?.Sumwater < currentGoal?.watergoal  ? (
                   (
                     <View style={{ paddingTop: 40 }}>
                       <Pressable onPress={handleModal} style={styles.button}>
@@ -157,7 +159,7 @@ const WaterTracker = () => {
               <View style={styles.targetContainer}>
                 <Text style={{ color: "#90A5B4", fontSize: 15 }}>Mục tiêu</Text>
                 <Text style={{ fontSize: 22, fontWeight: "600", paddingTop: 10 }}>
-                  { currentGoal ? `${currentGoal.watergoal}ml` : '0ml' }
+                  { currentGoal.watergoal ? `${currentGoal.watergoal}ml` : '0ml' }
                 </Text>
               </View>
             </View>
@@ -204,8 +206,8 @@ const WaterTracker = () => {
                       label="Lượng nước đã uống"
                       subLabel="(ml)"
                       editable={false}
-                      value={getValues('water')}
-                      defaultValue={getValues('water')}
+                      value={getValues('water').toString()}
+                      defaultValue={getValues('water').toString()}
                       onChangeText={(t) => setValue("water", Number(t))}
                     />
                     {errors.water && (
