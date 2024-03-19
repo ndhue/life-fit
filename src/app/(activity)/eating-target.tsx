@@ -19,12 +19,13 @@ import { toastConfig } from "../../toast/config/toastConfig";
 import InputField from "../../components/InputField";
 import { Calendar } from "react-native-calendars";
 import { Platform } from "react-native";
+import moment from "moment";
 
 const SetDietGoal = () => {
   const { token } = useAppSelector((state) => state.auth);
   const [goal, setGoal] = useState(0);
   const [isLoading, setIsloading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("2024-03-08");
+  const [selectedDate, setSelectedDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
   const [markedDates, setMarkedDates] = useState({});
 
   const [setDietGoal] = useSetDietGoalMutation();
@@ -42,7 +43,7 @@ const SetDietGoal = () => {
   }, []);
 
   const handleSubmit = async () => {
-    const date = new Date();
+    const date = moment(new Date()).format('YYYY-MM-DD');
     const data = { goal, date };
     setIsloading(true);
     try {

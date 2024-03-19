@@ -14,6 +14,7 @@ import { useGetActivityByDateQuery, useGetDietGoalByDateQuery, useGetPeriodLengt
 import { ActivityView } from "../../components/ActivityView";
 import { doSaveProfile } from "../../redux/slices/authSlice";
 import { router } from "expo-router";
+import moment from "moment";
 
 export default function TabHomeScreen() {
   const [currentTime] = useState(new Date().toISOString());
@@ -23,8 +24,8 @@ export default function TabHomeScreen() {
 
   const { data } = useGetUserProfileQuery(token);
   const { data: currentActivity } = useGetActivityByDateQuery({ token, date: currentTime });
-  const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: currentTime, token });
-  const { data: dietGoal } = useGetDietGoalByDateQuery({ token, date: currentTime });
+  const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: moment(currentTime).format('YYYY-MM-DD'), token });
+  const { data: dietGoal } = useGetDietGoalByDateQuery({ token, date: moment(currentTime).format('YYYY-MM-DD') });
   const { data: periodLengthCurrent } = useGetPeriodLengthCurrentQuery(token);
 
   useEffect(() => {

@@ -27,7 +27,7 @@ export const PeriodView = ({ periodLengthCurrent }: props) => {
     <View style={styles.container}>
       <View style={{ width: "50%" }}>
         <Text style={styles.text1}>Chu kỳ kinh nguyệt</Text>
-        { periodLengthCurrent?.lengthperiod && !periodCurr.end_date ? (
+        { periodLengthCurrent?.lengthperiod && isNaN(new Date(periodCurr.end_date)) ? (
           <>
           <Text style={styles.text2}>Ngày {periodLengthCurrent?.lengthperiod}</Text>
             <Pressable

@@ -11,7 +11,7 @@ import {
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { bg, global } from "../../constants/Global";
 import { ScrollView } from "react-native-gesture-handler";
 import Header from "../../components/Header";
@@ -153,6 +153,12 @@ const CaloHistory = () => {
         onPress={() => handleOpenEditModal(rowData.item.id)}
       >
         <AntDesign name="edit" size={20} color="white" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.hiddenButton, { backgroundColor: Colors.secondary }]}
+        onPress={() => router.push({ pathname: `/diet-detail-history/`, params: { date: moment(rowData.item.date).format('YYYY-MM-DD') }})}
+      >
+        <AntDesign name="eyeo" size={20} color="white" />
       </TouchableOpacity>
     </View>
   );

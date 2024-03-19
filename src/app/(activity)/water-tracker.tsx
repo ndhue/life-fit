@@ -36,9 +36,9 @@ const WaterTracker = () => {
   const [currentGoal, setCurrentGoal] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: today, token });
-  const { data: sumWater} = useGetSumWaterByDateQuery({ token, dategoal: today });
-  const { data: waterHisory } = useGetWaterHistoryByDateQuery({ token, dategoal: today });
+  const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: moment(today).format('YYYY-MM-DD'), token });
+  const { data: sumWater} = useGetSumWaterByDateQuery({ token, dategoal: moment(today).format('YYYY-MM-DD') });
+  const { data: waterHisory } = useGetWaterHistoryByDateQuery({ token, dategoal: moment(today).format('YYYY-MM-DD') });
 
   const [setWaterTrackerHistory] = useSetWaterTrackerHistoryMutation();
 
@@ -48,7 +48,7 @@ const WaterTracker = () => {
   }, [waterHisory]);
 
   useEffect(() => {
-    if(waterGoal) {
+    if(waterGoal && waterGoal.result.length > 0) {
       setCurrentGoal(waterGoal.result[0]);
       setValue('watertracker_id', waterGoal.result[0].id);
       setValue('water', Math.ceil(waterGoal.result[0].watergoal / 8));
@@ -87,7 +87,7 @@ const WaterTracker = () => {
   
   const onSubmit = async (data) => {
     try {
-      const result = await setWaterTrackerHistory({ data, token });
+      const result = await setWaterTrackerHistory({ data: {...data, time: data.time.toISOString()}, token });
       console.log(result);
       
       if (result?.data) {
@@ -153,7 +153,7 @@ const WaterTracker = () => {
             <View style={styles.container}>
               <View>
                 <Image source={require("../../assets/images/process.png")} />
-                <Text style={styles.target}>{sumWater ? sumWater.Sumwater : 0}ml</Text>
+                <Text style={[styles.target, { left: `${sumWater || sumWater?.watergoal < 1000 ? '18%' : '12%'}`}]}>{sumWater ? sumWater.Sumwater : 0}ml</Text>
               </View>
 
               <View style={styles.targetContainer}>
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     position: "absolute",
     top: "60%",
-    left: "12%",
+    left: "18%",
   },
   targetContainer: {
     backgroundColor: "white",

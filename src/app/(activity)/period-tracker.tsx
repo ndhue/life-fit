@@ -153,8 +153,7 @@ console.log(periodCurr);
       handleEndModal();
     }
   };
-console.log(new Date(periodCurr.end_date));
-
+  
   return (
     <>
       <ImageBackground

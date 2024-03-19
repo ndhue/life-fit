@@ -35,7 +35,7 @@ import {
   useGetWeightRecordQuery,
 } from "../../controllers/api";
 import { useAppSelector } from "../../redux/store";
-import { formatDate } from "../../toast/formatter";
+import { formatDate, formatTime } from "../../toast/formatter";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
 import Button from "../../components/Button";
@@ -117,7 +117,11 @@ const WeightHistory = () => {
 
   const handleEditHeart = async (data) => {
     try {
-      const result = await editWeightRecord({ id: editedHeart.id, token, data });
+      const result = await editWeightRecord({
+        id: editedHeart.id,
+        token,
+        data,
+      });
 
       if (result?.data.message === "Cập nhật thành công") {
         showToastSuccessUpdate();
@@ -190,54 +194,60 @@ const WeightHistory = () => {
           resizeMode="cover"
         >
           <View style={global.wrapper}>
-              <Header title="Lịch sử cân nặng" route="/health" main={true} />
-              <View style={[global.container, { justifyContent: "center" }]}>
-                <View style={styles.currentContainer}>
-                  <View>
-                    <View style={styles.detail}>
-                      <FontAwesome5 name="weight" size={20} color="#197BD2" />
-                      <Text style={styles.title}>Cân nặng</Text>
-                    </View>
-                    { currentWeight?.weight ? (
-                      <View
+            <Header title="Lịch sử cân nặng" route="/health" main={true} />
+            <View style={[global.container, { justifyContent: "center" }]}>
+              <View style={styles.currentContainer}>
+                <View>
+                  <View style={styles.detail}>
+                    <FontAwesome5 name="weight" size={20} color="#197BD2" />
+                    <Text style={styles.title}>Cân nặng</Text>
+                  </View>
+                  {currentWeight?.weight ? (
+                    <View
                       style={[
                         styles.detail,
                         { alignItems: "baseline", gap: 2 },
                       ]}
                     >
-                      <Text style={styles.staticCurrent}>{currentWeight?.weight}</Text>
+                      <Text style={styles.staticCurrent}>
+                        {currentWeight?.weight}
+                      </Text>
                       <Text style={styles.type}>kg</Text>
                     </View>
-                    ): (
-                      <Text style={[styles.type, { fontSize: 20 }]}>Chưa có lịch sử</Text>
-                    )}
-                    
-                  </View>
-                  <View style={{ width: "50%", alignItems: "flex-end" }}>
-                    <Text style={styles.dateCurrent}>{currentWeight?.date_recorded && formatDate(currentWeight?.date_recorded)}</Text>
-                    <Pressable onPress={handleModal} style={styles.button}>
-                      <Text style={{ color: "black", fontWeight: "500" }}>
-                        Thêm
-                      </Text>
-                    </Pressable>
-                  </View>
+                  ) : (
+                    <Text style={[styles.type, { fontSize: 20 }]}>
+                      Chưa có lịch sử
+                    </Text>
+                  )}
                 </View>
-
-                <SwipeListView
-                  data={itemList}
-                  renderItem={renderListHeartRate}
-                  renderHiddenItem={renderHiddenItem}
-                  rightOpenValue={-130}
-                  previewRowKey={"0"}
-                  previewOpenValue={-40}
-                  previewOpenDelay={3000}
-                  style={{
-                    width: "90%",
-                    height: "auto",
-                  }}
-                />
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.dateCurrent}>
+                    {currentWeight?.date_recorded &&
+                      formatDate(currentWeight?.date_recorded)}
+                  </Text>
+                  <Pressable onPress={handleModal} style={styles.button}>
+                    <Text style={{ color: "black", fontWeight: "500" }}>
+                      Thêm
+                    </Text>
+                  </Pressable>
+                </View>
               </View>
-              <View style={{ paddingBottom: 20 }} />
+
+              <SwipeListView
+                data={itemList}
+                renderItem={renderListHeartRate}
+                renderHiddenItem={renderHiddenItem}
+                rightOpenValue={-130}
+                previewRowKey={"0"}
+                previewOpenValue={-40}
+                previewOpenDelay={3000}
+                style={{
+                  width: "90%",
+                  height: "auto",
+                }}
+              />
+            </View>
+            <View style={{ paddingBottom: 20 }} />
 
             {/* modal add */}
             <Modal isVisible={isModalVisible}>

@@ -11,7 +11,7 @@ import {
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -46,7 +46,9 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "../../toast/config/toastConfig";
 import moment from "moment";
 
-const EatingSchedule = () => {
+const EditDetailHistory = () => {
+  const params = useLocalSearchParams();
+  const { date } = params;
   const { token } = useAppSelector((state) => state.auth);
   const [goal, setGoal] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -57,14 +59,14 @@ const EatingSchedule = () => {
   const [itemList, setItemList] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
 
-  const { data } = useGetDietGoalByDateQuery({ token, date: moment(today).format('YYYY-MM-DD') });
+  const { data } = useGetDietGoalByDateQuery({ token, date });
   const { data: dietDetailData } = useGetDetailDietByDateQuery({
     token,
-    diet_date: moment(today).format('YYYY-MM-DD'),
+    diet_date: date,
   });
   const { data: caloByDate } = useGetCaloByDateQuery({
     token,
-    diet_date: moment(today).format('YYYY-MM-DD'),
+    diet_date: date,
   });
 
   const [addDetailDiet] = useAddDetailDietMutation();
@@ -243,7 +245,7 @@ const EatingSchedule = () => {
           resizeMode="cover"
         >
           <View style={global.wrapper}>
-            <Header title="Chế độ dinh duỡng" route="/" main={true} />
+            <Header title="Chế độ dinh duỡng" route="/calo-history" main={true} />
             <View style={global.container}>
               <View style={styles.circle}>
                 <View style={styles.line}>
@@ -273,14 +275,7 @@ const EatingSchedule = () => {
 
               <View style={[global.flexBox, { width: "90%" }]}>
                 <Text style={styles.datetime}>{currentTime}</Text>
-                {goal && (
-                  <AntDesign
-                    name="plussquareo"
-                    size={20}
-                    color={Colors.border}
-                    onPress={handleModal}
-                  />
-                )}
+               
               </View>
 
               <View style={styles.info}>
@@ -552,4 +547,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-export default EatingSchedule;
+export default EditDetailHistory;

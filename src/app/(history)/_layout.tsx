@@ -34,6 +34,8 @@ export default function Layout() {
       <Stack.Screen name="blood-pressure-history" options={{ headerShown: false }} />
       <Stack.Screen name="calo-history" options={{ headerShown: false }} />
       <Stack.Screen name="weight-history" options={{ headerShown: false }} />
+
+      <Stack.Screen name="diet-detail-history" options={{ headerShown: false }} />
     </Stack>
   );
 }
