@@ -19,6 +19,7 @@ export default function Layout() {
     async function getLoginId() {
       const token = await SecureStore.getItemAsync(LOGIN_ID_KEY);
       if (token) {
+        dispatch(doSaveUser(token));
         return <Redirect href="/" />;
       }
     }
@@ -27,6 +28,7 @@ export default function Layout() {
   if (Platform.OS === "web") {
     const token = localStorage.getItem("token");
     if (token) {
+      dispatch(doSaveUser(token));
       return <Redirect href="/" />;
     } 
   }

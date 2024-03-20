@@ -7,6 +7,7 @@ import * as SecureStore from "expo-secure-store";
 import { LOGIN_ID_KEY } from "../../controllers/secureStore";
 import { useAppDispatch} from "../../redux/store";
 import { doSaveUser } from "../../redux/slices/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function TabLayout() {
 

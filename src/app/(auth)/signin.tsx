@@ -11,12 +11,16 @@ import LargeButton from "../../components/LargeButton";
 import { useAuthLoginMutation } from "../../controllers/api";
 import { UserLogin } from "../../types/user";
 import Toast from "react-native-toast-message";
-import { save } from "../../controllers/secureStore";
+import { LOGIN_ID_KEY, save } from "../../controllers/secureStore";
 import { toastConfig } from "../../toast/config/toastConfig";
 import { showToastSuccessSignIn, showToastErrorSignIn } from "../../toast/toaster";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppDispatch } from "../../redux/store";
+import { doSaveUser } from "../../redux/slices/authSlice";
 
 const SignIn = () => {
   const [isLoading, setIsloading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const schema = yup.object().shape({
     email: yup.string().email('Email không hợp lệ').required('Email không được để trống'),
@@ -42,12 +46,17 @@ const SignIn = () => {
     try {
       const result = await authLogin(data);
       const { token } = result?.data;
+  console.log(result);
+  
       if (token) {
         if (Platform.OS === "web") {
           localStorage.setItem("token", token);
+          dispatch(doSaveUser(token));
         }
         if (Platform.OS === "android" || Platform.OS === "ios") {
           save(token);
+          await AsyncStorage.setItem(LOGIN_ID_KEY, token);
+          dispatch(doSaveUser(token));
         }
         showToastSuccessSignIn();
         setIsloading(false);

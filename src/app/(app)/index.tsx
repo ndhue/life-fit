@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useGetActivityByDateQuery, useGetDietGoalByDateQuery, useGetPeriodLengthCurrentQuery, useGetUserProfileQuery, useGetWaterGoalByDatesQuery } from "../../controllers/api";
 import { ActivityView } from "../../components/ActivityView";
 import { doSaveProfile } from "../../redux/slices/authSlice";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import moment from "moment";
 
 export default function TabHomeScreen() {
@@ -27,6 +27,11 @@ export default function TabHomeScreen() {
   const { data: waterGoal } = useGetWaterGoalByDatesQuery({ dategoal: moment(currentTime).format('YYYY-MM-DD'), token });
   const { data: dietGoal } = useGetDietGoalByDateQuery({ token, date: moment(currentTime).format('YYYY-MM-DD') });
   const { data: periodLengthCurrent } = useGetPeriodLengthCurrentQuery(token);
+console.log(token);
+
+    if (!token) {
+      return <Redirect href='/signin' />;
+    }
 
   useEffect(() => {
     if (data) {

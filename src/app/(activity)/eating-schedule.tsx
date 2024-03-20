@@ -284,7 +284,7 @@ const EatingSchedule = () => {
               </View>
 
               <View style={styles.info}>
-                {itemList.length !== 0 ? (
+                {itemList?.length !== 0 ? (
                   <>
                     <SwipeListView
                       data={itemList}
@@ -345,7 +345,7 @@ const EatingSchedule = () => {
                     Thời gian
                   </Text>
                   <DateTimePicker
-                    value={new Date()}
+                    value={selectedDate}
                     mode="time"
                     is24Hour={true}
                     display="default"

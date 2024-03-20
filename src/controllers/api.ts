@@ -681,6 +681,7 @@ export const {
   useSignUpMutation,
   useAccountAuthenMutation,
   useSaveAccountMutation,
+  useResetOtpMutation,
   useSetUpProfileMutation,
   useSendOtpMutation,
   useAuthOtpMutation,

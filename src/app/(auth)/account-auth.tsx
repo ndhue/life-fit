@@ -13,7 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { bg, global } from "../../constants/Global";
 import Colors from "../../constants/Colors";
-import { useAccountAuthenMutation } from "../../controllers/api";
+import { useAccountAuthenMutation, useResetOtpMutation } from "../../controllers/api";
 import { useAppSelector } from "../../redux/store";
 import LargeButton from "../../components/LargeButton";
 import { router } from "expo-router";
@@ -60,10 +60,13 @@ const AccountAuthent = () => {
   });
   
   const [accountAuthen] = useAccountAuthenMutation();
+  const [resetOtp] = useResetOtpMutation();
 
   const onSubmit = async () => {
     try {
-      const result = await accountAuthen({ email });
+      const result = await resetOtp({ email });
+      console.log(result);
+      
       if (result?.data) {
         setSeconds(60);
         setDisabled(false);
@@ -80,10 +83,13 @@ const AccountAuthent = () => {
   const onSubmitAuth = async (data: { otp: string }) => {
     setIsloading(true);
     try {
-      setSeconds(60);
+      
       setDisabled(false);
       const result = await accountAuthen(data);
+      console.log(result);
+      
       if (result?.data) {
+        setSeconds(60);
         showToastSuccessAuth();
         setIsloading(false);
         setTimeout(() => {
@@ -157,7 +163,6 @@ const AccountAuthent = () => {
                       <Text
                         style={{ fontSize: 16, fontWeight: '600' }}
                         onPress={handleSubmit(onSubmit)}
-                        disabled={seconds === 0}
                       >
                         Gửi lại mã
                       </Text>
@@ -165,7 +170,6 @@ const AccountAuthent = () => {
                   <View style={{ marginTop: 30 }}>
                     <LargeButton
                       loading={isLoading}
-                      disabled={!disabled || getValues("otp").length < 6}
                       title="XÁC NHẬN"
                       variant="primary"
                       onPress={handleSubmit(onSubmitAuth)}
