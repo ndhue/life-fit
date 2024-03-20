@@ -132,8 +132,8 @@ const SignUp = () => {
                 label='Ngày sinh'
                 placeholder='YYYY-MM-DD'
                 onPress={toggleDatePicker}
-                // editable={false}   
-                // value={dateValue}
+                editable={false}   
+                value={dateValue}
                 onChangeText={text => setValue('birthday', text)}
               />
               {errors.birthday && <Text style={global.error}>{errors.birthday.message}</Text>}

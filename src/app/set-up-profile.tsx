@@ -162,7 +162,6 @@ const SetUpProfile = () => {
             >
               <Text style={global.title}>Tổng quan về bạn</Text>
             </View>
-            <ScrollView>
               <View style={global.container}>
                 {/* Gender */}
                 <View style={styles.choose}>
@@ -427,7 +426,6 @@ const SetUpProfile = () => {
                   />
                 </View>
               </View>
-            </ScrollView>
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>
