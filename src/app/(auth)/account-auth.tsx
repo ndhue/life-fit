@@ -162,7 +162,7 @@ const AccountAuthent = () => {
                       <Text style={{ color: "#90A5B4", fontSize: 16 }}>Không nhận được OTP?</Text>
                       <Text
                         style={{ fontSize: 16, fontWeight: '600' }}
-                        onPress={handleSubmit(onSubmit)}
+                        onPress={onSubmit}
                       >
                         Gửi lại mã
                       </Text>

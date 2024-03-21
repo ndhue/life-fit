@@ -289,9 +289,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 20,
     borderRadius: 15,
-    width: "47%",
+    width: "48%",
     height: 120,
-    marginVertical: "3%",
+    marginVertical: "2%",
     padding: 20,
   },
   datetime: {
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
   },
   subDetail: {
     fontWeight: "600",
-    fontSize: 18,
+    fontSize: 16,
   },
   conclusion: {
     color: "#6b6b6b",

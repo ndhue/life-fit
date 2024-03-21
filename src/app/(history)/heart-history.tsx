@@ -160,7 +160,7 @@ const HeartHistory = () => {
   const renderListHeartRate = (rowData) => (
     <View style={styles.container}>
       <Text style={styles.date}>{formatDate(rowData.item.date)}</Text>
-      <View style={[global.flexBox, { justifyContent: "flex-start" }]}>
+      <View style={[global.flexBox, { justifyContent: "flex-start", paddingTop: 3 }]}>
         <Text style={styles.text}>Nhịp tim cập nhật: </Text>
         <Text style={[styles.text, styles.static]}>
           {rowData.item.heartbeat} bpm
@@ -175,13 +175,13 @@ const HeartHistory = () => {
         style={[styles.hiddenButton, { backgroundColor: Colors.secondary }]}
         onPress={() => handleOpenEditModal(rowData.item.id)}
       >
-        <AntDesign name="edit" size={20} color="white" />
+        <AntDesign name="edit" size={24} color="white" />
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.hiddenButton, { backgroundColor: "black" }]}
         onPress={() => handleDeleteHeart(rowData.item.id)}
       >
-        <AntDesign name="delete" size={20} color="white" />
+        <AntDesign name="delete" size={24} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -244,7 +244,7 @@ const HeartHistory = () => {
                   data={itemList}
                   renderItem={renderListHeartRate}
                   renderHiddenItem={renderHiddenItem}
-                  rightOpenValue={-130}
+                  rightOpenValue={-150}
                   previewRowKey={"0"}
                   previewOpenValue={-40}
                   previewOpenDelay={3000}
@@ -380,12 +380,11 @@ const styles = StyleSheet.create({
   },
   date: {
     color: "#6b6b6b",
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "700",
   },
   text: {
     color: "#adadad",
-    fontSize: 15,
   },
   static: {
     fontWeight: "700",
@@ -403,7 +402,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
-    padding: 20,
+    width: 70,
+    height: 70
   },
   title: {
     fontSize: 20,
